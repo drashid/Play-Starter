@@ -1,0 +1,30 @@
+<configuration>
+
+	<!-- The pattern we use to write to the CONSOLE -->
+	<property name="console.pattern"
+		value="%d{yyyy-MM-dd HH:mm:ss:SSS zz} [%thread] %level %logger{0} - %msg%n" />
+
+	<!-- Appenders -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${console.pattern}</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="com.jolbox.bonecp" level="INFO">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="play" level="INFO">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="application" level="INFO">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="com.github.drashid" level="INFO">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+</configuration>

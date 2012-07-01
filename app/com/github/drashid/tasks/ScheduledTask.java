@@ -1,4 +1,4 @@
-package com.github.drashid.jobs;
+package com.github.drashid.tasks;
 
 import akka.util.Duration;
 
