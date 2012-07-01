@@ -7,6 +7,7 @@ public class ApplicationModule extends AbstractModule {
   @Override
   protected void configure() {
     install(new ControllerModule());
+    install(new ScheduledTaskModule());
   }
 
 }
