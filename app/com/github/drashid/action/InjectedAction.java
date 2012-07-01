@@ -1,23 +1,18 @@
 package com.github.drashid.action;
 
-import java.util.concurrent.Callable;
-
+import module.GuiceHolder;
 import play.mvc.Action;
-import play.mvc.Http.Context;
+import play.mvc.Http;
 import play.mvc.Result;
 
-public abstract class InjectedAction implements Callable<Result> {
+public abstract class InjectedAction extends Action.Simple {
 
-  protected Context context;
-
-  protected Action<?> delegate;
-
-  public void setContext(Context httpContext) {
-    this.context = httpContext;
+  @Override
+  public Result call(Http.Context context) throws Throwable {
+    GuiceHolder.injector().injectMembers(this);
+    return _call(context);
   }
 
-  public void setDelegate(Action<?> delegate) {
-    this.delegate = delegate;
-  }
+  protected abstract Result _call(Http.Context context);
 
 }
