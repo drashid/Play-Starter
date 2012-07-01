@@ -1,11 +1,11 @@
+package module;
 
 
-import module.ApplicationModule;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-class GuiceHolder {
+public class GuiceHolder {
 
   private static final Injector inject = Guice.createInjector(new ApplicationModule());
 

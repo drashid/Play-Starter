@@ -2,6 +2,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import module.GuiceHolder;
+
 import play.Application;
 import play.GlobalSettings;
 
