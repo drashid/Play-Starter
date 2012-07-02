@@ -15,7 +15,7 @@ import com.github.drashid.tasks.ScheduledTask;
 @Singleton
 public class ScheduledTaskService extends AbstractService {
   
-  private List<Cancellable> scheduledJobs = new ArrayList<Cancellable>();
+  private List<Cancellable> scheduledTasks = new ArrayList<Cancellable>();
 
   @Inject
   private List<ScheduledTask> tasks;
@@ -27,19 +27,20 @@ public class ScheduledTaskService extends AbstractService {
   
   @Override
   protected void stopService() {
-    cancelTasks();
+    stopTasks();
   }
   
   private void startTasks() {
     for (ScheduledTask task : tasks) {
-      scheduledJobs.add(Akka.system().scheduler().schedule(task.getInitialDelay(), task.getFrequency(), task));
+      scheduledTasks.add(Akka.system().scheduler().schedule(task.getInitialDelay(), task.getFrequency(), task));
     }
   }
 
-  private void cancelTasks() {
-    for (Cancellable running : scheduledJobs) {
+  private void stopTasks() {
+    for (Cancellable running : scheduledTasks) {
       running.cancel(); // Warning: does not shut down the running task, just future schedules
     }
+    scheduledTasks.clear();
   }
 
 }
