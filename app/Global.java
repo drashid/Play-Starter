@@ -1,8 +1,8 @@
+import static module.GuiceHolder.injector;
+
 import java.util.List;
 
 import javax.inject.Inject;
-
-import module.GuiceHolder;
 
 import play.Application;
 import play.GlobalSettings;
@@ -16,7 +16,7 @@ public class Global extends GlobalSettings {
 
   @Override
   public void onStart(Application app) {
-    GuiceHolder.injector().injectMembers(this);
+    injector().injectMembers(this);
 
     startServices();
   }

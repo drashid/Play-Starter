@@ -8,7 +8,6 @@ import views.html.index;
 
 import com.github.drashid.action.InjectedAction;
 
-
 public class Index extends Controller {
 
   @With(IndexAction.class)
@@ -17,6 +16,7 @@ public class Index extends Controller {
   }
 
   public static class IndexAction extends InjectedAction {
+
     @Override
     public Result _call(Context context) {
       return ok(index.render("I'm Injected!"));
