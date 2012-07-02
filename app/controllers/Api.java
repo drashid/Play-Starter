@@ -2,15 +2,26 @@ package controllers;
 
 import static module.GuiceHolder.injector;
 
+import java.util.concurrent.Callable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import play.libs.Akka;
+import play.libs.F.Promise;
+import play.mvc.Controller;
+import play.mvc.Http.Context;
+import play.mvc.Result;
+
 import com.github.drashid.api.ApiOp;
 import com.github.drashid.api.Async;
 
-import play.libs.Akka;
-import play.mvc.Controller;
-import play.mvc.Result;
+import controllers.api.Test;
 
 public class Api extends Controller {
 
+  private static final Logger LOG = LoggerFactory.getLogger(Test.class);
+  
   private static final String API_PATH = "controllers.api";
 
   public static Result api(String path) throws Exception {
@@ -20,14 +31,27 @@ public class Api extends Controller {
 
     try {
       ApiOp op = (ApiOp)injector().getInstance(Class.forName(sb.toString()));
+      LOG.info("Executing API call [{}]", op.getClass().getCanonicalName()); 
+      
       if(op.getClass().isAnnotationPresent(Async.class)){
-        return async(Akka.future(op));
+        return async(apiAsyncCall(Context.current(), op));
       }else{
         return op.call();
       }
     } catch (Exception e) {
+      LOG.error("Could not execute API call", e);
       return badRequest();
     }
+  }
+
+  private static Promise<Result> apiAsyncCall(final Context current, final ApiOp op) {
+    return Akka.future(new Callable<Result>() {
+      @Override
+      public Result call() throws Exception {
+        Context.current.set(current);
+        return op.call();
+      }
+    });
   }
 
   private static StringBuffer capitalizeClassName(StringBuffer sb) {

@@ -23,6 +23,10 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
+	<logger name="controllers" level="INFO">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
 	<logger name="com.github.drashid" level="INFO">
 		<appender-ref ref="STDOUT" />
 	</logger>
