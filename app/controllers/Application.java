@@ -8,6 +8,7 @@ import views.html.index;
 
 import com.github.drashid.action.InjectedAction;
 
+
 public class Application extends Controller {
 
   @With(IndexAction.class)
