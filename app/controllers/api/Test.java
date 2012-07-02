@@ -6,12 +6,12 @@ import javax.inject.Inject;
 
 import play.mvc.Result;
 
-import com.github.drashid.api.ApiOperation;
+import com.github.drashid.api.ApiOp;
 import com.github.drashid.api.Async;
 import com.yammer.metrics.annotation.Timed;
 
 @Async
-public class Test extends ApiOperation {
+public class Test extends ApiOp {
 
   @Inject
   private Date date;

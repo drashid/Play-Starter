@@ -2,7 +2,7 @@ package controllers;
 
 import static module.GuiceHolder.injector;
 
-import com.github.drashid.api.ApiOperation;
+import com.github.drashid.api.ApiOp;
 import com.github.drashid.api.Async;
 
 import play.libs.Akka;
@@ -19,7 +19,7 @@ public class Api extends Controller {
         .append(path.replace('/', '.').toLowerCase()));
 
     try {
-      ApiOperation op = (ApiOperation)injector().getInstance(Class.forName(sb.toString()));
+      ApiOp op = (ApiOp)injector().getInstance(Class.forName(sb.toString()));
       if(op.getClass().isAnnotationPresent(Async.class)){
         return async(Akka.future(op));
       }else{
