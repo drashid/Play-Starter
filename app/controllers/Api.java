@@ -1,10 +1,15 @@
 package controllers;
 
 import static module.GuiceHolder.injector;
+
+import com.github.drashid.api.ApiOperation;
+import com.github.drashid.api.Async;
+
+import play.libs.Akka;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-public class ApiController extends Controller {
+public class Api extends Controller {
 
   private static final String API_PATH = "controllers.api";
 
@@ -15,7 +20,11 @@ public class ApiController extends Controller {
 
     try {
       ApiOperation op = (ApiOperation)injector().getInstance(Class.forName(sb.toString()));
-      return op.call();
+      if(op.getClass().isAnnotationPresent(Async.class)){
+        return async(Akka.future(op));
+      }else{
+        return op.call();
+      }
     } catch (Exception e) {
       return badRequest();
     }

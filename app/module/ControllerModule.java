@@ -1,4 +1,4 @@
-package controllers;
+package module;
 
 import org.reflections.Reflections;
 

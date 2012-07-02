@@ -9,7 +9,7 @@ import views.html.index;
 import com.github.drashid.action.InjectedAction;
 
 
-public class Application extends Controller {
+public class Index extends Controller {
 
   @With(IndexAction.class)
   public static Result index() {
