@@ -3,9 +3,12 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Index.index()
+GET     /                           controllers.Index.main()
 
-# API
+# API by simple name
+GET     /api/metrics                controllers.Api.named(name="AdminMetrics")
+
+# Full path API calls
 GET     /api/*path                  controllers.Api.api(path)
 
 # Map static resources from the /public folder to the /assets URL path
