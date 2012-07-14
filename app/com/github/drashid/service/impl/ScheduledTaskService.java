@@ -10,7 +10,7 @@ import play.libs.Akka;
 import akka.actor.Cancellable;
 
 import com.github.drashid.service.AbstractService;
-import com.github.drashid.tasks.ScheduledTask;
+import com.github.drashid.task.ScheduledTask;
 
 @Singleton
 public class ScheduledTaskService extends AbstractService {
