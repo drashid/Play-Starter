@@ -15,7 +15,6 @@ public class Index extends Controller {
   }
 
   public static Result main() {
-//    return ok(views.html.main.render("Titley", Html.empty()));
     return notFound();
   }
   
@@ -24,7 +23,6 @@ public class Index extends Controller {
     @Override
     public Result _call(Context context) {
       return notFound();
-//      return ok(index.render("I'm Injected!"));
     }
   }
 }

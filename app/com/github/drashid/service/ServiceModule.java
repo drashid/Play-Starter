@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Singleton;
+
 import org.reflections.Reflections;
 
 import com.google.inject.AbstractModule;
@@ -24,6 +26,7 @@ public class ServiceModule extends AbstractModule {
   }
 
   @Provides
+  @Singleton
   List<Service> getAllServices(Injector inject) {
     List<Service> servInsts = new ArrayList<Service>();
     for (Class<? extends Service> servCls : services) {

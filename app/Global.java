@@ -22,8 +22,8 @@ public class Global extends GlobalSettings {
   }
 
   private void startServices() {
-    for (Service s : services) {
-      s.start();
+    for (Service service : services) {
+      service.start();
     }
   }
 
@@ -33,8 +33,8 @@ public class Global extends GlobalSettings {
   }
 
   private void stopServices() {
-    for (Service s : services) {
-      s.stop();
+    for (Service service : services) {
+      service.stop();
     }
   }
 
