@@ -10,7 +10,8 @@ object ApplicationBuild extends Build {
     val appDependencies = Seq(
       "com.google.inject" % "guice" % "3.0",
       "com.yammer.metrics" % "metrics-core" % "2.1.2",
-      "com.yammer.metrics" % "metrics-guice" % "2.1.2"
+      "com.yammer.metrics" % "metrics-guice" % "2.1.2",
+      "redis.clients" % "jedis" % "2.1.0"
     )
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(

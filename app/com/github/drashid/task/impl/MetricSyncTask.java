@@ -5,17 +5,17 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.drashid.task.ScheduledTask;
-
 import akka.util.Duration;
 
-public class MetricTask implements ScheduledTask {
+import com.github.drashid.task.ScheduledTask;
 
-  public static Logger LOG = LoggerFactory.getLogger(MetricTask.class);
+public class MetricSyncTask implements ScheduledTask {
+
+  public static Logger LOG = LoggerFactory.getLogger(MetricSyncTask.class);
 
   @Override
   public void run() {
-    LOG.info("Ping!"); //TODO
+//    LOG.info("Ping!"); //TODO
   }
 
   @Override
