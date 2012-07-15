@@ -50,7 +50,7 @@ public class MetricGateway {
   public void pushMetrics() {
     Jedis conn = redis.getConnection();
     try {
-      List<TimerInfo> timerInfos = Lists.newArrayList();
+      List<MetricData> timerInfos = Lists.newArrayList();
       for (Entry<MetricName, Metric> entry : Metrics.defaultRegistry().allMetrics().entrySet()) {
         if (entry.getValue() instanceof Timer) {
           String metricName = getFullName(entry.getKey());

@@ -32,6 +32,6 @@ function MetricCtrl($scope, $http) {
 
 	//INIT
 	$scope.loadMetrics();
-	$scope.sortBy("machine");
+	$scope.sortBy("name");
 	$scope.reverse = false;
 };
