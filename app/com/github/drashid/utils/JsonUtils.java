@@ -18,4 +18,12 @@ public class JsonUtils {
         .with(SerializationConfig.Feature.AUTO_DETECT_GETTERS));
   }
 
+  public static String encode(Object o) {
+    try {
+      return MAPPER.writeValueAsString(o);
+    } catch (Exception e) {
+      throw new RuntimeException("Json encoding exception", e);
+    }
+  }
+    
 }

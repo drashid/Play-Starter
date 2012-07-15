@@ -9,6 +9,7 @@ import play.GlobalSettings;
 
 import com.github.drashid.config.InvalidConfigurationException;
 import com.github.drashid.service.Service;
+import com.yammer.metrics.Metrics;
 
 public class Global extends GlobalSettings {
 
@@ -40,7 +41,8 @@ public class Global extends GlobalSettings {
 
   @Override
   public void onStop(Application app) {
-    stopServices();
+    stopServices();    
+    Metrics.shutdown();
   }
 
   private void stopServices() {

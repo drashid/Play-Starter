@@ -71,7 +71,7 @@ public class Api extends Controller {
         try {
           return op.call();
         } finally {
-          LOG.info("Executed API call [{}] in {} ms", op.getClass().getCanonicalName(), System.currentTimeMillis() - startTime);
+          LOG.info("Executed API [{}] in {} ms", op.getClass().getCanonicalName(), System.currentTimeMillis() - startTime);
         }
       }
     } catch (Exception e) {
@@ -88,7 +88,7 @@ public class Api extends Controller {
           Context.current.set(current);
           return op.call();
         } finally {
-          LOG.info("Executed API call [{}] in {} ms", op.getClass().getCanonicalName(), System.currentTimeMillis() - startTime);
+          LOG.info("Executed API [{}] in {} ms", op.getClass().getCanonicalName(), System.currentTimeMillis() - startTime);
         }
       }
     });
