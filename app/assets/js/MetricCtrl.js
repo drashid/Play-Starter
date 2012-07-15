@@ -21,6 +21,17 @@ function MetricCtrl($scope, $http) {
 		});
 	}
 
+	$scope.sortBy = function(fieldName){
+		if($scope.sortField === fieldName){
+			$scope.reverse = !$scope.reverse;
+		}else{
+			$scope.reverse = false;
+		}
+		$scope.sortField = fieldName;
+	}
+
 	//INIT
 	$scope.loadMetrics();
+	$scope.sortBy("machine");
+	$scope.reverse = false;
 };
