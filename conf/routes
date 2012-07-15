@@ -6,8 +6,10 @@
 GET     /                           controllers.Index.main()
 
 # API by simple name
-GET     /api/metrics                controllers.Api.named(name="AdminMetrics")
-GET     /admin                  controllers.Api.named(name="AdminPanel")
+GET     /api/metrics/all            controllers.Api.named(name="FetchMetrics")
+POST    /api/metrics/clear          controllers.Api.named(name="ClearMachineMetrics")
+
+GET     /admin                      controllers.Api.named(name="AdminPanel")
 
 # Full path API calls
 GET     /api/*path                  controllers.Api.api(path)

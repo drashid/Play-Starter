@@ -2,7 +2,7 @@ package com.github.drashid.metric;
 
 import com.yammer.metrics.core.Timer;
 
-public class TimerInfo {
+public class TimerInfo implements Metric {
 
   private String machine;
 

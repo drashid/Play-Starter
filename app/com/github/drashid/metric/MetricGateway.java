@@ -69,6 +69,10 @@ public class MetricGateway {
     Jedis conn = redis.getConnection();
     try {
       String[] keys = conn.hkeys(TIMER_HASH_KEY).toArray(new String[]{});
+      if(keys.length == 0){
+        return Maps.newHashMap();
+      }
+      
       List<String> values = conn.hmget(TIMER_HASH_KEY, keys);
       Map<String, JsonNode> toRet = new HashMap<String, JsonNode>(keys.length);
       for (int i = 0; i < keys.length; i++) {
@@ -82,6 +86,15 @@ public class MetricGateway {
 
   private static String getFullName(MetricName name) {
     return name.getGroup() + "." + name.getType() + "." + name.getName();
+  }
+
+  public void clearMetrics(String machine) {
+    Jedis conn = redis.getConnection();
+    try {
+      conn.hdel(TIMER_HASH_KEY, machine);
+    } finally {
+      redis.returnConnection(conn);
+    }
   }
 
 }

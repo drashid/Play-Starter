@@ -20,11 +20,11 @@ import play.mvc.Result;
 import com.github.drashid.api.ApiOp;
 import com.github.drashid.api.Async;
 
-import controllers.api.AdminMetrics;
+import controllers.api.FetchMetrics;
 
 public class Api extends Controller {
 
-  private static final Logger LOG = LoggerFactory.getLogger(AdminMetrics.class);
+  private static final Logger LOG = LoggerFactory.getLogger(FetchMetrics.class);
   
   private static final String API_PATH = "controllers.api";
 
