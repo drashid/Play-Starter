@@ -8,14 +8,14 @@ import play.mvc.Result;
 
 import com.github.drashid.api.ApiOp;
 import com.github.drashid.api.Async;
-import com.github.drashid.metric.MetricGateway;
+import com.github.drashid.status.ServerStatusGateway;
 import com.yammer.metrics.annotation.Timed;
 
 @Async
 public class ClearMachineMetrics extends ApiOp {
 
   @Inject
-  private MetricGateway metrics;
+  private ServerStatusGateway metrics;
   
   @Override
   @Timed

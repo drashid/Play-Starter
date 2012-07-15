@@ -9,7 +9,9 @@ import play.GlobalSettings;
 
 import com.github.drashid.config.InvalidConfigurationException;
 import com.github.drashid.service.Service;
+import com.yammer.metrics.HealthChecks;
 import com.yammer.metrics.Metrics;
+import com.yammer.metrics.core.HealthCheck;
 
 public class Global extends GlobalSettings {
 
@@ -18,12 +20,22 @@ public class Global extends GlobalSettings {
   @Inject
   private List<Service> services;
   
+  @Inject
+  private List<HealthCheck> checks;
+  
   @Override
   public void onStart(Application app) {
     validateAppConfig(app);
     injector().injectMembers(this);
     
     startServices();
+    registerHealthChecks();
+  }
+
+  private void registerHealthChecks() {
+    for(HealthCheck check : checks){
+      HealthChecks.register(check);
+    }    
   }
 
   private static void validateAppConfig(Application app) {

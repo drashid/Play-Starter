@@ -9,19 +9,19 @@ import org.slf4j.LoggerFactory;
 
 import akka.util.Duration;
 
-import com.github.drashid.metric.MetricGateway;
+import com.github.drashid.status.ServerStatusGateway;
 import com.github.drashid.task.ScheduledTask;
 
-public class MetricSyncTask implements ScheduledTask {
+public class ServerStatusSyncTask implements ScheduledTask {
 
-  public static Logger LOG = LoggerFactory.getLogger(MetricSyncTask.class);
+  public static Logger LOG = LoggerFactory.getLogger(ServerStatusSyncTask.class);
   
   @Inject
-  private MetricGateway metricGateway;
+  private ServerStatusGateway metricGateway;
 
   @Override
   public void run() {
-    metricGateway.pingServer();
+    metricGateway.pushHealth();
     metricGateway.pushMetrics();
   }
 

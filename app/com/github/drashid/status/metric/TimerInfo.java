@@ -1,4 +1,4 @@
-package com.github.drashid.metric;
+package com.github.drashid.status.metric;
 
 import com.yammer.metrics.core.Timer;
 
