@@ -6,6 +6,8 @@ public class TimerInfo {
 
   private String machine;
 
+  private String name;
+
   private double mean;
 
   private double min;
@@ -16,13 +18,16 @@ public class TimerInfo {
 
   private double nfPercent; // 95 percentile
 
-  public TimerInfo(String machineCode, Timer timer) {
+  private MetricType type = MetricType.TIMER;
+
+  public TimerInfo(String machineCode, String metricName, Timer timer) {
     this.mean = timer.mean();
     this.min = timer.min();
     this.max = timer.max();
     this.median = timer.getSnapshot().getMedian();
     this.nfPercent = timer.getSnapshot().get95thPercentile();
     this.machine = machineCode;
+    this.name = metricName;
   }
 
   TimerInfo() {
@@ -74,5 +79,17 @@ public class TimerInfo {
 
   public String getMachine() {
     return machine;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public MetricType getType() {
+    return type;
   }
 }

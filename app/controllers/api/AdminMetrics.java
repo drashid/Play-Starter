@@ -20,7 +20,7 @@ public class AdminMetrics extends ApiOp {
   @Timed
   public Result call() {
     try {
-      return ok(Json.toJson(metrics.getMetrics()));
+      return ok(Json.toJson(metrics.getMetrics().values()));
     } catch (Exception e){
       return internalServerError(e.getMessage());
     }

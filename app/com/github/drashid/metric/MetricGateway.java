@@ -17,6 +17,7 @@ import redis.clients.jedis.Jedis;
 import com.github.drashid.service.impl.RedisService;
 import com.github.drashid.utils.JsonUtils;
 import com.github.drashid.utils.MachineUtils;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.yammer.metrics.Metrics;
 import com.yammer.metrics.core.Metric;
@@ -49,14 +50,15 @@ public class MetricGateway {
   public void pushMetrics() {
     Jedis conn = redis.getConnection();
     try {
-      Map<String, TimerInfo> timerMap = Maps.newHashMap();
+      List<TimerInfo> timerInfos = Lists.newArrayList();
       for (Entry<MetricName, Metric> entry : Metrics.defaultRegistry().allMetrics().entrySet()) {
         if (entry.getValue() instanceof Timer) {
-          timerMap.put(getFullName(entry.getKey()), new TimerInfo(MACHINE_CODE, (Timer)entry.getValue()));
+          String metricName = getFullName(entry.getKey());
+          timerInfos.add(new TimerInfo(MACHINE_CODE, metricName, (Timer)entry.getValue()));
         }
       }
       Map<String, String> nodeTimerMap = Maps.newHashMap();
-      nodeTimerMap.put(MACHINE_CODE, JsonUtils.encode(timerMap));
+      nodeTimerMap.put(MACHINE_CODE, JsonUtils.encode(timerInfos));
       conn.hmset(TIMER_HASH_KEY, nodeTimerMap);
     } finally {
       redis.returnConnection(conn);
