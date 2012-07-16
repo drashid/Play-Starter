@@ -46,7 +46,7 @@ public class ServerStatusGateway {
     try {
       Map<String, Result> results = HealthChecks.runHealthChecks();      
       Map<String, String> map = Maps.newHashMap();
-      map.put(MACHINE_CODE, JsonUtils.encode(new ServerHealth(results)));
+      map.put(MACHINE_CODE, JsonUtils.encode(new ServerHealth(MACHINE_CODE, results)));
       
       conn.hmset(SERVER_HEALTH_KEY, map);      
     } finally {

@@ -10,13 +10,16 @@ public class ServerHealth {
 
   private long timestamp;
 
+  private String machine;
+
   ServerHealth() {
 
   }
 
-  public ServerHealth(Map<String, Result> results) {
+  public ServerHealth(String machine, Map<String, Result> results) {
     this.checkResults = results;
     this.timestamp = System.currentTimeMillis();
+    this.machine = machine;
   }
 
   public Map<String, Result> getCheckResults() {
@@ -33,6 +36,14 @@ public class ServerHealth {
 
   public void setTimestamp(long timestamp) {
     this.timestamp = timestamp;
+  }
+
+  public void setMachine(String machine) {
+    this.machine = machine;
+  }
+
+  public String getMachine() {
+    return machine;
   }
 
 }
