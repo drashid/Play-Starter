@@ -6,9 +6,9 @@
 #GET     /                           controllers.Index.main()
 
 # API by simple name
-GET     /api/admin/metrics/health         controllers.Api.named(name="HealthChecks")
+GET     /api/admin/metrics/health           controllers.Api.named(name="HealthChecks")
 GET     /api/admin/metrics/fetch            controllers.Api.named(name="FetchMetrics")
-POST    /api/admin/metrics/clear          controllers.Api.named(name="ClearMachineMetrics")
+POST    /api/admin/metrics/clear            controllers.Api.named(name="ClearMachineMetrics")
 
 GET     /admin                      controllers.Api.named(name="AdminPanel")
 

@@ -25,6 +25,7 @@ function MetricCtrl($scope, $http) {
 	$scope.clearMachine = function(machineName){
 		$http.post('/api/admin/metrics/clear', {'machine': machineName}).success(function(){
 			$scope.loadMetrics();
+			$scope.loadHealth();
 		});
 	}
 
