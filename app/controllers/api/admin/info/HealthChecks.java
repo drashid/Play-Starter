@@ -1,4 +1,4 @@
-package controllers.api;
+package controllers.api.admin.info;
 
 import javax.inject.Inject;
 

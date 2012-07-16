@@ -44,11 +44,11 @@ public class ServerStatusGateway {
   public void pushHealth() {
     Jedis conn = redis.getConnection();
     try {
-      Map<String, Result> results = HealthChecks.runHealthChecks();      
+      Map<String, Result> results = HealthChecks.runHealthChecks();
       Map<String, String> map = Maps.newHashMap();
       map.put(MACHINE_CODE, JsonUtils.encode(new ServerHealth(MACHINE_CODE, results)));
-      
-      conn.hmset(SERVER_HEALTH_KEY, map);      
+
+      conn.hmset(SERVER_HEALTH_KEY, map);
     } finally {
       redis.returnConnection(conn);
     }
@@ -57,11 +57,11 @@ public class ServerStatusGateway {
   public Map<String, JsonNode> getHealthChecks() throws JsonProcessingException, IOException {
     Jedis conn = redis.getConnection();
     try {
-      String[] keys = conn.hkeys(SERVER_HEALTH_KEY).toArray(new String[]{});
-      if(keys.length == 0){
+      String[] keys = conn.hkeys(SERVER_HEALTH_KEY).toArray(new String[] {});
+      if (keys.length == 0) {
         return Maps.newHashMap();
       }
-      
+
       List<String> values = conn.hmget(SERVER_HEALTH_KEY, keys);
       Map<String, JsonNode> toRet = new HashMap<String, JsonNode>(keys.length);
       for (int i = 0; i < keys.length; i++) {
@@ -72,7 +72,7 @@ public class ServerStatusGateway {
       redis.returnConnection(conn);
     }
   }
-  
+
   public void pushMetrics() {
     Jedis conn = redis.getConnection();
     try {
@@ -94,11 +94,11 @@ public class ServerStatusGateway {
   public Map<String, JsonNode> getMetrics() throws JsonProcessingException, IOException {
     Jedis conn = redis.getConnection();
     try {
-      String[] keys = conn.hkeys(TIMER_HASH_KEY).toArray(new String[]{});
-      if(keys.length == 0){
+      String[] keys = conn.hkeys(TIMER_HASH_KEY).toArray(new String[] {});
+      if (keys.length == 0) {
         return Maps.newHashMap();
       }
-      
+
       List<String> values = conn.hmget(TIMER_HASH_KEY, keys);
       Map<String, JsonNode> toRet = new HashMap<String, JsonNode>(keys.length);
       for (int i = 0; i < keys.length; i++) {
@@ -110,8 +110,6 @@ public class ServerStatusGateway {
     }
   }
 
-  
-  
   private static String getFullName(MetricName name) {
     return name.getGroup() + "." + name.getType() + "." + name.getName();
   }
@@ -120,6 +118,7 @@ public class ServerStatusGateway {
     Jedis conn = redis.getConnection();
     try {
       conn.hdel(TIMER_HASH_KEY, machine);
+      conn.hdel(SERVER_HEALTH_KEY, machine);
     } finally {
       redis.returnConnection(conn);
     }

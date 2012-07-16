@@ -1,4 +1,4 @@
-package controllers.api;
+package controllers.api.admin;
 
 import play.mvc.Result;
 

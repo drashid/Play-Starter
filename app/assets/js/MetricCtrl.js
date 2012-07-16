@@ -1,7 +1,14 @@
 function MetricCtrl($scope, $http) {
+	//load health checks 
+	$scope.loadHealth = function(){
+	  	$http.get('/api/admin/metrics/health').success(function(data){
+			$scope.health = data;
+	  	});
+	};
+
 	//load metrics 
 	$scope.loadMetrics = function(){
-	  	$http.get('/api/metrics/all').success(function(data){
+	  	$http.get('/api/admin/metrics/fetch').success(function(data){
 			//flatten metric array of arrays (one array per web node)
 			var flat = [ ];
 			var k = 0;
@@ -16,7 +23,7 @@ function MetricCtrl($scope, $http) {
 	};
 
 	$scope.clearMachine = function(machineName){
-		$http.post('/api/metrics/clear', {'machine': machineName}).success(function(){
+		$http.post('/api/admin/metrics/clear', {'machine': machineName}).success(function(){
 			$scope.loadMetrics();
 		});
 	}
@@ -32,6 +39,7 @@ function MetricCtrl($scope, $http) {
 
 	//INIT
 	$scope.loadMetrics();
+	$scope.loadHealth();
 	$scope.sortBy("name");
 	$scope.reverse = false;
 };
