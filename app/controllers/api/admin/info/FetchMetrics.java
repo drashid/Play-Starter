@@ -1,5 +1,7 @@
 package controllers.api.admin.info;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -22,11 +24,11 @@ public class FetchMetrics extends ApiOp {
   private ServerStatusGateway metrics;
   
   @Override
-  @Timed
+  @Timed(durationUnit = TimeUnit.SECONDS)
   public Result call() {
     try {
       return ok(Json.toJson(metrics.getMetrics().values()));
-    } catch (Exception e){
+    } catch (Exception e){ 
       LOG.error("Error getting metrics!", e);
       return internalServerError(e.getMessage());
     }

@@ -55,11 +55,11 @@
 
             <div class="row">
                 <div> 
-                    <h2>Performance Metrics</h2>
+                    <h2>Timing</h2>
                 </div>
                 <!--<form class="well form-search">
                   <button class="btn" ng-click="loadMetrics(); loadHealth()"><i class="icon-refresh"></i></button> -->
-                  <input type="text" class="input-medium search-query" ng-model="timerSearch" placeholder="Filter...">
+                <input type="text" class="input-medium search-query" ng-model="timerSearch" placeholder="Filter...">
                 <!-- </form> -->
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
@@ -87,14 +87,15 @@
 
             <div class="row">
                 <div> 
-                    <h2>Metering Metrics</h2>
+                    <h2>Meters</h2>
                 </div>
-                  <input type="text" class="input-medium search-query" ng-model="meterSearch" placeholder="Filter...">
+                <input type="text" class="input-medium search-query" ng-model="meterSearch" placeholder="Filter...">
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
                       <th ng-click="sortMeterBy('machine')">Node ID</th>
                       <th ng-click="sortMeterBy('name')">Meter Name</th>
                       <th ng-click="sortMeterBy('count')">Count</th>
+                      <th ng-click="sortMeterBy('meanRate')">Mean Rate</th>
                       <th ng-click="sortMeterBy('oneMinRate')">1 Minute Rate</th>
                       <th ng-click="sortMeterBy('fiveMinRate')">5 Minute Rate</th>
                       <th ng-click="sortMeterBy('fifteenMinRate')">15 Minute Rate</th>
@@ -104,6 +105,7 @@
                             <td>{{metric.machine}}</td>
                             <td>{{metric.name}}</td>
                             <td>{{metric.count}}</td>
+                            <td>{{metric.meanRate}}<span class="metric-unit">/{{metric.unit}}</span></td>
                             <td>{{metric.oneMinRate}}<span class="metric-unit">/{{metric.unit}}</span></td>
                             <td>{{metric.fiveMinRate}}<span class="metric-unit">/{{metric.unit}}</span></td>
                             <td>{{metric.fifteenMinRate}}<span class="metric-unit">/{{metric.unit}}</span></td>
