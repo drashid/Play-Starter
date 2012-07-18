@@ -16,6 +16,7 @@ import redis.clients.jedis.Jedis;
 
 import com.github.drashid.service.impl.RedisService;
 import com.github.drashid.status.health.ServerHealth;
+import com.github.drashid.status.metric.MeterInfo;
 import com.github.drashid.status.metric.MetricData;
 import com.github.drashid.status.metric.TimerInfo;
 import com.github.drashid.utils.JsonUtils;
@@ -24,7 +25,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.yammer.metrics.HealthChecks;
 import com.yammer.metrics.Metrics;
+import com.yammer.metrics.core.Gauge;
 import com.yammer.metrics.core.HealthCheck.Result;
+import com.yammer.metrics.core.Meter;
 import com.yammer.metrics.core.Metric;
 import com.yammer.metrics.core.MetricName;
 import com.yammer.metrics.core.Timer;
@@ -76,15 +79,20 @@ public class ServerStatusGateway {
   public void pushMetrics() {
     Jedis conn = redis.getConnection();
     try {
-      List<MetricData> timerInfos = Lists.newArrayList();
+      List<MetricData> metricInfos = Lists.newArrayList();
       for (Entry<MetricName, Metric> entry : Metrics.defaultRegistry().allMetrics().entrySet()) {
+        String metricName = getFullName(entry.getKey());
+        
         if (entry.getValue() instanceof Timer) {
-          String metricName = getFullName(entry.getKey());
-          timerInfos.add(new TimerInfo(MACHINE_CODE, metricName, (Timer)entry.getValue()));
+          metricInfos.add(new TimerInfo(MACHINE_CODE, metricName, (Timer)entry.getValue()));
+        }else if(entry.getValue() instanceof Meter) {
+          metricInfos.add(new MeterInfo(MACHINE_CODE, metricName, (Meter)entry.getValue()));
+        }else if(entry.getValue() instanceof Gauge) {
+          
         }
       }
       Map<String, String> nodeTimerMap = Maps.newHashMap();
-      nodeTimerMap.put(MACHINE_CODE, JsonUtils.encode(timerInfos));
+      nodeTimerMap.put(MACHINE_CODE, JsonUtils.encode(metricInfos));
       conn.hmset(TIMER_HASH_KEY, nodeTimerMap);
     } finally {
       redis.returnConnection(conn);

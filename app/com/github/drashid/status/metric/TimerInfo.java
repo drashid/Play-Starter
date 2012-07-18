@@ -1,9 +1,13 @@
 package com.github.drashid.status.metric;
 
+import java.util.concurrent.TimeUnit;
+
 import com.yammer.metrics.core.Timer;
 
 public class TimerInfo implements MetricData {
 
+  private MetricType type = MetricType.TIMER;
+  
   private String machine;
 
   private String name;
@@ -18,7 +22,7 @@ public class TimerInfo implements MetricData {
 
   private double nfPercent; // 95 percentile
 
-  private MetricType type = MetricType.TIMER;
+  private TimeUnit unit;
 
   public TimerInfo(String machineCode, String metricName, Timer timer) {
     this.mean = timer.mean();
@@ -26,6 +30,7 @@ public class TimerInfo implements MetricData {
     this.max = timer.max();
     this.median = timer.getSnapshot().getMedian();
     this.nfPercent = timer.getSnapshot().get95thPercentile();
+    this.unit = timer.durationUnit();
     this.machine = machineCode;
     this.name = metricName;
   }
@@ -91,5 +96,13 @@ public class TimerInfo implements MetricData {
 
   public MetricType getType() {
     return type;
+  }
+
+  public TimeUnit getUnit() {
+    return unit;
+  }
+
+  public void setUnit(TimeUnit unit) {
+    this.unit = unit;
   }
 }
