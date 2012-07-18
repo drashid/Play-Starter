@@ -29,27 +29,29 @@ function MetricCtrl($scope, $http) {
 		});
 	}
 
-	$scope.sortTimerBy = function(fieldName){
-		if($scope.timerSortField === fieldName){
-			$scope.timerSortOrder = !$scope.timerSortOrder;
+	sortBy = function(sortFieldName, sortField, orderField) {
+		if($scope[sortField] === sortFieldName){
+			$scope[orderField] = !$scope[orderField];
 		}else{
-			$scope.timerSortOrder = false;
+			$scope[orderField] = false;
 		}
-		$scope.timerSortField = fieldName;
+		$scope[sortField] = sortFieldName;
+	}
+
+	$scope.sortTimerBy = function(fieldName){
+		sortBy(fieldName, 'timerSortField', 'timerSortOrder');
 	}
 
 	$scope.sortMeterBy = function(fieldName){
-		if($scope.meterSortField === fieldName){
-			$scope.meterSortOrder = !$scope.meterSortOrder;
-		}else{
-			$scope.meterSortOrder = false;
-		}
-		$scope.meterSortField = fieldName;
+		sortBy(fieldName, 'meterSortField', 'meterSortOrder');
 	}
 
 	//INIT
 	$scope.loadMetrics();
 	$scope.loadHealth();
 	$scope.sortTimerBy("name");
+	$scope.sortMeterBy("name");
 	$scope.timerSortOrder = false;
+	$scope.meterSortOrder = false;
+	
 };
