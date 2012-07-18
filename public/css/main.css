@@ -5,3 +5,8 @@ body {
 td {
 	vertical-align: middle;
 }
+
+.metric-unit {
+	font-size: 0.75em;
+	color: grey;
+}

@@ -65,21 +65,21 @@
                     <thead>
                       <th ng-click="sortTimerBy('machine')">Node ID</th>
                       <th ng-click="sortTimerBy('name')">Timer Name</th>
-                      <th ng-click="sortTimerBy('mean')">Mean (ms)</th>
-                      <th ng-click="sortTimerBy('median')">Median (ms)</th>
-                      <th ng-click="sortTimerBy('nfPercent')">95th Percentile (ms)</th>
-                      <th ng-click="sortTimerBy('min')">Min (ms)</th>
-                      <th ng-click="sortTimerBy('max')">Max (ms)</th>
+                      <th ng-click="sortTimerBy('mean')">Mean</th>
+                      <th ng-click="sortTimerBy('median')">Median</th>
+                      <th ng-click="sortTimerBy('nfPercent')">95th Percentile</th>
+                      <th ng-click="sortTimerBy('min')">Min</th>
+                      <th ng-click="sortTimerBy('max')">Max</th>
                     </thead>
                     <tbody>
                         <tr ng-repeat="metric in metrics | filter:{'type': 'TIMER'} | filter:timerSearch | orderBy:timerSortField:timerSortOrder">
                             <td>{{metric.machine}}</td>
                             <td>{{metric.name}}</td>
-                            <td>{{metric.mean}}</td>
-                            <td>{{metric.median}}</td>
-                            <td>{{metric.nfPercent}}</td>
-                            <td>{{metric.min}}</td>
-                            <td>{{metric.max}}</td>
+                            <td>{{metric.mean}} <span class="metric-unit">({{metric.unit}})</span></td>
+                            <td>{{metric.median}} <span class="metric-unit">({{metric.unit}})</span></td>
+                            <td>{{metric.nfPercent}} <span class="metric-unit">({{metric.unit}})</span></td>
+                            <td>{{metric.min}} <span class="metric-unit">({{metric.unit}})</span></td>
+                            <td>{{metric.max}} <span class="metric-unit">({{metric.unit}})</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -104,9 +104,9 @@
                             <td>{{metric.machine}}</td>
                             <td>{{metric.name}}</td>
                             <td>{{metric.count}}</td>
-                            <td>{{metric.oneMinRate}}</td>
-                            <td>{{metric.fiveMinRate}}</td>
-                            <td>{{metric.fifteenMinRate}}</td>
+                            <td>{{metric.oneMinRate}}<span class="metric-unit">/{{metric.unit}}</span></td>
+                            <td>{{metric.fiveMinRate}}<span class="metric-unit">/{{metric.unit}}</span></td>
+                            <td>{{metric.fifteenMinRate}}<span class="metric-unit">/{{metric.unit}}</span></td>
                         </tr>
                     </tbody>
                 </table>
