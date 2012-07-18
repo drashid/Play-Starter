@@ -4,35 +4,29 @@ import java.util.concurrent.TimeUnit;
 
 import com.yammer.metrics.core.Timer;
 
-public class TimerInfo implements MetricData {
+public class TimerInfo extends MeterInfo {
 
-  private MetricType type = MetricType.TIMER;
-  
-  private String machine;
+  protected double mean;
 
-  private String name;
+  protected double min;
 
-  private double mean;
+  protected double max;
 
-  private double min;
+  protected double median;
 
-  private double max;
+  protected double nfPercent; // 95 percentile
 
-  private double median;
-
-  private double nfPercent; // 95 percentile
-
-  private TimeUnit unit;
+  protected TimeUnit durationUnit;
 
   public TimerInfo(String machineCode, String metricName, Timer timer) {
+    super(machineCode, metricName, timer);
     this.mean = timer.mean();
     this.min = timer.min();
     this.max = timer.max();
     this.median = timer.getSnapshot().getMedian();
     this.nfPercent = timer.getSnapshot().get95thPercentile();
-    this.unit = timer.durationUnit();
-    this.machine = machineCode;
-    this.name = metricName;
+    this.durationUnit = timer.durationUnit();
+    this.type = MetricType.TIMER;
   }
 
   TimerInfo() {
@@ -98,11 +92,12 @@ public class TimerInfo implements MetricData {
     return type;
   }
 
-  public TimeUnit getUnit() {
-    return unit;
+  public TimeUnit getDurationUnit() {
+    return durationUnit;
   }
 
-  public void setUnit(TimeUnit unit) {
-    this.unit = unit;
+  public void setDurationUnit(TimeUnit durationUnit) {
+    this.durationUnit = durationUnit;
   }
+
 }

@@ -2,40 +2,41 @@ package com.github.drashid.status.metric;
 
 import java.util.concurrent.TimeUnit;
 
-import com.yammer.metrics.core.Meter;
+import com.yammer.metrics.core.Metered;
 
 public class MeterInfo implements MetricData {
 
-  private MetricType type = MetricType.METER;
+  protected MetricType type;
 
-  private String machine;
+  protected String machine;
 
-  private String name;
+  protected String name;
 
-  private long count;
+  protected long count;
 
-  private double meanRate;
+  protected double meanRate;
 
-  private TimeUnit unit;
+  protected TimeUnit rateUnit;
 
-  private double oneMinRate;
+  protected double oneMinRate;
 
-  private double fiveMinRate;
+  protected double fiveMinRate;
 
-  private double fifteenMinRate;
+  protected double fifteenMinRate;
 
-  public MeterInfo(String machineCode, String metricName, Meter value) {
+  public MeterInfo(String machineCode, String metricName, Metered value) {
     this.name = metricName;
     this.machine = machineCode;
     this.count = value.count();
     this.meanRate = value.meanRate();
-    this.unit = value.rateUnit();
+    this.rateUnit = value.rateUnit();
     this.oneMinRate = value.oneMinuteRate();
     this.fiveMinRate = value.fiveMinuteRate();
     this.fifteenMinRate = value.fifteenMinuteRate();
+    this.type = MetricType.METER;
   }
-  
-  MeterInfo(){  
+
+  MeterInfo() {
   }
 
   @Override
@@ -79,14 +80,6 @@ public class MeterInfo implements MetricData {
     this.meanRate = meanRate;
   }
 
-  public TimeUnit getUnit() {
-    return unit;
-  }
-
-  public void setUnit(TimeUnit unit) {
-    this.unit = unit;
-  }
-
   public double getOneMinRate() {
     return oneMinRate;
   }
@@ -109,6 +102,14 @@ public class MeterInfo implements MetricData {
 
   public void setFifteenMinRate(double fifteenMinRate) {
     this.fifteenMinRate = fifteenMinRate;
+  }
+
+  public TimeUnit getRateUnit() {
+    return rateUnit;
+  }
+
+  public void setRateUnit(TimeUnit rateUnit) {
+    this.rateUnit = rateUnit;
   }
 
 }
