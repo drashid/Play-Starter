@@ -77,7 +77,7 @@
                 </div>
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
-                      <th ng-click="sortTimerBy('machine')">Node ID</th>
+                      <th ng-class="showID()" ng-click="sortTimerBy('machine')">Node ID</th>
                       <th ng-click="sortTimerBy('name')">Timer Name</th>
                       <th ng-click="sortTimerBy('mean')">Mean</th>
                       <th ng-click="sortTimerBy('median')">Median</th>
@@ -87,7 +87,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="metric in metrics | filter:{'type': 'TIMER'} | filter:timerSearch | orderBy:timerSortField:timerSortOrder">
-                            <td>{{metric.machine}}</td>
+                            <td ng-class="showID()">{{metric.machine}}</td>
                             <td>{{metric.name}}</td>
                             <td>{{metric.mean}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
                             <td>{{metric.median}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
@@ -105,7 +105,7 @@
                 </div>
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
-                      <th ng-click="sortMeterBy('machine')">Node ID</th>
+                      <th ng-class="showID()" ng-click="sortMeterBy('machine')">Node ID</th>
                       <th ng-click="sortMeterBy('name')">Meter Name</th>
                       <th ng-click="sortMeterBy('count')">Count</th>
                       <th ng-click="sortMeterBy('meanRate')">Mean Rate</th>
@@ -115,7 +115,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="metric in metrics | filter:meterSearch | orderBy:meterSortField:meterSortOrder">
-                            <td>{{metric.machine}}</td>
+                            <td ng-class="showID()">{{metric.machine}}</td>
                             <td>{{metric.name}}</td>
                             <td>{{metric.count}}</td>
                             <td>{{metric.meanRate}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>

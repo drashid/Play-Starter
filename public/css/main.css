@@ -10,3 +10,7 @@ td {
 	font-size: 0.75em;
 	color: grey;
 }
+
+.hide-id {
+	display: none;	
+}

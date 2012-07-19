@@ -78,8 +78,15 @@ function MetricCtrl($scope, $http) {
 	};
 
 	$scope.$watch('averageNodes', function(value){
-		$scope.loadMetrics();
+		$scope.metrics = processMetrics();
 	});
+
+	$scope.showID = function(){
+		if($scope.averageNodes){
+			return "hide-id";
+		}
+		return "show-id";
+	};
 
 	//INIT
 	$scope.averageNodes = true;
