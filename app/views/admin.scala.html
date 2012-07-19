@@ -13,7 +13,8 @@
         <script src="@routes.Assets.at("js/jquery-1.7.1.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("js/angular-1.0.1.min.js")"></script>
-
+        <script src="@routes.Assets.at("js/underscore-min.js")" type="text/javascript"></script>
+        
         <!-- controllers -->
         <script src="@routes.Assets.at("js/MetricCtrl.js")" type="text/javascript"></script>
 
@@ -54,13 +55,26 @@
             </div>
 
             <div class="row">
+                <form class="well form-search">
+                    <div class="span3">
+                        <input type="text" class="input-medium search-query" ng-model="timerSearch" placeholder="Filter Timing...">
+                    </div>
+                    <div class="span3">
+                        <input type="text" class="input-medium search-query" ng-model="meterSearch" placeholder="Filter Meters...">
+                    </div>
+                    <div class="span3">
+                        <label class="checkbox">
+                            <input type="checkbox" name="averageCheckBox" ng-model="averageNodes">
+                            Average Node Data ({{averageNodes}})
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row">
                 <div> 
                     <h2>Timing</h2>
                 </div>
-                <!--<form class="well form-search">
-                  <button class="btn" ng-click="loadMetrics(); loadHealth()"><i class="icon-refresh"></i></button> -->
-                <input type="text" class="input-medium search-query" ng-model="timerSearch" placeholder="Filter...">
-                <!-- </form> -->
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
                       <th ng-click="sortTimerBy('machine')">Node ID</th>
@@ -89,7 +103,6 @@
                 <div> 
                     <h2>Meters</h2>
                 </div>
-                <input type="text" class="input-medium search-query" ng-model="meterSearch" placeholder="Filter...">
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
                       <th ng-click="sortMeterBy('machine')">Node ID</th>
