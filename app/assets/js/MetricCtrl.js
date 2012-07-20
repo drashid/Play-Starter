@@ -15,16 +15,16 @@ function MetricCtrl($scope, $http) {
     var result = {};
     var keys = _.keys(objs[0]);
     _.each(keys, function(key){
-      if(_.isNumber(objs[0][key])){
-        var sum = _.chain(objs)
-          .pluck(key)
-          .reduce(function(memo, num){ return memo + num; }, 0)
-          .value();
-        result[key] = sum / size;
-      }else{
-        result[key] = objs[0][key];
-      }
-    });
+        if(_.isNumber(objs[0][key])){
+          var sum = _.chain(objs)
+            .pluck(key)
+            .reduce(function(memo, num){ return memo + num; }, 0)
+            .value();
+          result[key] = sum / size;
+        }else{
+          result[key] = objs[0][key];
+        }
+      });
     return result;
   };
 
@@ -44,7 +44,7 @@ function MetricCtrl($scope, $http) {
     $http.get('/api/admin/metrics/fetch').success(function(data){
       //flatten metric array of arrays (one array per web node)
       $scope.fetchedMetrics = _.flatten(data);
-        
+
       $scope.metrics = processMetrics();
     });
   };
@@ -78,7 +78,7 @@ function MetricCtrl($scope, $http) {
   };
 
   $scope.$watch('averageNodes', function(value){
-    $scope.loadMetrics();
+    $scope.metrics = processMetrics();
   });
 
   $scope.showID = function(){
