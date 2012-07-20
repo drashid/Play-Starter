@@ -56,7 +56,7 @@ function MetricCtrl($scope, $http) {
 
   $scope.clearMachine = function(machineName){
     $http.post('/api/admin/metrics/clear', {'machine': machineName}).success(function(){
-      refresh();
+      $scope.refresh();
     });
   };
 
@@ -76,6 +76,24 @@ function MetricCtrl($scope, $http) {
   $scope.sortMeterBy = function(fieldName){
     sortBy(fieldName, 'meterSortField', 'meterSortOrder');
   };
+
+  //example input {"healthy":true,"message":null,"error":null}
+  $scope.healthStatus = function(health) {
+    if(health.healthy){
+      return "alert-success";
+    }else{
+      return "alert-error";
+    }
+  }
+
+  //example input {"healthy":true,"message":null,"error":null}
+  $scope.healthMessage = function(health) {
+    if(health.healthy){
+      return "OK";
+    }else{
+      return health.message + " -- " + health.error;
+    }
+  }
 
   $scope.$watch('averageNodes', function(value){
     $scope.metrics = processMetrics();
