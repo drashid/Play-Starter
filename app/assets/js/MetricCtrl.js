@@ -79,19 +79,19 @@ function MetricCtrl($scope, $http) {
 
   //example input {"healthy":true,"message":null,"error":null}
   $scope.healthStatus = function(health) {
-    if(health.healthy){
-      return "alert-success";
-    }else{
-      return "alert-error";
-    }
+    return health.healthy ? "alert-success" : "alert-error";
   }
 
   //example input {"healthy":true,"message":null,"error":null}
+  $scope.healthIcon = function(health) {
+    return health.healthy ? "icon-ok" : "icon-exclamation-sign";
+  }
+
   $scope.healthMessage = function(health) {
     if(health.healthy){
-      return "OK";
+      return;
     }else{
-      return health.message + " -- " + health.error;
+      return health.message;
     }
   }
 

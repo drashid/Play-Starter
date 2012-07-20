@@ -49,10 +49,10 @@
                                 </button>
                             </td>
                             <td style="vertical-align:middle" ng-class="healthStatus(check.checkResults.RedisCheck)">
-                                {{healthMessage(check.checkResults.RedisCheck)}}
+                                <i class="{{healthIcon(check.checkResults.RedisCheck)}}"></i> {{healthMessage(check.checkResults.RedisCheck)}}
                             </td>
                             <td style="vertical-align:middle" ng-class="healthStatus(check.checkResults.MongoCheck)">
-                                {{healthMessage(check.checkResults.MongoCheck)}}
+                                <i class="{{healthIcon(check.checkResults.MongoCheck)}}"></i> {{healthMessage(check.checkResults.MongoCheck)}}
                             </td>
                             <td style="vertical-align:middle">{{check.timestamp | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
                         </tr>
