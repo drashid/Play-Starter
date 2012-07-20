@@ -84,15 +84,14 @@ function MetricCtrl($scope, $http) {
 
   //example input {"healthy":true,"message":null,"error":null}
   $scope.healthIcon = function(health) {
-    return health.healthy ? "icon-ok" : "icon-exclamation-sign";
+    return health.healthy ? "icon-ok" : "icon-remove";
   }
 
   $scope.healthMessage = function(health) {
-    if(health.healthy){
-      return;
-    }else{
+    if(!health.healthy){
       return health.message;
     }
+    return;
   }
 
   $scope.$watch('averageNodes', function(value){
@@ -100,10 +99,7 @@ function MetricCtrl($scope, $http) {
   });
 
   $scope.showID = function(){
-    if($scope.averageNodes){
-      return "hide-id";
-    }
-    return "show-id";
+    $scope.averageNodes ? "hide-id" : "show-id";
   };
 
   //INIT
