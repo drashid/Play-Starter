@@ -26,7 +26,7 @@
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/main.css")">
 
     </head>
-    <body>
+    <body ng-controller="MetricCtrl">
 
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
@@ -35,7 +35,25 @@
             </div>
         </div>   
 
-        <div class="container" ng-controller="MetricCtrl">
+        <div class="container">
+
+            <div class="row">
+                <form class="well form-search">
+                    <div class="span3">
+                        <input type="text" class="input-medium search-query" ng-model="timerSearch" placeholder="Filter Timing...">
+                    </div>
+                    <div class="span3">
+                        <input type="text" class="input-medium search-query" ng-model="meterSearch" placeholder="Filter Meters...">
+                    </div>
+                    <div class="span3">
+                        <label class="checkbox">
+                            <input type="checkbox" name="averageCheckBox" ng-model="averageNodes">
+                            Average Node Data
+                        </label>
+                    </div>
+                </form>
+            </div>
+
             <div class="row" id="healthChecks">  
                 <div> 
                     <h2>Node Health</h2>
@@ -64,23 +82,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-
-            <div class="row">
-                <form class="well form-search">
-                    <div class="span3">
-                        <input type="text" class="input-medium search-query" ng-model="timerSearch" placeholder="Filter Timing...">
-                    </div>
-                    <div class="span3">
-                        <input type="text" class="input-medium search-query" ng-model="meterSearch" placeholder="Filter Meters...">
-                    </div>
-                    <div class="span3">
-                        <label class="checkbox">
-                            <input type="checkbox" name="averageCheckBox" ng-model="averageNodes">
-                            Average Node Data
-                        </label>
-                    </div>
-                </form>
             </div>
 
             <div class="row">

@@ -90,7 +90,7 @@ function MetricCtrl($scope, $http) {
   $scope.healthInfo = function(health){
     var icon = healthIcon(health);
     if(health.message){
-      return "<i class=\"" + icon +  " healthMessage\" rel=\"popover\" data-content=\"" 
+      return "<i class=\"" + icon +  "\" rel=\"popover\" data-content=\"" 
         + health.message + "\" data-original-title=\"Status Message\"></i>";
     }else{
       return "<i class=\"" + icon + "\"></i>";
@@ -113,7 +113,7 @@ function MetricCtrl($scope, $http) {
   //after template rendering related to model changes on health, add js popover 
   $scope.$watch('health', function(){
     $scope.$evalAsync(function(){
-      $('.healthMessage').popover({
+      $('[rel=popover]').popover({
         placement: 'bottom'
       });
     });
