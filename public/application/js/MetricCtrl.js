@@ -85,8 +85,8 @@ function MetricCtrl($scope, $http) {
   $scope.loadMetrics();
 
   $scope.sortTimerBy("name");
-  $scope.sortMeterBy("name");
+  $scope.sortMeterBy("count");
   $scope.timerSortOrder = false;
-  $scope.meterSortOrder = false;
+  $scope.meterSortOrder = true;
 
 };
