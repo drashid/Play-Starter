@@ -1,10 +1,4 @@
 function MetricCtrl($scope, $http) {
-  //load health checks 
-  $scope.loadHealth = function(){
-      $http.get('/api/admin/metrics/health').success(function(data){
-      $scope.health = data;
-      });
-  };
 
   averageObjs = function(objs){
     var size = _.size(objs);
@@ -51,13 +45,6 @@ function MetricCtrl($scope, $http) {
 
   $scope.refresh = function() {
     $scope.loadMetrics();
-    $scope.loadHealth();
-  };
-
-  $scope.clearMachine = function(machineName){
-    $http.post('/api/admin/metrics/remove', {'machine': machineName}).success(function(){
-      $scope.refresh();
-    });
   };
 
   sortBy = function(sortFieldName, sortField, orderField) {
@@ -77,26 +64,6 @@ function MetricCtrl($scope, $http) {
     sortBy(fieldName, 'meterSortField', 'meterSortOrder');
   };
 
-  //example input {"healthy":true,"message":null,"error":null}
-  $scope.healthStatus = function(health) {
-    return health.healthy ? "alert-success" : "alert-error";
-  }
-
-  //example input {"healthy":true,"message":null,"error":null}
-  healthIcon = function(health) {
-    return health.healthy ? "icon-ok" : "icon-remove";
-  }
-
-  $scope.healthInfo = function(health){
-    var icon = healthIcon(health);
-    if(health.message){
-      return "<i class=\"" + icon +  "\" rel=\"popover\" data-content=\"" 
-        + health.message + "\" data-original-title=\"Status Message\"></i>";
-    }else{
-      return "<i class=\"" + icon + "\"></i>";
-    }
-  };
-
   $scope.showID = function(){
     return $scope.averageNodes ? "hide-id" : "show-id";
   };
@@ -110,22 +77,12 @@ function MetricCtrl($scope, $http) {
     $scope.metrics = processMetrics();
   });
 
-  //after template rendering related to model changes on health, add js popover 
-  $scope.$watch('health', function(){
-    $scope.$evalAsync(function(){
-      $('[rel=popover]').popover({
-        placement: 'bottom'
-      });
-    });
-  });
-
   //
   // Initialization
   //
 
   $scope.averageNodes = true;
   $scope.loadMetrics();
-  $scope.loadHealth();
 
   $scope.sortTimerBy("name");
   $scope.sortMeterBy("name");
