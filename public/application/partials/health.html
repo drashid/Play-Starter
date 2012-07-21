@@ -1,0 +1,26 @@
+<div class="row" id="healthChecks">  
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <th>Node ID</th>
+            <th>Redis</th>
+            <th>Mongo</th>
+            <th>Ping</th>
+        </thead>
+        <tbody style="text-align: center">
+            <tr ng-repeat="check in health">
+                <td>
+                    <button class="btn btn-danger" ng-click="clearMachine(check.machine)">
+                        <i class="icon-trash icon-white"></i> {{check.machine}}
+                    </button>
+                </td>
+                <td ng-class="healthStatus(check.checkResults.RedisCheck)">
+                    <span ng-bind-html-unsafe="healthInfo(check.checkResults.RedisCheck)"></span>
+                </td>
+                <td ng-class="healthStatus(check.checkResults.MongoCheck)">
+                    <span ng-bind-html-unsafe="healthInfo(check.checkResults.MongoCheck)"></span>
+                </td>
+                <td>{{check.timestamp | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

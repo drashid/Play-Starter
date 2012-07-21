@@ -1,0 +1,24 @@
+<div class="row">
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+          <th ng-class="showID()" ng-click="sortMeterBy('machine')">Node ID</th>
+          <th ng-click="sortMeterBy('name')">Meter Name</th>
+          <th ng-click="sortMeterBy('count')">Count</th>
+          <th ng-click="sortMeterBy('meanRate')">Mean Rate</th>
+          <th ng-click="sortMeterBy('oneMinRate')">1 Minute Rate</th>
+          <th ng-click="sortMeterBy('fiveMinRate')">5 Minute Rate</th>
+          <th ng-click="sortMeterBy('fifteenMinRate')">15 Minute Rate</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="metric in metrics | filter:meterSearch | orderBy:meterSortField:meterSortOrder">
+                <td ng-class="showID()">{{metric.machine}}</td>
+                <td>{{metric.name}}</td>
+                <td>{{metric.count}}</td>
+                <td>{{metric.meanRate}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
+                <td>{{metric.oneMinRate}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
+                <td>{{metric.fiveMinRate}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
+                <td>{{metric.fifteenMinRate}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
