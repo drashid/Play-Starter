@@ -55,7 +55,7 @@ function MetricCtrl($scope, $http) {
   };
 
   $scope.clearMachine = function(machineName){
-    $http.post('/api/admin/metrics/clear', {'machine': machineName}).success(function(){
+    $http.post('/api/admin/metrics/remove', {'machine': machineName}).success(function(){
       $scope.refresh();
     });
   };

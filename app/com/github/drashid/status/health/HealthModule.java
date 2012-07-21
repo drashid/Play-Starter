@@ -33,7 +33,7 @@ public class HealthModule extends AbstractModule {
 
     List<HealthCheck> checks = Lists.newArrayList();
     for (Class<? extends HealthCheck> cls : clsz) {
-      LOG.info("Creating Health Check {}", cls);
+      LOG.info("Creating Health Check {}", cls.getSimpleName());
       checks.add(inject.getInstance(cls));
     }
     return checks;

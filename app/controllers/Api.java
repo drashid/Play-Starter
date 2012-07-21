@@ -24,7 +24,7 @@ public class Api extends Controller {
 
   private static final Logger LOG = LoggerFactory.getLogger(Api.class);
   
-  private static final String API_PATH = "controllers.api";
+  private static final String API_PATH = "controllers";
 
   private static final Map<String, Class<?>> nameMap = new HashMap<String, Class<?>>();
   
@@ -35,6 +35,7 @@ public class Api extends Controller {
       if(nameMap.containsKey(cls.getSimpleName())){
         throw new IllegalStateException("Conflicting API simple class names " + cls.getSimpleName());
       }
+      LOG.info("Loaded API Class {}", cls.getSimpleName());
       nameMap.put(cls.getSimpleName(), cls);
     }
   }
