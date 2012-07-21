@@ -88,8 +88,6 @@ function MetricCtrl($scope, $http) {
   }
 
   $scope.healthInfo = function(health){
-    $scope.healthModified = !$scope.healthModified || true;
-
     var icon = healthIcon(health);
     if(health.message){
       return "<i class=\"" + icon +  " healthMessage\" rel=\"popover\" data-content=\"" 
@@ -99,21 +97,32 @@ function MetricCtrl($scope, $http) {
     }
   };
 
-  $scope.$watch('averageNodes', function(value){
-    $scope.metrics = processMetrics();
-  });
-
-  $scope.$watch('healthModified', function(){
-    $('.healthMessage').popover({
-      placement: 'bottom'
-    });
-  });
-
   $scope.showID = function(){
     return $scope.averageNodes ? "hide-id" : "show-id";
   };
 
-  //INIT
+  //
+  //  On change events
+  //
+
+  //trigger metric processing (average or not average) on toggle
+  $scope.$watch('averageNodes', function(value){
+    $scope.metrics = processMetrics();
+  });
+
+  //after template rendering related to model changes on health, add js popover 
+  $scope.$watch('health', function(){
+    $scope.$evalAsync(function(){
+      $('.healthMessage').popover({
+        placement: 'bottom'
+      });
+    });
+  });
+
+  //
+  // Initialization
+  //
+
   $scope.averageNodes = true;
   $scope.loadMetrics();
   $scope.loadHealth();

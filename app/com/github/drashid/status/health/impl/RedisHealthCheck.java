@@ -20,9 +20,10 @@ public class RedisHealthCheck extends HealthCheck {
   protected Result check() throws Exception {
     Jedis jedis = redis.getConnection();
     try {
+      long start = System.currentTimeMillis();
       String pong = jedis.ping();
       if (pong.equalsIgnoreCase("pong")) {
-        return Result.healthy(pong);
+        return Result.healthy("Check Latency: " + (System.currentTimeMillis() - start) + " ms");
       } else {
         return Result.unhealthy(pong);
       }
