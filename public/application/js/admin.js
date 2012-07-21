@@ -1,9 +1,10 @@
 angular.module('admin', []).
   config(function($routeProvider){
+    var assetPath = window.ASSET_PATH;
     $routeProvider.
-      when('/admin/timers', { templateUrl: '/assets/application/partials/timers.html', controller: 'MetricCtrl' }).
-      when('/admin/meters', { templateUrl: '/assets/application/partials/meters.html', controller: 'MetricCtrl' }).
-      otherwise({ redirectTo:'/admin/health', templateUrl: '/assets/application/partials/health.html', controller: 'HealthCtrl'});
+      when('/admin/timers', { templateUrl: assetPath + 'application/partials/timers.html', controller: 'MetricCtrl' }).
+      when('/admin/meters', { templateUrl: assetPath + 'application/partials/meters.html', controller: 'MetricCtrl' }).
+      otherwise({ redirectTo:'/admin/health', templateUrl: assetPath + 'application/partials/health.html', controller: 'HealthCtrl'});
   });
 
   function AdminCtrl($scope, $location) {
