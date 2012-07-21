@@ -1,7 +1,7 @@
 angular.module('admin', []).
   config(function($routeProvider){
     $routeProvider.
-      when('/admin/timers', { template: 'partials/timers.html' }).
-      when('/admin/meters', { template: 'partials/meters.html' }).
-      otherwise({ redirectTo:'/admin/health', template: 'partials/health.html'});
+      when('/admin/timers', { templateUrl: '/assets/application/partials/timers.html' }).
+      when('/admin/meters', { templateUrl: '/assets/application/partials/meters.html' }).
+      otherwise({ redirectTo:'/admin/health', templateUrl: '/assets/application/partials/health.html'});
   });
