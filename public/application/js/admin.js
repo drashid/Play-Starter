@@ -1,4 +1,4 @@
-angular.modules('admin', []).
+angular.module('admin', []).
   config(function($routeProvider){
     $routeProvider.
       when('/admin/timers', {
