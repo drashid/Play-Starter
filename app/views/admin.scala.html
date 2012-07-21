@@ -19,6 +19,7 @@
         <script src="@routes.Assets.at("js/MetricCtrl.js")" type="text/javascript"></script>
 
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/main.css")">
+        
     </head>
     <body>
 
@@ -30,7 +31,7 @@
         </div>   
 
         <div class="container" ng-controller="MetricCtrl">
-            <div class="row">  
+            <div class="row" id="healthChecks">  
                 <div> 
                     <h2>Node Health</h2>
                 </div>
@@ -41,20 +42,20 @@
                         <th>Mongo</th>
                         <th>Ping</th>
                     </thead>
-                    <tbody>
+                    <tbody style="text-align: center">
                         <tr ng-repeat="check in health">
                             <td>
                                 <button class="btn btn-danger" ng-click="clearMachine(check.machine)">
                                     <i class="icon-trash icon-white"></i> {{check.machine}}
                                 </button>
                             </td>
-                            <td style="vertical-align:middle" ng-class="healthStatus(check.checkResults.RedisCheck)">
+                            <td ng-class="healthStatus(check.checkResults.RedisCheck)">
                                 <i class="{{healthIcon(check.checkResults.RedisCheck)}}"></i> {{healthMessage(check.checkResults.RedisCheck)}}
                             </td>
-                            <td style="vertical-align:middle" ng-class="healthStatus(check.checkResults.MongoCheck)">
+                            <td ng-class="healthStatus(check.checkResults.MongoCheck)">
                                 <i class="{{healthIcon(check.checkResults.MongoCheck)}}"></i> {{healthMessage(check.checkResults.MongoCheck)}}
                             </td>
-                            <td style="vertical-align:middle">{{check.timestamp | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+                            <td>{{check.timestamp | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -88,9 +88,9 @@ function MetricCtrl($scope, $http) {
   }
 
   $scope.healthMessage = function(health) {
-    if(!health.healthy){
-      return health.message;
-    }
+    // if(!health.healthy){
+    //   return health.message;
+    // }
     return;
   }
 
@@ -99,7 +99,7 @@ function MetricCtrl($scope, $http) {
   });
 
   $scope.showID = function(){
-    $scope.averageNodes ? "hide-id" : "show-id";
+    return $scope.averageNodes ? "hide-id" : "show-id";
   };
 
   //INIT

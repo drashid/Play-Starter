@@ -3,14 +3,19 @@ body {
 }
 
 td {
-	vertical-align: middle;
+  vertical-align: middle;
 }
 
 .metric-unit {
-	font-size: 0.75em;
-	color: grey;
+  font-size: 0.75em;
+  color: grey;
 }
 
 .hide-id {
-	display: none;	
+  display: none;  
+}
+
+#healthChecks td, #healthChecks th {
+  text-align: center;
+  vertical-align: middle;
 }
