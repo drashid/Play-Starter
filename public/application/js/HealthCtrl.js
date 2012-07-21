@@ -2,12 +2,8 @@ function HealthCtrl($scope, $http) {
 
   $scope.loadHealth = function(){
       $http.get('/api/admin/metrics/health').success(function(data){
-      $scope.health = data;
+        $scope.health = data;
       });
-  };
-
-  $scope.refresh = function() {
-    $scope.loadHealth();
   };
 
   $scope.clearMachine = function(machineName){
@@ -16,18 +12,17 @@ function HealthCtrl($scope, $http) {
     });
   };
 
+  $scope.refresh = function() {
+    $scope.loadHealth();
+  };
+
   //example input {"healthy":true,"message":null,"error":null}
   $scope.healthStatus = function(health) {
     return health.healthy ? "alert-success" : "alert-error";
   }
 
-  //example input {"healthy":true,"message":null,"error":null}
-  healthIcon = function(health) {
-    return health.healthy ? "icon-ok" : "icon-remove";
-  }
-
   $scope.healthInfo = function(health){
-    var icon = healthIcon(health);
+    var icon = _healthIcon(health);
     if(health.message){
       return "<i class=\"" + icon +  "\" rel=\"popover\" data-content=\"" 
         + health.message + "\" data-original-title=\"Status Message\"></i>";
@@ -35,6 +30,15 @@ function HealthCtrl($scope, $http) {
       return "<i class=\"" + icon + "\"></i>";
     }
   };
+
+  //example input {"healthy":true,"message":null,"error":null}
+  _healthIcon = function(health) {
+    return health.healthy ? "icon-ok" : "icon-remove";
+  }
+
+  //
+  // Initialization
+  //
 
   //after template rendering related to model changes on health, add js popover 
   $scope.$watch('health', function(){
@@ -44,10 +48,6 @@ function HealthCtrl($scope, $http) {
       });
     });
   });
-
-  //
-  // Initialization
-  //
 
   $scope.loadHealth();  
 
