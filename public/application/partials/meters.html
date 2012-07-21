@@ -1,7 +1,7 @@
 <div class="row">
     <form class="well form-search">
         <div class="span3">
-            <input type="text" class="input-medium search-query" ng-model="meterSearch" placeholder="Filter Meters...">
+            <input type="text" class="input-medium search-query" ng-model="meterSearch" placeholder="Filter...">
         </div>
         <div class="span3">
             <label class="checkbox">
@@ -12,7 +12,7 @@
     </form>
 </div>
 
-<div class="row">
+<div class="row" ng-cloak>
     <table class="table table-striped table-bordered table-condensed">
         <thead>
           <th ng-class="showID()" ng-click="sortMeterBy('machine')">Node ID</th>
@@ -28,10 +28,10 @@
                 <td ng-class="showID()">{{metric.machine}}</td>
                 <td>{{metric.name}}</td>
                 <td>{{metric.count}}</td>
-                <td>{{metric.meanRate}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
-                <td>{{metric.oneMinRate}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
-                <td>{{metric.fiveMinRate}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
-                <td>{{metric.fifteenMinRate}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
+                <td>{{metric.meanRate | round:2}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
+                <td>{{metric.oneMinRate | round:2}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
+                <td>{{metric.fiveMinRate | round:2}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
+                <td>{{metric.fifteenMinRate | round:2}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
             </tr>
         </tbody>
     </table>

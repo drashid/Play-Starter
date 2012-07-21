@@ -1,7 +1,7 @@
 <div class="row">
     <form class="well form-search">
         <div class="span3">
-            <input type="text" class="input-medium search-query" ng-model="timerSearch" placeholder="Filter Timing...">
+            <input type="text" class="input-medium search-query" ng-model="timerSearch" placeholder="Filter...">
         </div>
         <div class="span3">
             <label class="checkbox">
@@ -12,7 +12,7 @@
     </form>
 </div>
 
-<div class="row">
+<div class="row" ng-cloak>
     <table class="table table-striped table-bordered table-condensed">
         <thead>
           <th ng-class="showID()" ng-click="sortTimerBy('machine')">Node ID</th>
@@ -27,11 +27,11 @@
             <tr ng-repeat="metric in metrics | filter:{'type': 'TIMER'} | filter:timerSearch | orderBy:timerSortField:timerSortOrder">
                 <td ng-class="showID()">{{metric.machine}}</td>
                 <td>{{metric.name}}</td>
-                <td>{{metric.mean}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
-                <td>{{metric.median}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
-                <td>{{metric.nfPercent}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
-                <td>{{metric.min}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
-                <td>{{metric.max}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
+                <td>{{metric.mean | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
+                <td>{{metric.median | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
+                <td>{{metric.nfPercent | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
+                <td>{{metric.min | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
+                <td>{{metric.max | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
             </tr>
         </tbody>
     </table>

@@ -5,6 +5,11 @@ angular.module('admin', []).
       when('/admin/timers', { templateUrl: assetPath + 'application/partials/timers.html', controller: 'MetricCtrl' }).
       when('/admin/meters', { templateUrl: assetPath + 'application/partials/meters.html', controller: 'MetricCtrl' }).
       otherwise({ redirectTo:'/admin/health', templateUrl: assetPath + 'application/partials/health.html', controller: 'HealthCtrl'});
+  }).
+  filter('round', function(){
+    return function(input, digits){
+      return input.toFixed(digits);
+    }
   });
 
   function AdminCtrl($scope, $location) {
