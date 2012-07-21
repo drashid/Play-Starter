@@ -22,7 +22,7 @@ public class RedisHealthCheck extends HealthCheck {
     try {
       String pong = jedis.ping();
       if (pong.equalsIgnoreCase("pong")) {
-        return Result.healthy();
+        return Result.healthy(pong);
       } else {
         return Result.unhealthy(pong);
       }

@@ -83,25 +83,19 @@ function MetricCtrl($scope, $http) {
   }
 
   //example input {"healthy":true,"message":null,"error":null}
-  $scope.healthIcon = function(health) {
+  healthIcon = function(health) {
     return health.healthy ? "icon-ok" : "icon-remove";
-  }
-
-  $scope.healthMessage = function(health) {
-    // if(!health.healthy){
-    //   return health.message;
-    // }
-    return;
   }
 
   $scope.healthInfo = function(health){
     $scope.healthModified = !$scope.healthModified || true;
 
-    if(health.healthy){
-      return "<i class=\"icon-ok\"></i>";
+    var icon = healthIcon(health);
+    if(health.message){
+      return "<i class=\"" + icon +  " healthMessage\" rel=\"popover\" data-content=\"" 
+        + health.message + "\" data-original-title=\"Status Message\"></i>";
     }else{
-      return "<i class=\"icon-remove\" id=\"healthError\" rel=\"popover\" data-content=\"" 
-        + health.message + "\" data-original-title=\"" + "ERROR" + "\"></i>";
+      return "<i class=\"" + icon + "\"></i>";
     }
   };
 
@@ -110,7 +104,9 @@ function MetricCtrl($scope, $http) {
   });
 
   $scope.$watch('healthModified', function(){
-    $('#healthError').popover();
+    $('.healthMessage').popover({
+      placement: 'bottom'
+    });
   });
 
   $scope.showID = function(){

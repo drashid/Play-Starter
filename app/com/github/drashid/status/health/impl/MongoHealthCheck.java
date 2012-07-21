@@ -10,7 +10,7 @@ public class MongoHealthCheck extends HealthCheck {
 
   @Override
   protected Result check() throws Exception {
-    return Result.unhealthy("Not yet implemented!");
+    return Result.unhealthy("Not hooked up yet.  Adjust your expectations accordingly, otherwise you will be disappointed.");
   }
 
 }

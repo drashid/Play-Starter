@@ -5,7 +5,13 @@ import java.net.NetworkInterface;
 
 public class MachineUtils {
 
-  public static String getMachineCode() {
+  private static final String MACHINE_CODE = computeMachineCode();
+  
+  public static String getMachineName() {
+    return MACHINE_CODE;
+  }
+  
+  private static String computeMachineCode() {
     try {
       InetAddress addr = InetAddress.getLocalHost();
       byte[] mac = NetworkInterface.getByInetAddress(addr).getHardwareAddress();

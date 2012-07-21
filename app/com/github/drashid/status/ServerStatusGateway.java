@@ -39,7 +39,7 @@ public class ServerStatusGateway {
 
   private static final String TIMER_HASH_KEY = "_timers_";
 
-  private static final String MACHINE_CODE = MachineUtils.getMachineCode();
+  private static final String MACHINE_CODE = MachineUtils.getMachineName();
 
   @Inject
   private RedisService redis;
