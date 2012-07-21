@@ -11,15 +11,20 @@
 
         <!-- framework scripts -->
         <script src="@routes.Assets.at("js/jquery-1.7.1.min.js")" type="text/javascript"></script>
+
         <script src="@routes.Assets.at("bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("bootstrap/js/bootstrap-tooltip.js")" type="text/javascript"></script> 
+        <script src="@routes.Assets.at("bootstrap/js/bootstrap-popover.js")" type="text/javascript"></script> 
+
         <script src="@routes.Assets.at("js/angular-1.0.1.min.js")"></script>
         <script src="@routes.Assets.at("js/underscore-min.js")" type="text/javascript"></script>
 
         <!-- controllers -->
         <script src="@routes.Assets.at("js/MetricCtrl.js")" type="text/javascript"></script>
 
+        <!-- project styles -->
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/main.css")">
-        
+
     </head>
     <body>
 
@@ -50,10 +55,10 @@
                                 </button>
                             </td>
                             <td ng-class="healthStatus(check.checkResults.RedisCheck)">
-                                <i class="{{healthIcon(check.checkResults.RedisCheck)}}"></i> {{healthMessage(check.checkResults.RedisCheck)}}
+                                <span ng-bind-html-unsafe="healthInfo(check.checkResults.RedisCheck)"></span>
                             </td>
                             <td ng-class="healthStatus(check.checkResults.MongoCheck)">
-                                <i class="{{healthIcon(check.checkResults.MongoCheck)}}"></i> {{healthMessage(check.checkResults.MongoCheck)}}
+                                <span ng-bind-html-unsafe="healthInfo(check.checkResults.MongoCheck)"></span>
                             </td>
                             <td>{{check.timestamp | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
                         </tr>

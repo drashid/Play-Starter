@@ -94,8 +94,23 @@ function MetricCtrl($scope, $http) {
     return;
   }
 
+  $scope.healthInfo = function(health){
+    $scope.healthModified = !$scope.healthModified || true;
+
+    if(health.healthy){
+      return "<i class=\"icon-ok\"></i>";
+    }else{
+      return "<i class=\"icon-remove\" id=\"healthError\" rel=\"popover\" data-content=\"" 
+        + health.message + "\" data-original-title=\"" + "ERROR" + "\"></i>";
+    }
+  };
+
   $scope.$watch('averageNodes', function(value){
     $scope.metrics = processMetrics();
+  });
+
+  $scope.$watch('healthModified', function(){
+    $('#healthError').popover();
   });
 
   $scope.showID = function(){
@@ -111,4 +126,5 @@ function MetricCtrl($scope, $http) {
   $scope.sortMeterBy("name");
   $scope.timerSortOrder = false;
   $scope.meterSortOrder = false;
+
 };
