@@ -3,20 +3,20 @@ package com.github.drashid.config;
 import play.Application;
 
 public enum Environment {
-  DEV,
+  DEVELOPMENT,
   STAGING,
-  PROD,
+  PRODUCTION,
   TEST;
 
   public static Environment valueOf(Application app) {
     if (app.isDev()) {
-      return DEV;
+      return DEVELOPMENT;
     } else if (app.isTest()) {
       return TEST;
     } else if (app.isProd()) {
-      return PROD; // eventually Staging?
+      return PRODUCTION; // eventually Staging?
     }
 
-    return DEV;
+    return DEVELOPMENT;
   }
 }

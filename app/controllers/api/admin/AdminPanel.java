@@ -10,7 +10,7 @@ public class AdminPanel extends ApiOp {
   @Override
   @Metered
   public Result call() throws Exception {
-    return ok(views.html.admin.render());
+    return ok(views.html.admin.render(env));
   }
 
 }
