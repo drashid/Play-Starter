@@ -21,7 +21,8 @@ object ApplicationBuild extends Build {
   }
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
-    requireJsSettings
+    requireJsSettings, 
+    (packageBin in Compile) <<= (packageBin in Compile).dependsOn(requireOptimizeTask)
   )
 
 }
