@@ -20,6 +20,5 @@
     //   'nm': false,
     //   nfm: false
     // },
-    //move shim config to standalone file?
-    mainConfigFile: '../public/js/admin-main.js'  
+    mainConfigFile: '../public/js/shim-config.js'  
 })
