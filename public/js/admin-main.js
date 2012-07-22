@@ -7,7 +7,8 @@ require({
   },
   ['admin', 
     'controller/controllers', 
-    'controller/HealthCtrl', 
+    'controller/HealthCtrl',
+    'controller/MetricCtrl', 
     'controller/AdminCtrl'], 
     function(app){
       app.run();
