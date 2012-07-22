@@ -14,17 +14,14 @@ object ApplicationBuild extends Build {
     "redis.clients" % "jedis" % "2.1.0"
   )
 
-  val requireOptimizeTask = TaskKey[Unit]("blahTask")
+  val requireOptimizeTask = TaskKey[Unit]("optimizejs")
 
   val requireJsSettings = requireOptimizeTask := {
-    println("Compiling RequireJS dependencies!")
-    //TODO make errors fail build
     "node project/r.js -o project/app.build.js" !
   }
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
-    //requireJsSettings,
-    //compile in Compile <<= (compile in Compile).dependsOn(requireOptimizeTask)
+    requireJsSettings
   )
 
 }
