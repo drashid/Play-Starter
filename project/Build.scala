@@ -19,7 +19,7 @@ object ApplicationBuild extends Build {
   val requireOptimizeTask = TaskKey[Unit]("optimizejs")
 
   val requireJsSettings = requireOptimizeTask := {
-    "java -classpath project/rhino.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js" !
+    "java -classpath project/js.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js" !
   }
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
