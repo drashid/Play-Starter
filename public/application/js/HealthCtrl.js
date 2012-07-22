@@ -31,6 +31,10 @@ function HealthCtrl($scope, $http) {
     }
   };
 
+  $scope.diffTime = function(time){
+    return Math.round((new Date().getTime() - time)/1000);
+  }
+
   //example input {"healthy":true,"message":null,"error":null}
   _healthIcon = function(health) {
     return health.healthy ? "icon-ok" : "icon-remove";

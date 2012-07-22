@@ -19,7 +19,7 @@
                 <td ng-class="healthStatus(check.checkResults.MongoCheck)">
                     <span ng-bind-html-unsafe="healthInfo(check.checkResults.MongoCheck)"></span>
                 </td>
-                <td>{{check.timestamp | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+                <td>{{diffTime(check.timestamp)}}s ago</td>
             </tr>
         </tbody>
     </table>
