@@ -21,11 +21,11 @@ require({
     //depends on controllers module our controllers will be added to when they are loaded
     angular.module('admin', ['controllers'])
       .config(function($routeProvider){
-        var assetPath = window.SYSTEM.assetPath;
+        var asset = function(assetPath){ return window.SYSTEM.assetRoot + assetPath };
         $routeProvider.
-          when('/timers', { templateUrl: assetPath + 'partials/timers.html', controller: 'MetricCtrl' }).
-          when('/meters', { templateUrl: assetPath + 'partials/meters.html', controller: 'MetricCtrl' }).
-          otherwise({ redirectTo:'/health', templateUrl: assetPath + 'partials/health.html', controller: 'HealthCtrl'});
+          when('/timers', { templateUrl: asset('partials/timers.html'), controller: 'MetricCtrl' }).
+          when('/meters', { templateUrl: asset('partials/meters.html'), controller: 'MetricCtrl' }).
+          otherwise({ redirectTo:'/health', templateUrl: asset('partials/health.html'), controller: 'HealthCtrl'});
       })
       .filter('round', function(){
         return function(input, digits){
