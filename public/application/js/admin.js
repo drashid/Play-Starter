@@ -1,6 +1,6 @@
 angular.module('admin', []).
   config(function($routeProvider){
-    var assetPath = window.ASSET_PATH;
+    var assetPath = window.SYSTEM.assetPath;
     $routeProvider.
       when('/timers', { templateUrl: assetPath + 'application/partials/timers.html', controller: 'MetricCtrl' }).
       when('/meters', { templateUrl: assetPath + 'application/partials/meters.html', controller: 'MetricCtrl' }).
