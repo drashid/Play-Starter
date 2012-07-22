@@ -18,22 +18,27 @@ object ApplicationBuild extends Build {
   )
 
   // val outputPath = artifactPathSetting(artifact);
-  val outputPath = sourceDirectory in Compile;
+  // val outputPath = sourceDirectory in Compile;
 
   val requireOptimizeTask = TaskKey[Unit]("optimizejs")
 
-  val requireJsSettings = requireOptimizeTask <<= outputPath map { (outputPath: File) =>  
-    val path = outputPath.getParent() + "/public/r-build/" 
-    "java -classpath project/js.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js dir=" + path !
-  }
-
-  // val requireJsSettings = requireOptimizeTask := {  
-  //   "java -classpath project/js.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js" !
+  // val requireJsSettings = requireOptimizeTask <<= outputPath map { (outputPath: File) =>  
+  //   val path = outputPath.getParent() + "/public/r-build/" 
+  //   "java -classpath project/js.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js dir=" + path !
   // }
+
+  val requireJsSettings = requireOptimizeTask := {  
+    if(System.getenv("DISABLE_REQUIREJS_OPT") == null){
+      println("To disable this for DEVLEOPMENT set the environment variable: DISABLE_REQUIREJS_OPT")
+      "java -classpath project/js.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js" !
+    }else{
+      println("RequireJS optimization disabled.")
+    }
+  }
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
     requireJsSettings, 
-    (packageBin in Compile) <<= (packageBin in Compile).dependsOn(requireOptimizeTask)
+    (compile in Compile) <<= (compile in Compile).dependsOn(requireOptimizeTask)
   )
 
 }

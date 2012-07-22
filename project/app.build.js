@@ -2,7 +2,7 @@
 ({
     appDir: "../public",
     baseUrl: "js",
-    // dir: "../public/r-build",
+    dir: "../public/r-build",
     modules: [
         {
             name: "admin-main"
