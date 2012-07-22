@@ -1,0 +1,1 @@
+web:	play optimizejs run --http.port=$PORT $PLAY_OPTS
