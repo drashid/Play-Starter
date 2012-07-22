@@ -16,15 +16,22 @@ object ApplicationBuild extends Build {
     // "rhino" % "js" % "1.7R2"
   )
 
+  // val outputPath = SettingKey[File]("assembly-output-path") // + "/public/r-build"
+
   val requireOptimizeTask = TaskKey[Unit]("optimizejs")
 
-  val requireJsSettings = requireOptimizeTask := {
+  // val requireJsSettings = requireOptimizeTask <<= outputPath map { (outputPath: File) =>  
+  //   println("Target Path: " + outputPath)
+  //   "java -classpath project/js.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js dir=" + outputPath !
+  // }
+
+  val requireJsSettings = requireOptimizeTask := {  
     "java -classpath project/js.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js" !
   }
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
     requireJsSettings, 
-    (packageBin in Compile) <<= (packageBin in Compile).dependsOn(requireOptimizeTask)
+    (copyResources in Compile) <<= (copyResources in Compile).dependsOn(requireOptimizeTask)
   )
 
 }
