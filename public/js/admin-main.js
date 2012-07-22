@@ -1,8 +1,10 @@
 require({
     shim: {
       'libs/angular': { exports: 'angular' },
-      'libs/jquery': {exports: '$'},
-      'libs/underscore': {exports: '_'}
+      'libs/jquery': { exports: '$' },
+      'libs/bootstrap-tooltip': ['libs/jquery'], 
+      'libs/bootstrap-popover': ['libs/bootstrap-tooltip'], 
+      'libs/underscore': { exports: '_' }
     }
   },
   ['admin', 

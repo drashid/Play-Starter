@@ -1,4 +1,5 @@
-define(['controller/controllers', 'libs/jquery'], function(controllers, $){
+define(['controller/controllers', 'libs/jquery', 
+        'libs/bootstrap-tooltip', 'libs/bootstrap-popover'], function(controllers, $){
   
   controllers.controller('HealthCtrl', ['$scope', '$http',
       function HealthCtrl($scope, $http) {
@@ -50,12 +51,12 @@ define(['controller/controllers', 'libs/jquery'], function(controllers, $){
         //after template rendering related to model changes on health, add js popover 
         $scope.$watch('health', function(){
           $scope.$evalAsync(function(){
-            // $('[rel=popover]').popover({
-            //   placement: 'bottom'
-            // });
-            // $('[rel=tooltip]').tooltip({
-            //   placement: 'right'
-            // });
+            $('[rel=popover]').popover({
+              placement: 'bottom'
+            });
+            $('[rel=tooltip]').tooltip({
+              placement: 'right'
+            });
           });
         });
 
