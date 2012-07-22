@@ -1,5 +1,5 @@
 define(['libs/angular'], function(angular){
-  return angular.module('admin', ['controllers']).
+  angular.module('admin', ['controllers']).
     config(function($routeProvider){
       var assetPath = window.SYSTEM.assetPath;
       $routeProvider.
