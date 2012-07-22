@@ -12,12 +12,14 @@ object ApplicationBuild extends Build {
     "com.yammer.metrics" % "metrics-core" % "2.1.2",
     "com.yammer.metrics" % "metrics-guice" % "2.1.2",
     "redis.clients" % "jedis" % "2.1.0"
+    // ,
+    // "rhino" % "js" % "1.7R2"
   )
 
   val requireOptimizeTask = TaskKey[Unit]("optimizejs")
 
   val requireJsSettings = requireOptimizeTask := {
-    "node project/r.js -o project/app.build.js" !
+    "java -classpath project/rhino.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js" !
   }
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
