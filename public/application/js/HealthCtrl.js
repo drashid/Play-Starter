@@ -50,7 +50,11 @@ function HealthCtrl($scope, $http) {
       $('[rel=popover]').popover({
         placement: 'bottom'
       });
+      $('[rel=tooltip]').tooltip({
+        placement: 'right'
+      });
     });
+
   });
 
   $scope.loadHealth();  

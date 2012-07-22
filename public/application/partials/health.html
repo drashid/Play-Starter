@@ -5,13 +5,12 @@
             <th>Redis</th>
             <th>Mongo</th>
             <th>Ping</th>
+            <th></th>
         </thead>
         <tbody style="text-align: center">
             <tr ng-repeat="check in health">
                 <td>
-                    <button class="btn btn-danger" ng-click="clearMachine(check.machine)">
-                        <i class="icon-trash icon-white"></i> {{check.machine}}
-                    </button>
+                    {{check.machine}}
                 </td>
                 <td ng-class="healthStatus(check.checkResults.RedisCheck)">
                     <span ng-bind-html-unsafe="healthInfo(check.checkResults.RedisCheck)"></span>
@@ -20,6 +19,11 @@
                     <span ng-bind-html-unsafe="healthInfo(check.checkResults.MongoCheck)"></span>
                 </td>
                 <td>{{diffTime(check.timestamp)}}s ago</td>
+                <td>
+                    <button class="btn btn-danger" rel="tooltip" ng-click="clearMachine(check.machine)" title="Clear node data">
+                        <i class="icon-trash icon-white"></i>
+                    </button>
+                </td>
             </tr>
         </tbody>
     </table>
