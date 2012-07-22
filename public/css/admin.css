@@ -15,6 +15,10 @@ td {
   display: none;  
 }
 
+.navbar .pull-right {
+  margin-right: 25px;
+}
+
 /* 
  * Retain colors for health checks on hover 
  */
