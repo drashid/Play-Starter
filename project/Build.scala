@@ -18,12 +18,13 @@ object ApplicationBuild extends Build {
 
   val requireJsSettings = requireOptimizeTask := {
     println("Compiling RequireJS dependencies!")
+    //TODO make errors fail build
     "node project/r.js -o project/app.build.js" !
   }
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
-    requireJsSettings,
-    compile in Compile <<= (compile in Compile).dependsOn(requireOptimizeTask)
+    //requireJsSettings,
+    //compile in Compile <<= (compile in Compile).dependsOn(requireOptimizeTask)
   )
 
 }

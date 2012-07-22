@@ -1,5 +1,7 @@
 @(env: com.github.drashid.config.Environment)
 
+@import com.github.drashid.config.{Environment}
+
 <!DOCTYPE html>
 
 <html ng-app="admin">
@@ -16,7 +18,11 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("img/favicon.png")">
 
         <!-- dynamic module loading with requirejs -->    
-        <script src="@routes.Assets.at("js/libs/require.js")" data-main="@routes.Assets.at("js/admin-main")"></script>
+        @if(env == Environment.DEVELOPMENT) {
+            <script src="@routes.Assets.at("js/libs/require.js")" data-main="@routes.Assets.at("js/admin-main")"></script>
+        } else {   
+            <script src="@routes.Assets.at("r-build/js/libs/require.js")" data-main="@routes.Assets.at("r-build/js/admin-main")"></script>
+        }
 
         <!-- styles -->
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("css/bootstrap.min.css")">    
