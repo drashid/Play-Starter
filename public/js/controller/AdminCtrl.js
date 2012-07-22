@@ -1,5 +1,6 @@
 define(['controller/controllers'], function(controllers){
-  controllers.controller('AdminCtrl', ['$scope', '$location', function AdminCtrl($scope, $location) {
+  controllers.controller('AdminCtrl', ['$scope', '$location', 
+    function AdminCtrl($scope, $location) {
       // set nav button to active on route change
       $scope.$on('$routeChangeSuccess', function() {
         var current = $location.path();
