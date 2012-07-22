@@ -17,12 +17,13 @@ object ApplicationBuild extends Build {
     "redis.clients" % "jedis" % "2.1.0"
   )
 
-  val outputPath = artifactPathSetting(artifact);
+  // val outputPath = artifactPathSetting(artifact);
+  val outputPath = sourceDirectory in Compile;
 
   val requireOptimizeTask = TaskKey[Unit]("optimizejs")
 
   val requireJsSettings = requireOptimizeTask <<= outputPath map { (outputPath: File) =>  
-    val path = outputPath.getParent() + "/classes/public/" 
+    val path = outputPath.getParent() + "/public/r-build/" 
     "java -classpath project/js.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js dir=" + path !
   }
 
