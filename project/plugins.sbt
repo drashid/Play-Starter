@@ -4,5 +4,12 @@ logLevel := Level.Warn
 // The Typesafe repository
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
+resolvers += Resolver.url("sbt-plugin-releases",
+  new URL("http://scalasbt.artifactoryonline.com/scalasbt/sbt-plugin-releases/"))(
+    Resolver.ivyStylePatterns)
+
 // Use the Play sbt plugin for Play projects
 addSbtPlugin("play" % "sbt-plugin" % "2.0.2")
+
+// Requirejs optimization plugin
+addSbtPlugin("org.scalatra.requirejs" % "sbt-requirejs" % "0.0.3")
