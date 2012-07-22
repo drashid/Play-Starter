@@ -12,7 +12,5 @@ require({
     'controller/HealthCtrl',
     'controller/MetricCtrl', 
     'controller/AdminCtrl'], 
-    function(app){
-      app.run();
-    }
+    function(){ /* don't need to do anything here */ }
 );
