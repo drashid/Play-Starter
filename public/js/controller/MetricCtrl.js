@@ -1,6 +1,7 @@
 define(['controller/controllers', 'libs/underscore'], function(controllers, _){
   
-  controllers.controller('MetricCtrl', ['$scope', '$http', function MetricCtrl($scope, $http) {
+  controllers.controller('MetricCtrl', ['$scope', '$http', 
+    function MetricCtrl($scope, $http) {
       //load metrics 
       $scope.loadMetrics = function() {
         $http.get('/api/admin/metrics/fetch').success(function(data){
@@ -87,4 +88,5 @@ define(['controller/controllers', 'libs/underscore'], function(controllers, _){
       $scope.meterSortOrder = true;
     }
   ]);
+
 });
