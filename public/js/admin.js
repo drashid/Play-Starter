@@ -1,4 +1,4 @@
-define(['libs/angular', 'controller/controllers'], function(angular){
+define(['libs/angular'], function(angular){
   return angular.module('admin', ['controllers']).
     config(function($routeProvider){
       var assetPath = window.SYSTEM.assetPath;
