@@ -39,10 +39,11 @@ public class Global extends GlobalSettings {
   }
 
   private static void validateAppConfig(Application app) {
-    String env = app.configuration().getString(CONFIG_ENV);
-    if( (app.isDev() && !env.equals("dev")) || (app.isTest() && !env.equals("test")) || (app.isProd() && !env.equals("prod"))){
-      throw new InvalidConfigurationException("Environment does not match!");
-    }
+    //TODO put back
+//    String env = app.configuration().getString(CONFIG_ENV);
+//    if( (app.isDev() && !env.equals("dev")) || (app.isTest() && !env.equals("test")) || (app.isProd() && !env.equals("prod"))){
+//      throw new InvalidConfigurationException("Environment does not match!");
+//    }
   }
 
   private void startServices() {
