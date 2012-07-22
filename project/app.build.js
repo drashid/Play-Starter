@@ -7,10 +7,7 @@
         {
             name: "admin-main"
         }
-    ], 
-    paths: {
-      "lib/angular": "lib/angular"
-    },
+    ],
     optimize: "none",
     //WHY DOESN'T THIS WORK!?
     // uglify: {
