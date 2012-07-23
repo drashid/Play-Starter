@@ -21,13 +21,13 @@ require(
     //top level module we're going to use in the admin panel,
     //depends on controllers module our controllers will be added to when they are loaded
     angular.module('admin', ['controllers'])
-      .config(function($routeProvider){
+      .config(['$routeProvider', function(routes){
         var asset = function(assetPath){ return window.SYSTEM.assetRoot + assetPath };
-        $routeProvider.
+        routes.
           when('/timers', { templateUrl: asset('partials/timers.html'), controller: 'MetricCtrl' }).
           when('/meters', { templateUrl: asset('partials/meters.html'), controller: 'MetricCtrl' }).
           otherwise({ redirectTo:'/health', templateUrl: asset('partials/health.html'), controller: 'HealthCtrl'});
-      })
+      }])
       .filter('round', function(){
         return function(input, digits){
           return input.toFixed(digits);

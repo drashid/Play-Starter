@@ -8,7 +8,10 @@
             name: "admin-main"
         }
     ],
-    optimize: "none",
+    optimize: "uglify",
+    // closure: {
+    //   CompilationLevel: "SIMPLE_OPTIMIZATION"
+    // },
     //WHY DOESN'T THIS WORK!?
     // uglify: {
     //   //we require $<named> params in angularjs
