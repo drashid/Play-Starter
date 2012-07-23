@@ -11,7 +11,6 @@ require(
   },
   [ //modules needed for admin panel 
     'libs/angular',
-    'global-config',
     'controller/controllers', 
     'controller/HealthCtrl',
     'controller/MetricCtrl', 

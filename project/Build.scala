@@ -27,8 +27,11 @@ object ApplicationBuild extends Build {
   //   "java -classpath project/js.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js dir=" + path !
   // }
 
+  var done = false
+
   val requireJsSettings = requireOptimizeTask := {  
-    if(System.getenv("DISABLE_REQUIREJS_OPT") == null){
+    if(System.getenv("DISABLE_REQUIREJS_OPT") == null && !done){
+      done = true
       println("To disable this for DEVLEOPMENT set the environment variable: DISABLE_REQUIREJS_OPT")
       "java -classpath project/js.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js" !
     }else{
