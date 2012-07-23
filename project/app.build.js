@@ -17,5 +17,7 @@
     //   'nm': false,
     //   nfm: false
     // },
-    mainConfigFile: '../public/js/global-config.js'  
+
+    //external lib definitions, also needed in the modules above
+    mainConfigFile: '../public/js/global-config.js' 
 })
