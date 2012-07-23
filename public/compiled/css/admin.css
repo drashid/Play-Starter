@@ -1,0 +1,26 @@
+body {
+    padding-top: 70px;
+}
+td {
+  vertical-align: middle;
+}
+.metric-unit {
+  font-size: 0.75em;
+  color: grey;
+}
+.hide-id {
+  display: none;  
+}
+.navbar .pull-right {
+  margin-right: 25px;
+}
+#healthChecks tr:hover .alert-error {
+  background-color: #F2DEDE;
+}
+#healthChecks tr:hover .alert-success {
+  background-color: #DFF0D8;
+}
+#healthChecks td, #healthChecks th {
+  text-align: center;
+  vertical-align: middle;
+}

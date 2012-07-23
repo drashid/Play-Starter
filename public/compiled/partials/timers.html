@@ -1,0 +1,38 @@
+<div class="row">
+    <form class="well form-search">
+        <div class="span3">
+            <input type="text" class="input-medium search-query" ng-model="timerSearch" placeholder="Filter...">
+        </div>
+        <div class="span3">
+            <label class="checkbox">
+                <input type="checkbox" name="averageCheckBox" ng-model="averageNodes">
+                Average Node Data
+            </label>
+        </div>
+    </form>
+</div>
+
+<div class="row" ng-cloak>
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+          <th ng-class="showID()" ng-click="sortTimerBy('machine')">Node ID</th>
+          <th ng-click="sortTimerBy('name')">Timer Name</th>
+          <th ng-click="sortTimerBy('mean')">Mean</th>
+          <th ng-click="sortTimerBy('median')">Median</th>
+          <th ng-click="sortTimerBy('nfPercent')">95th Percentile</th>
+          <th ng-click="sortTimerBy('min')">Min</th>
+          <th ng-click="sortTimerBy('max')">Max</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="metric in metrics | filter:{'type': 'TIMER'} | filter:timerSearch | orderBy:timerSortField:timerSortOrder">
+                <td ng-class="showID()">{{metric.machine}}</td>
+                <td>{{metric.name}}</td>
+                <td>{{metric.mean | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
+                <td>{{metric.median | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
+                <td>{{metric.nfPercent | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
+                <td>{{metric.min | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
+                <td>{{metric.max | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

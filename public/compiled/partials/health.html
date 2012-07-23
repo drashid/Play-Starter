@@ -1,0 +1,30 @@
+<div class="row" id="healthChecks">  
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <th>Node ID</th>
+            <th>Redis</th>
+            <th>Mongo</th>
+            <th>Ping</th>
+            <th></th>
+        </thead>
+        <tbody style="text-align: center">
+            <tr ng-repeat="check in health">
+                <td>
+                    {{check.machine}}
+                </td>
+                <td ng-class="healthStatus(check.checkResults.RedisCheck)">
+                    <span ng-bind-html-unsafe="healthInfo(check.checkResults.RedisCheck)"></span>
+                </td>
+                <td ng-class="healthStatus(check.checkResults.MongoCheck)">
+                    <span ng-bind-html-unsafe="healthInfo(check.checkResults.MongoCheck)"></span>
+                </td>
+                <td>{{diffTime(check.timestamp)}}s ago</td>
+                <td>
+                    <button class="btn btn-danger" rel="tooltip" ng-click="clearMachine(check.machine)" title="Clear node data">
+                        <i class="icon-trash icon-white"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

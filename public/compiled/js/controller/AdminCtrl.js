@@ -1,0 +1,1 @@
+define(["controller/controllers"],function(e){e.controller("AdminCtrl",["$scope","$location",function(t,n){t.$on("$routeChangeSuccess",function(){var e=n.path();t.navTimersActive=e=="/timers"?"active":"",t.navHealthActive=e=="/health"?"active":"",t.navMetersActive=e=="/meters"?"active":""})}])})
