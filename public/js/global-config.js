@@ -1,4 +1,4 @@
-requirejs.config({
+require({
   //shims for non-requirejs libraries
   shim: {
     'libs/underscore': { exports: '_' },

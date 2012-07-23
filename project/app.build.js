@@ -17,5 +17,5 @@
     //   'nm': false,
     //   nfm: false
     // },
-    mainConfigFile: '../public/js/shim-config.js'  
+    mainConfigFile: '../public/js/global-config.js'  
 })
