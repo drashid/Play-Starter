@@ -21,7 +21,7 @@
         @if(env == Environment.DEVELOPMENT) {
             <script src="@routes.Assets.at("js/libs/require.js")" data-main="@routes.Assets.at("js/admin-main")"></script>
         } else {   
-            <script src="@routes.Assets.at("r-build/js/libs/require.js")" data-main="@routes.Assets.at("r-build/js/admin-main")"></script>
+            <script src="@routes.Assets.at("compiled/js/libs/require.js")" data-main="@routes.Assets.at("compiled/js/admin-main")"></script>
         }
 
         <!-- styles -->
