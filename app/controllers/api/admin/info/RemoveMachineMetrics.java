@@ -12,7 +12,7 @@ import com.github.drashid.status.ServerStatusGateway;
 import com.yammer.metrics.annotation.Timed;
 
 @Async
-public class ClearMachineMetrics extends ApiOp {
+public class RemoveMachineMetrics extends ApiOp {
 
   @Inject
   private ServerStatusGateway metrics;
@@ -24,7 +24,7 @@ public class ClearMachineMetrics extends ApiOp {
       JsonNode body = request().body().asJson();
       String machine = body.get("machine").asText();
       
-      metrics.clearMetrics(machine);
+      metrics.removeMetrics(machine);
       return ok();
     } catch (Exception e){
       return internalServerError(e.getMessage());

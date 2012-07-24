@@ -122,7 +122,7 @@ public class ServerStatusGateway {
     return name.getGroup() + "." + name.getType() + "." + name.getName();
   }
 
-  public void clearMetrics(String machine) {
+  public void removeMetrics(String machine) {
     Jedis conn = redis.getConnection();
     try {
       conn.hdel(TIMER_HASH_KEY, machine);
