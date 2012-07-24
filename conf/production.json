@@ -1,6 +1,7 @@
 {
     "redis": {
-        "host": "localhost",
-        "port": 6379
+        "host": "chubb.redistogo.com",
+        "port": 9542,
+        "password": "42d8b97c73a6397b50f7b075dfd8b5db"
     }
 }

@@ -5,9 +5,11 @@ import com.github.drashid.config.Config;
 @Config("redis")
 public class RedisConfig {
 
-  public String host;
+  private String host;
 
-  public int port;
+  private int port;
+
+  private String password;
 
   RedisConfig() {
   }
@@ -26,6 +28,14 @@ public class RedisConfig {
 
   public void setPort(int port) {
     this.port = port;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getPassword() {
+    return password;
   }
 
 }

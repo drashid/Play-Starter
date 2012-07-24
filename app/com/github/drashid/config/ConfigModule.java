@@ -54,7 +54,7 @@ public class ConfigModule extends AbstractModule {
   }
 
   private String getConfigFile(Environment env) {
-    return env.name().toLowerCase() + ".json";
+    return Play.application().configuration().getString("config." + env.name());
   }
 
   private <E> void bindConfig(Class<E> cls, JsonNode json) throws JsonParseException, JsonMappingException, IOException {
