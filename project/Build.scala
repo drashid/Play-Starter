@@ -19,26 +19,12 @@ object ApplicationBuild extends Build {
 
   val requireOptimizeTask = TaskKey[Unit]("optimizejs")
 
-  //to avoid multiple optimization runs - will need to figure out why this is needed for sbt
-  //var done = false
-
-  // val requireJsSettings = requireOptimizeTask := {  
-  //   if(System.getenv("DISABLE_REQUIREJS_OPT") == null && !done){
-  //     done = true
-  //     println("To disable this for DEVLEOPMENT set the environment variable: DISABLE_REQUIREJS_OPT")
-  //     "java -classpath project/js.jar:project/compiler.jar org.mozilla.javascript.tools.shell.Main project/r.js -o project/app.build.js" !
-  //   }else{
-  //     println("RequireJS optimization disabled.")
-  //   }
-  // }
-
   val requireJsSettings = requireOptimizeTask := {   
     "node project/r.js -o project/app.build.js" !
   }
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
-    requireJsSettings//, 
-    // (compile in Compile) <<= (compile in Compile).dependsOn(requireOptimizeTask)
+    requireJsSettings
   )
 
 }
