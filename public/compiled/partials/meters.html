@@ -28,10 +28,10 @@
                 <td ng-class="showID()">{{metric.machine}}</td>
                 <td>{{metric.name}}</td>
                 <td>{{metric.count}}</td>
-                <td>{{metric.meanRate | round:2}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
-                <td>{{metric.oneMinRate | round:2}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
-                <td>{{metric.fiveMinRate | round:2}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
-                <td>{{metric.fifteenMinRate | round:2}}<span class="metric-unit">/{{metric.rateUnit}}</span></td>
+                <td>{{metric.meanRate | round:2}}<span class="metric-unit">/{{metric.rateUnit | timeunit}}</span></td>
+                <td>{{metric.oneMinRate | round:2}}<span class="metric-unit">/{{metric.rateUnit | timeunit}}</span></td>
+                <td>{{metric.fiveMinRate | round:2}}<span class="metric-unit">/{{metric.rateUnit | timeunit}}</span></td>
+                <td>{{metric.fifteenMinRate | round:2}}<span class="metric-unit">/{{metric.rateUnit | timeunit}}</span></td>
             </tr>
         </tbody>
     </table>

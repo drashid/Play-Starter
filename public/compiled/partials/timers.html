@@ -27,11 +27,11 @@
             <tr ng-repeat="metric in metrics | filter:{'type': 'TIMER'} | filter:timerSearch | orderBy:timerSortField:timerSortOrder">
                 <td ng-class="showID()">{{metric.machine}}</td>
                 <td>{{metric.name}}</td>
-                <td>{{metric.mean | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
-                <td>{{metric.median | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
-                <td>{{metric.nfPercent | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
-                <td>{{metric.min | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
-                <td>{{metric.max | round:2}} <span class="metric-unit">({{metric.durationUnit}})</span></td>
+                <td>{{metric.mean | round:2}} <span class="metric-unit">({{metric.durationUnit | timeunit}})</span></td>
+                <td>{{metric.median | round:2}} <span class="metric-unit">({{metric.durationUnit | timeunit}})</span></td>
+                <td>{{metric.nfPercent | round:2}} <span class="metric-unit">({{metric.durationUnit | timeunit}})</span></td>
+                <td>{{metric.min | round:2}} <span class="metric-unit">({{metric.durationUnit | timeunit}})</span></td>
+                <td>{{metric.max | round:2}} <span class="metric-unit">({{metric.durationUnit | timeunit}})</span></td>
             </tr>
         </tbody>
     </table>
