@@ -28,9 +28,25 @@ require(
           when('/meters', { templateUrl: asset('partials/meters.html'), controller: 'MetricCtrl' }).
           otherwise({ redirectTo:'/health', templateUrl: asset('partials/health.html'), controller: 'HealthCtrl'});
       }])
+      //basic filters
       .filter('round', function(){
         return function(input, digits){
           return input.toFixed(digits);
+        }
+      })
+      .filter('timeunit', function(){
+        return function(input){
+          switch(input){
+            case "MILLISECONDS":
+              return "ms";
+            case "NANOSECONDS":
+              return "ns";
+            case "SECONDS":
+              return "s";
+            case "MINUTES":
+              return "min";
+          }
+          return input;
         }
       });
   }
