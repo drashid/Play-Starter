@@ -2,11 +2,11 @@ package controllers.api.admin.info;
 
 import javax.inject.Inject;
 
-import play.libs.Json;
 import play.mvc.Result;
 
 import com.github.drashid.api.ApiOp;
 import com.github.drashid.status.ServerStatusGateway;
+import com.github.drashid.utils.json.JsonUtils;
 import com.yammer.metrics.annotation.Timed;
 
 public class HealthChecks extends ApiOp {
@@ -17,7 +17,7 @@ public class HealthChecks extends ApiOp {
   @Override
   @Timed
   public Result call() throws Exception {
-    return ok(Json.toJson(gateway.getHealthChecks().values()));
+    return ok(JsonUtils.toJson(gateway.getHealthChecks().values()));
   }
 
 }

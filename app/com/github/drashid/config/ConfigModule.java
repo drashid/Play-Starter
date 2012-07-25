@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import play.Play;
 
-import com.github.drashid.utils.JsonUtils;
+import com.github.drashid.utils.json.JsonUtils;
 import com.google.inject.AbstractModule;
 
 public class ConfigModule extends AbstractModule {
@@ -36,7 +36,7 @@ public class ConfigModule extends AbstractModule {
 
     JsonNode json;
     try {
-      json = JsonUtils.MAPPER.readTree(Play.application().resourceAsStream(configFile));
+      json = JsonUtils.toJson(Play.application().resourceAsStream(configFile));
     } catch (Exception e) {
       LOG.error("Error loading configuration json file {}", configFile);
       throw new InvalidConfigurationException("Error loading json config", e);
@@ -58,7 +58,8 @@ public class ConfigModule extends AbstractModule {
   }
 
   private <E> void bindConfig(Class<E> cls, JsonNode json) throws JsonParseException, JsonMappingException, IOException {
-    bind(cls).toInstance(JsonUtils.MAPPER.readValue(json.get(cls.getAnnotation(Config.class).value()), cls));
+    E configData = JsonUtils.toObject(json.get(cls.getAnnotation(Config.class).value()), cls);
+    bind(cls).toInstance(configData);
   }
 
 }
