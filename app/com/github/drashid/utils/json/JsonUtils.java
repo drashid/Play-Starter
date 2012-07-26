@@ -21,16 +21,15 @@ public class JsonUtils {
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
   static {
-    MAPPER.setVisibility(JsonMethod.FIELD, Visibility.NONE).setVisibility(JsonMethod.GETTER, Visibility.ANY)
-        .setVisibility(JsonMethod.IS_GETTER, Visibility.ANY);
+    MAPPER.setVisibility(JsonMethod.FIELD, Visibility.NONE)
+      .setVisibility(JsonMethod.GETTER, Visibility.ANY)
+      .setVisibility(JsonMethod.IS_GETTER, Visibility.ANY);
 
-    MAPPER
-        .setSerializationConfig(MAPPER.getSerializationConfig()
-            .without(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS)
-            .with(SerializationConfig.Feature.AUTO_DETECT_GETTERS));
+    MAPPER.setSerializationConfig(MAPPER.getSerializationConfig()
+      .without(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS)
+      .with(SerializationConfig.Feature.AUTO_DETECT_GETTERS));
 
     SimpleModule module = new SimpleModule("drashid", new Version(1, 0, 0, null));
-//    module.addSerializer(new TimeUnitSerializer());
     MAPPER.registerModule(module);
   }
 
