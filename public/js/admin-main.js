@@ -11,10 +11,10 @@ require(
   },
   [ //modules needed for admin panel 
     'libs/angular',
-    'controller/controllers', 
     'controller/HealthCtrl',
     'controller/MetricCtrl', 
-    'controller/AdminCtrl'
+    'controller/AdminCtrl',
+    'controller/controllers' 
   ], 
   //set up front-end routes for single page application (e.g. no page reloading)
   function(angular){
