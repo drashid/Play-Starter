@@ -1,4 +1,4 @@
-define(['controller/controllers', 'libs/underscore'], function(controllers, _){
+define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(controllers, _, nv){
   
   controllers.controller('MetricCtrl', ['$scope', '$http', 
     function MetricCtrl($scope, $http) {
@@ -86,6 +86,56 @@ define(['controller/controllers', 'libs/underscore'], function(controllers, _){
       $scope.sortMeterBy("count");
       $scope.timerSortOrder = false;
       $scope.meterSortOrder = true;
+      
+      function stream_layers(n, m, o) {
+        if (arguments.length < 3) o = 0;
+        function bump(a) {
+          var x = 1 / (.1 + Math.random()),
+          y = 2 * Math.random() - .5,
+          z = 10 / (.1 + Math.random());
+          for (var i = 0; i < m; i++) {
+            var w = (i / m - y) * z;
+            a[i] += x * Math.exp(-w * w);
+          }
+        }
+        return d3.range(n).map(function() {
+          var a = [], i;
+          for (i = 0; i < m; i++) a[i] = o + o * Math.random();
+            for (i = 0; i < 5; i++) bump(a);
+              return a.map(stream_index);
+          });
+      }
+
+      function stream_index(d, i) {
+        return {x: i, y: Math.max(0, d)};
+      }
+
+      function exampleData() {
+        return stream_layers(3,10+Math.random()*100,.1).map(function(data, i) {
+          return {
+           key: 'Stream' + i,
+           values: data
+         };
+       });
+      };
+      
+      nv.addGraph(function() {
+        var chart = nv.models.multiBarChart();
+
+        chart.xAxis
+          .tickFormat(d3.format(',f'));
+
+        chart.yAxis
+          .tickFormat(d3.format(',.1f'));
+
+        d3.select('#chart1 svg')
+          .datum(exampleData())
+          .transition().duration(500).call(chart);
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
+      });
     }
   ]);
 

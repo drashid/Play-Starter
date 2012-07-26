@@ -6,7 +6,9 @@ require(
       'libs/angular': { exports: 'angular' },
       'libs/jquery': { exports: '$' },
       'libs/bootstrap-tooltip': ['libs/jquery'], 
-      'libs/bootstrap-popover': ['libs/bootstrap-tooltip']
+      'libs/bootstrap-popover': ['libs/bootstrap-tooltip'],
+      'libs/d3': { exports: 'd3' },
+      'libs/nv.d3': { exports: 'nv', deps: ['libs/d3'] }
     }
   },
   [ //modules needed for admin panel 
