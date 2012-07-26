@@ -20,3 +20,10 @@ Running
 2. From the root of the project directory where you cloned the code, launch `play run` to start the application in DEVELOPMENT mode
 
 From here you can navigate your browser to localhost at the /admin endpoint (e.g. `http://localhost:9000/admin`) to view the dashboard.  You may need to wait a few seconds and refresh your browser for metric data to come in, as it is only synced every 5 seconds.
+
+Deployment
+-------
+A few notes about deployment:
+
+1. You should change the `conf/production.json` configuration file to match your environment
+2. The minified/processed files for the dashboard are currently checked in.  They are the result of running `play optimizejs` (combo/minifying using the RequireJS optimizer) and will need to be re-run by hand currently after any dashboard changes.  The reason for this has more to do with me targeting Heroku at the moment than a necessity.  Heroku executes certain build steps after a git push, and having this hooked into the build (which required I use the Java Rhino implementation of JS, rather than being able to use Node since Node isn't in their Java Cedar stack) took a long time to optimize and even with this small amount of JS would cause TimeoutErrors and fail the push.  As a result, the only way I can see to make this work with Heroku is to check in my compiled files.  I'll be working on a deployment script which will execute this for you in the future, check it in and make a git tag for the deployment before pushing out to Heroku.  For now, just be aware of this caveat.
