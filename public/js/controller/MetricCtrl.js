@@ -7,8 +7,10 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
         $http.get('/api/admin/metrics/fetch').success(function(data){
           //flatten metric array of arrays (one array per web node)
           $scope.fetchedMetrics = _.flatten(data);
+          $scope.averagedMetrics = _averageMetrics($scope.fetchedMetrics)
 
-          $scope.metrics = _processMetrics();
+          $scope.metrics = _chooseMetrics();
+          _loadGraph();
         });
       };
 
@@ -50,12 +52,16 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
         return result;
       };
 
-      _processMetrics = function() {
-        if($scope.averageNodes){
-          return _.chain($scope.fetchedMetrics)
+      _averageMetrics = function(fetchedMetrics){
+        return _.chain($scope.fetchedMetrics)
             .groupBy('name')
             .map(function(objList){ return _averageObjs(objList); })
             .value();
+      }
+
+      _chooseMetrics = function() {
+        if($scope.averageNodes){
+          return $scope.averagedMetrics;
         }else{
           return $scope.fetchedMetrics;
         }
@@ -76,7 +82,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
 
       //trigger metric processing (average or not average) on toggle
       $scope.$watch('averageNodes', function(value){
-        $scope.metrics = _processMetrics();
+        $scope.metrics = _chooseMetrics();
       });
 
       $scope.averageNodes = true;
@@ -87,36 +93,55 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
       $scope.timerSortOrder = false;
       $scope.meterSortOrder = true;
 
-      function exampleData() {
+      _getGraphData = function(averagedMetrics){
+        var min = [],
+            avg = [],
+            max = [];
+
+        _.chain(averagedMetrics)
+          .filter(function(item){
+            switch(item.type){
+              case 'TIMER': return true;
+              default: return false;
+            }
+          })
+          .each( function(item, i){ 
+            min.push({ x: i, y: item.min, units: item.durationUnit, metricName: item.name });
+            avg.push({ x: i, y: item.mean, units: item.durationUnit, metricName: item.name });
+            max.push({ x: i, y: item.max, units: item.durationUnit, metricName: item.name });
+          });
+
         return [
-          { key: 'Min', values:[{x: 1, y:10, metricName:'com.cray.metrics.HitIt', units:'ms'}, {x: 2, y:4, metricName:'com.cray.metrics.HitIt', units:'ms'}] },
-          { key: 'Average', values:[{x: 1, y:72, metricName:'com.cray.metrics.HitIt', units:'ms'}, {x: 2, y:78, metricName:'com.cray.metrics.HitIt', units:'ms'}] },
-          { key: 'Max', values:[{x: 1, y:100, metricName:'com.cray.metrics.HitIt', units:'ms'}, {x: 2, y:97, metricName:'com.cray.metrics.HitIt', units:'ms'}] }                 
+          { key: 'Min', values: min },
+          { key: 'Average', values: avg },
+          { key: 'Max', values: max }
         ];
       };
       
-      nv.addGraph(function() {
-        var chart = nv.models.multiBarChart();
-        chart.showControls(false); //disable stacked
-        chart.tooltipContent(function(key, x, y, e, graph){
-          return '<h3>' + e.point.metricName + '</h3>' + 
-                 '<p>' + y + ' ' + e.point.units + '</p>';
+      _loadGraph = function(){
+        nv.addGraph(function() {
+          var chart = nv.models.multiBarChart();
+          chart.showControls(false); //disable stacked
+          chart.tooltipContent(function(key, x, y, e, graph){
+            return '<h3>' + e.point.metricName + '</h3>' + 
+                   '<p>' + y + ' ' + e.point.units + '</p>';
+          });
+
+          chart.xAxis
+            .tickFormat(d3.format(',f'));
+
+          chart.yAxis
+            .tickFormat(d3.format(',.1f'));
+
+          d3.select('#chart1 svg')
+            .datum(_getGraphData($scope.averagedMetrics))
+            .transition().duration(250).call(chart);
+
+          nv.utils.windowResize(chart.update);
+
+          return chart;
         });
-
-        chart.xAxis
-          .tickFormat(d3.format(',f'));
-
-        chart.yAxis
-          .tickFormat(d3.format(',.1f'));
-
-        d3.select('#chart1 svg')
-          .datum(exampleData())
-          .transition().duration(500).call(chart);
-
-        nv.utils.windowResize(chart.update);
-
-        return chart;
-      });
+      };
     }
   ]);
 
