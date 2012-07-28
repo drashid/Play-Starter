@@ -30,7 +30,15 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
         return $scope.averageNodes ? "hide-id" : "show-id";
       };
 
-      _averageObjs = function(objs){
+      _avgArr = function(vals){
+        return _sum(vals) / _.size(vals);
+      }
+
+      _sum = function(vals){
+        return _.reduce(vals, function(memo, num){ return memo + num; }, 0);
+      }
+
+      _averageObjs = function(objs, funcsByKey){
         var size = _.size(objs);
         if(size == 0){
           return {};
@@ -39,13 +47,11 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
         var result = {};
         var keys = _.keys(objs[0]);
         _.each(keys, function(key){
-            if(_.isNumber(objs[0][key])){
-              var sum = _.chain(objs)
-                .pluck(key)
-                .reduce(function(memo, num){ return memo + num; }, 0)
-                .value();
-              result[key] = sum / size;
-            }else{
+            if(_.has(funcsByKey, key)){ //specific user function
+              result[key] = funcsByKey[key]( _.pluck(objs, key) );
+            } else if(_.isNumber(objs[0][key])) { //average by default
+              result[key] = _avgArr( _.pluck(objs, key) );
+            } else {
               result[key] = objs[0][key];
             }
           });
@@ -55,7 +61,11 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
       _averageMetrics = function(fetchedMetrics){
         return _.chain($scope.fetchedMetrics)
             .groupBy('name')
-            .map(function(objList){ return _averageObjs(objList); })
+            .map(function(objList){ return _averageObjs(objList, { 
+              'min': _.min,
+              'max': _.max,
+              'count': _sum
+             }); })
             .value();
       }
 
@@ -93,7 +103,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
       $scope.timerSortOrder = false;
       $scope.meterSortOrder = true;
 
-      _getGraphData = function(averagedMetrics){
+      _formatDataForGraph = function(averagedMetrics){
         var min = [],
             avg = [],
             max = [];
@@ -136,7 +146,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
             .tickFormat(d3.format(',.1f'));
 
           d3.select('#chart1 svg')
-            .datum(_getGraphData($scope.averagedMetrics))
+            .datum(_formatDataForGraph($scope.averagedMetrics))
             .transition().duration(250).call(chart);
 
           nv.utils.windowResize(chart.update);
