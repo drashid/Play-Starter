@@ -7,7 +7,7 @@ import sbt.Package.ManifestAttributes
 
 object ApplicationBuild extends Build {
 
-  val appName         = "ProductExplorer"
+  val appName         = "Play-Starter"
   val appVersion      = "1.0-SNAPSHOT"
 
   val appDependencies = Seq(
