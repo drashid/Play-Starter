@@ -118,7 +118,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
         ];
       };
       
-      _loadGraph = function(){
+      _loadGraph = function(){ 
         nv.addGraph(function() {
           var chart = nv.models.multiBarChart();
           chart.showControls(false); //disable stacked
@@ -128,9 +128,11 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
           });
 
           chart.xAxis
+            .axisLabel('Metrics')
             .tickFormat(d3.format(',f'));
 
           chart.yAxis
+            .axisLabel('Time')
             .tickFormat(d3.format(',.1f'));
 
           d3.select('#chart1 svg')
