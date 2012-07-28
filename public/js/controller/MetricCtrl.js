@@ -121,6 +121,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
       
       nv.addGraph(function() {
         var chart = nv.models.multiBarChart();
+        chart.showControls(false); //disable stacked
 
         chart.xAxis
           .tickFormat(d3.format(',f'));
