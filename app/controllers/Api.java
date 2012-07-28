@@ -19,6 +19,9 @@ import play.mvc.Result;
 
 import com.github.drashid.api.ApiOp;
 import com.github.drashid.api.Async;
+import com.yammer.metrics.Metrics;
+import com.yammer.metrics.core.Timer;
+import com.yammer.metrics.core.TimerContext;
 
 public class Api extends Controller {
 
@@ -27,6 +30,9 @@ public class Api extends Controller {
   private static final String API_PATH = "controllers";
 
   private static final Map<String, Class<?>> nameMap = new HashMap<String, Class<?>>();
+  
+  //Can't use @Timed annotation with this class because it's not managed by the Injector
+  private static final Timer executeTimer = Metrics.newTimer(Api.class, "execute");
   
   static {
     Reflections refs = new Reflections(API_PATH);
@@ -60,6 +66,7 @@ public class Api extends Controller {
   }
   
   private static Result execute(Class<?> apiCls){
+    final TimerContext context = executeTimer.time();
     try {
       long startTime = System.currentTimeMillis();
       ApiOp op = (ApiOp)injector().getInstance(apiCls);
@@ -76,6 +83,8 @@ public class Api extends Controller {
     } catch (Exception e) {
       LOG.error("Could not execute API call", e);
       return internalServerError();
+    }finally{
+      context.stop();
     }
   }
   

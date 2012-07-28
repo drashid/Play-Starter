@@ -22,15 +22,15 @@
     <table class="table table-striped table-bordered table-condensed">
         <thead>
           <th ng-class="showID()" ng-click="sortTimerBy('machine')">Node ID</th>
-          <th ng-click="sortTimerBy('name')">Timer Name</th>
-          <th ng-click="sortTimerBy('mean')">Mean</th>
-          <th ng-click="sortTimerBy('median')">Median</th>
-          <th ng-click="sortTimerBy('nfPercent')">95th Percentile</th>
-          <th ng-click="sortTimerBy('min')">Min</th>
-          <th ng-click="sortTimerBy('max')">Max</th>
+          <th ng-click="sortBy('name')">Timer Name</th>
+          <th ng-click="sortBy('mean')">Mean</th>
+          <th ng-click="sortBy('median')">Median</th>
+          <th ng-click="sortBy('nfPercent')">95th Percentile</th>
+          <th ng-click="sortBy('min')">Min</th>
+          <th ng-click="sortBy('max')">Max</th>
         </thead>
         <tbody>
-            <tr ng-repeat="metric in metrics | filter:{'type': 'TIMER'} | filter:timerSearch | orderBy:timerSortField:timerSortOrder">
+            <tr ng-repeat="metric in metrics | filter:{'type': 'TIMER'} | filter:timerSearch | orderBy:sortField:sortOrder">
                 <td ng-class="showID()">{{metric.machine}}</td>
                 <td>{{metric.name}}</td>
                 <td>{{metric.mean | round:2}} <span class="metric-unit">({{metric.durationUnit | timeunit}})</span></td>

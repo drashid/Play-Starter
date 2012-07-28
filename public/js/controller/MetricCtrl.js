@@ -18,12 +18,8 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
         $scope.loadMetrics();
       };
 
-      $scope.sortTimerBy = function(fieldName){
-        _sortBy(fieldName, 'timerSortField', 'timerSortOrder');
-      };
-
-      $scope.sortMeterBy = function(fieldName){
-        _sortBy(fieldName, 'meterSortField', 'meterSortOrder');
+      $scope.sortBy = function(fieldName){
+        _sortBy(fieldName, 'sortField', 'sortOrder');
       };
 
       $scope.showID = function(){
@@ -98,14 +94,10 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
       $scope.averageNodes = true;
       $scope.loadMetrics();
 
-      $scope.sortTimerBy("name");
-      $scope.sortMeterBy("count");
-      $scope.timerSortOrder = false;
-      $scope.meterSortOrder = true;
-
       _formatDataForGraph = function(averagedMetrics){
         var min = [],
             avg = [],
+            median = [],
             max = [];
 
         _.chain(averagedMetrics)
@@ -117,12 +109,14 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
           })
           .each( function(item, i){ 
             min.push({ x: i, y: item.min, units: item.durationUnit, metricName: item.name });
+            median.push({ x: i, y: item.median, units: item.durationUnit, metricName: item.name });
             avg.push({ x: i, y: item.mean, units: item.durationUnit, metricName: item.name });
             max.push({ x: i, y: item.max, units: item.durationUnit, metricName: item.name });
           });
 
         return [
           { key: 'Min', values: min },
+          { key: 'Median', values: median},
           { key: 'Average', values: avg },
           { key: 'Max', values: max }
         ];
