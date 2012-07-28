@@ -107,7 +107,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
       }
 
       function stream_index(d, i) {
-        return {x: i, y: Math.max(0, d)};
+        return {x: i, y: Math.max(0, d), metricName:'com.cray.metrics.HitIt', units:'ms'};
       }
 
       function exampleData() {
@@ -122,6 +122,10 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
       nv.addGraph(function() {
         var chart = nv.models.multiBarChart();
         chart.showControls(false); //disable stacked
+        chart.tooltipContent(function(key, x, y, e, graph){
+          return '<h3>' + e.point.metricName + '</h3>' + 
+                 '<p>' + y + ' ' + e.point.units + '</p>';
+        });
 
         chart.xAxis
           .tickFormat(d3.format(',f'));
