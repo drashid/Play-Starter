@@ -11,6 +11,10 @@ css/bootstrap.min.css
 ----------------
 css/bootstrap.min.css
 
+css/nv.d3.css
+----------------
+css/nv.d3.css
+
 js/admin-main.js
 ----------------
 js/libs/angular.js
@@ -20,6 +24,8 @@ js/libs/bootstrap-tooltip.js
 js/libs/bootstrap-popover.js
 js/controller/HealthCtrl.js
 js/libs/underscore.js
+js/libs/d3.js
+js/libs/nv.d3.js
 js/controller/MetricCtrl.js
 js/controller/AdminCtrl.js
 js/admin-main.js
