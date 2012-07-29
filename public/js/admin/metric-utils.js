@@ -39,7 +39,17 @@ define(['libs/underscore'], function(_){
         .value();
   }
 
+  sortBy = function(scope, sortFieldName, sortField, orderField) {
+    if(scope[sortField] === sortFieldName){
+      scope[orderField] = !scope[orderField];
+    }else{
+      scope[orderField] = false;
+    }
+    scope[sortField] = sortFieldName;
+  };
+
   return {
-    averageMetrics: averageMetrics
+    averageMetrics: averageMetrics,
+    sortBy: sortBy
   }
 });

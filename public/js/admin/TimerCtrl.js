@@ -16,20 +16,11 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
       };
 
       $scope.sortBy = function(fieldName){
-        _sortBy(fieldName, 'sortField', 'sortOrder');
+        utils.sortBy($scope, fieldName, 'sortField', 'sortOrder');
       };
 
       $scope.showID = function(){
         return $scope.averageNodes ? "hide-id" : "show-id";
-      };
-
-      _sortBy = function(sortFieldName, sortField, orderField) {
-        if($scope[sortField] === sortFieldName){
-          $scope[orderField] = !$scope[orderField];
-        }else{
-          $scope[orderField] = false;
-        }
-        $scope[sortField] = sortFieldName;
       };
 
       _chooseMetrics = function(){
