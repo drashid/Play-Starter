@@ -1,4 +1,4 @@
-define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(controllers, _, nv){
+define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric-utils'], function(controllers, _, nv, utils){
   
   controllers.controller('MetricCtrl', ['$scope', '$http', 
     function MetricCtrl($scope, $http) {
@@ -26,41 +26,13 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3'], function(con
         return $scope.averageNodes ? "hide-id" : "show-id";
       };
 
-      _avgArr = function(vals){
-        return _sum(vals) / _.size(vals);
-      }
-
-      _sum = function(vals){
-        return _.reduce(vals, function(memo, num){ return memo + num; }, 0);
-      }
-
-      _averageObjs = function(objs, funcsByKey){
-        var size = _.size(objs);
-        if(size == 0){
-          return {};
-        }
-
-        var result = {};
-        var keys = _.keys(objs[0]);
-        _.each(keys, function(key){
-            if(_.has(funcsByKey, key)){ //specific user function
-              result[key] = funcsByKey[key]( _.pluck(objs, key) );
-            } else if(_.isNumber(objs[0][key])) { //average by default
-              result[key] = _avgArr( _.pluck(objs, key) );
-            } else {
-              result[key] = objs[0][key];
-            }
-          });
-        return result;
-      };
-
       _averageMetrics = function(fetchedMetrics){
         return _.chain($scope.fetchedMetrics)
             .groupBy('name')
-            .map(function(objList){ return _averageObjs(objList, { 
+            .map(function(objList){ return utils.averageObjs(objList, { 
               'min': _.min,
               'max': _.max,
-              'count': _sum
+              'count': utils.sum
              }); })
             .value();
       }
