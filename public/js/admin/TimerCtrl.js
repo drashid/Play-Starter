@@ -10,12 +10,9 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
           $scope.averagedMetrics = utils.averageMetrics($scope.fetchedMetrics)
 
           $scope.metrics = _chooseMetrics();
+          
           _loadGraph();
         });
-      };
-
-      $scope.refresh = function() {
-        $scope.loadMetrics();
       };
 
       $scope.sortBy = function(fieldName){
@@ -24,14 +21,6 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
 
       $scope.showID = function(){
         return $scope.averageNodes ? "hide-id" : "show-id";
-      };
-
-      _chooseMetrics = function() {
-        if($scope.averageNodes){
-          return $scope.averagedMetrics;
-        }else{
-          return $scope.fetchedMetrics;
-        }
       };
 
       _sortBy = function(sortFieldName, sortField, orderField) {
@@ -43,17 +32,9 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
         $scope[sortField] = sortFieldName;
       };
 
-      //
-      // Initialization
-      //
-
-      //trigger metric processing (average or not average) on toggle
-      $scope.$watch('averageNodes', function(value){
-        $scope.metrics = _chooseMetrics();
-      });
-
-      $scope.averageNodes = true;
-      $scope.loadMetrics();
+      _chooseMetrics = function(){
+        return $scope.averageNodes ? $scope.averagedMetrics : $scope.fetchedMetrics;
+      }
 
       _formatDataForGraph = function(averagedMetrics){
         var min = [],
@@ -109,6 +90,15 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
           return chart;
         });
       };
+
+      //trigger metric processing (average or not average) on toggle
+      $scope.$watch('averageNodes', function(value){
+        $scope.metrics = _chooseMetrics();
+      });
+
+      //INIT
+      $scope.averageNodes = true;
+      $scope.loadMetrics();
     }
   ]);
 

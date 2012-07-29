@@ -14,10 +14,6 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
         });
       };
 
-      $scope.refresh = function() {
-        $scope.loadMetrics();
-      };
-
       $scope.sortBy = function(fieldName){
         _sortBy(fieldName, 'sortField', 'sortOrder');
       };
@@ -26,13 +22,9 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
         return $scope.averageNodes ? "hide-id" : "show-id";
       };
 
-      _chooseMetrics = function() {
-        if($scope.averageNodes){
-          return $scope.averagedMetrics;
-        }else{
-          return $scope.fetchedMetrics;
-        }
-      };
+      _chooseMetrics = function(){
+        return $scope.averageNodes ? $scope.averagedMetrics : $scope.fetchedMetrics;
+      }
 
       _sortBy = function(sortFieldName, sortField, orderField) {
         if($scope[sortField] === sortFieldName){
@@ -42,18 +34,6 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
         }
         $scope[sortField] = sortFieldName;
       };
-
-      //
-      // Initialization
-      //
-
-      //trigger metric processing (average or not average) on toggle
-      $scope.$watch('averageNodes', function(value){
-        $scope.metrics = _chooseMetrics();
-      });
-
-      $scope.averageNodes = true;
-      $scope.loadMetrics();
 
       _formatDataForGraph = function(averagedMetrics){
         var count = [];
@@ -71,6 +51,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
         nv.addGraph(function() {
           var chart = nv.models.multiBarChart();
           chart.showControls(false); //disable stacked
+          chart.showLegend(false);
           chart.tooltipContent(function(key, x, y, e, graph){
             return '<h3>' + e.point.metricName + '</h3>' + 
                    '<p>' + y + '</p>';
@@ -93,6 +74,16 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
           return chart;
         });
       };
+
+      //trigger metric processing (average or not average) on toggle
+      $scope.$watch('averageNodes', function(value){
+        $scope.metrics = _chooseMetrics();
+      });
+
+      //INIT 
+      $scope.averageNodes = true;
+      $scope.loadMetrics();
+      
     }
   ]);
 
