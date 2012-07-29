@@ -22,10 +22,12 @@ js/controller/controllers.js
 js/libs/jquery.js
 js/libs/bootstrap-tooltip.js
 js/libs/bootstrap-popover.js
-js/controller/HealthCtrl.js
+js/admin/HealthCtrl.js
 js/libs/underscore.js
 js/libs/d3.js
 js/libs/nv.d3.js
-js/controller/MetricCtrl.js
-js/controller/AdminCtrl.js
+js/admin/metric-utils.js
+js/admin/TimerCtrl.js
+js/admin/MeterCtrl.js
+js/admin/AdminCtrl.js
 js/admin-main.js
