@@ -56,30 +56,14 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
       $scope.loadMetrics();
 
       _formatDataForGraph = function(averagedMetrics){
-        var min = [],
-            avg = [],
-            median = [],
-            max = [];
+        var count = [];
 
-        _.chain(averagedMetrics)
-          .filter(function(item){
-            switch(item.type){
-              case 'TIMER': return true;
-              default: return false;
-            }
-          })
-          .each( function(item, i){ 
-            min.push({ x: i, y: item.min, units: item.durationUnit, metricName: item.name });
-            median.push({ x: i, y: item.median, units: item.durationUnit, metricName: item.name });
-            avg.push({ x: i, y: item.mean, units: item.durationUnit, metricName: item.name });
-            max.push({ x: i, y: item.max, units: item.durationUnit, metricName: item.name });
+        _.each(averagedMetrics, function(item, i){ 
+            count.push({ x: i, y: item.count, metricName: item.name });
           });
 
         return [
-          { key: 'Min', values: min },
-          { key: 'Median', values: median},
-          { key: 'Average', values: avg },
-          { key: 'Max', values: max }
+          { key: 'Count', values: count }
         ];
       };
       
@@ -89,7 +73,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
           chart.showControls(false); //disable stacked
           chart.tooltipContent(function(key, x, y, e, graph){
             return '<h3>' + e.point.metricName + '</h3>' + 
-                   '<p>' + y + ' ' + e.point.units + '</p>';
+                   '<p>' + y + '</p>';
           });
 
           chart.xAxis
@@ -97,7 +81,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
             .tickFormat(d3.format(',f'));
 
           chart.yAxis
-            .axisLabel('Time')
+            .axisLabel('Count')
             .tickFormat(d3.format(',.1f'));
 
           d3.select('#chart1 svg')
