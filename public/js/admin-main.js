@@ -13,9 +13,10 @@ require(
   },
   [ //modules needed for admin panel 
     'libs/angular',
-    'controller/HealthCtrl',
-    'controller/MetricCtrl', 
-    'controller/AdminCtrl',
+    'admin/HealthCtrl',
+    'admin/TimerCtrl',
+    'admin/MeterCtrl', 
+    'admin/AdminCtrl',
     'controller/controllers' 
   ], 
   //set up front-end routes for single page application (e.g. no page reloading)
@@ -26,8 +27,8 @@ require(
       .config(['$routeProvider', function(routes){
         var asset = function(assetPath){ return window.SYSTEM.assetRoot + assetPath };
         routes.
-          when('/timers', { templateUrl: asset('partials/timers.html'), controller: 'MetricCtrl' }).
-          when('/meters', { templateUrl: asset('partials/meters.html'), controller: 'MetricCtrl' }).
+          when('/timers', { templateUrl: asset('partials/timers.html'), controller: 'TimerCtrl' }).
+          when('/meters', { templateUrl: asset('partials/meters.html'), controller: 'MeterCtrl' }).
           otherwise({ redirectTo:'/health', templateUrl: asset('partials/health.html'), controller: 'HealthCtrl'});
       }])
       //basic filters
