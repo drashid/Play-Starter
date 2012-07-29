@@ -14,7 +14,8 @@ require(
   [ //modules needed for admin panel 
     'libs/angular',
     'admin/HealthCtrl',
-    'admin/MetricCtrl', 
+    'admin/TimerCtrl',
+    'admin/MeterCtrl', 
     'admin/AdminCtrl',
     'controller/controllers' 
   ], 
@@ -26,8 +27,8 @@ require(
       .config(['$routeProvider', function(routes){
         var asset = function(assetPath){ return window.SYSTEM.assetRoot + assetPath };
         routes.
-          when('/timers', { templateUrl: asset('partials/timers.html'), controller: 'MetricCtrl' }).
-          when('/meters', { templateUrl: asset('partials/meters.html'), controller: 'MetricCtrl' }).
+          when('/timers', { templateUrl: asset('partials/timers.html'), controller: 'TimerCtrl' }).
+          when('/meters', { templateUrl: asset('partials/meters.html'), controller: 'MeterCtrl' }).
           otherwise({ redirectTo:'/health', templateUrl: asset('partials/health.html'), controller: 'HealthCtrl'});
       }])
       //basic filters

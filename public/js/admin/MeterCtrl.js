@@ -1,7 +1,7 @@
 define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric-utils'], function(controllers, _, nv, utils){
   
-  controllers.controller('MetricCtrl', ['$scope', '$http', 
-    function MetricCtrl($scope, $http) {
+  controllers.controller('MeterCtrl', ['$scope', '$http', 
+    function MeterCtrl($scope, $http) {
       //load metrics 
       $scope.loadMetrics = function() {
         $http.get('/api/admin/metrics/fetch').success(function(data){
