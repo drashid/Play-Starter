@@ -28,9 +28,18 @@ define(['libs/underscore'], function(_){
     return _.reduce(vals, function(memo, num){ return memo + num; }, 0);
   }
 
+  function averageMetrics(fetchedMetrics){
+    return _.chain(fetchedMetrics)
+        .groupBy('name')
+        .map(function(objList){ return averageObjs(objList, { 
+          'min': _.min,
+          'max': _.max,
+          'count': sum
+         }); })
+        .value();
+  }
+
   return {
-    averageObjs: averageObjs,
-    sum: sum,
-    average: average
+    averageMetrics: averageMetrics
   }
 });

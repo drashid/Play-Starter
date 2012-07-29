@@ -7,7 +7,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
         $http.get('/api/admin/metrics/fetch').success(function(data){
           //flatten metric array of arrays (one array per web node)
           $scope.fetchedMetrics = _.flatten(data);
-          $scope.averagedMetrics = _averageMetrics($scope.fetchedMetrics)
+          $scope.averagedMetrics = utils.averageMetrics($scope.fetchedMetrics)
 
           $scope.metrics = _chooseMetrics();
           _loadGraph();
@@ -25,17 +25,6 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
       $scope.showID = function(){
         return $scope.averageNodes ? "hide-id" : "show-id";
       };
-
-      _averageMetrics = function(fetchedMetrics){
-        return _.chain($scope.fetchedMetrics)
-            .groupBy('name')
-            .map(function(objList){ return utils.averageObjs(objList, { 
-              'min': _.min,
-              'max': _.max,
-              'count': utils.sum
-             }); })
-            .value();
-      }
 
       _chooseMetrics = function() {
         if($scope.averageNodes){
