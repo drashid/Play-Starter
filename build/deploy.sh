@@ -21,7 +21,7 @@ git add -A
 echo "---- Committing Any Changes ----"
 git commit -m "Deploy generated files."
 echo "---- Tagging Build in Git ----"
-TAG=`git describe`
+TAG="deploy-"`git describe`
 git tag $TAG
 REV=`git rev-parse $TAG`
 echo "---- Pushing Changes to origin/master ----"
