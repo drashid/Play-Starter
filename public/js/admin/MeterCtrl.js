@@ -54,7 +54,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
 
           chart.yAxis
             .axisLabel('Count')
-            .tickFormat(d3.format(',.1f'));
+            .tickFormat(d3.format(',d'));
 
           d3.select('#chart1 svg')
             .datum(_formatDataForGraph($scope.averagedMetrics))
