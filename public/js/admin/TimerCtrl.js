@@ -10,7 +10,6 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
           $scope.averagedMetrics = utils.averageMetrics($scope.fetchedMetrics)
 
           $scope.metrics = _chooseMetrics();
-          
           _loadGraph();
         });
       };

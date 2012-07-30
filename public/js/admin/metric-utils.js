@@ -52,4 +52,5 @@ define(['libs/underscore'], function(_){
     averageMetrics: averageMetrics,
     sortBy: sortBy
   }
+  
 });

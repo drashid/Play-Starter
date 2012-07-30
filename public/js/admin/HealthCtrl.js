@@ -46,10 +46,6 @@ define(['controller/controllers', 'libs/jquery',
         return health.healthy ? "icon-ok" : "icon-remove";
       }
 
-      //
-      // Initialization
-      //
-
       //after template rendering related to model changes on health, add js popover 
       $scope.$watch('health', function(){
         $scope.$evalAsync(function(){
@@ -62,8 +58,9 @@ define(['controller/controllers', 'libs/jquery',
         });
       });
 
+      //INIT
       $scope.loadHealth();  
-
+      
     }
   ]);
 
