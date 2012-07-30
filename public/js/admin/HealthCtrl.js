@@ -11,6 +11,8 @@ define(['controller/controllers', 'libs/jquery',
       };
 
       $scope.clearMachine = function(machineName){
+        //hide tooltip associated with this node, since the button will be removed
+        $('[rel=tooltip]').tooltip('hide');
         $http.post('/api/admin/metrics/remove', {'machine': machineName}).success(function(){
           $scope.refresh();
         });
