@@ -74,7 +74,8 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
       //INIT 
       $scope.averageNodes = true;
       $scope.loadMetrics();
-      
+      $scope.sortBy('count');
+      $scope.sortOrder = true;
     }
   ]);
 

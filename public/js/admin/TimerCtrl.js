@@ -90,6 +90,8 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
       //INIT
       $scope.averageNodes = true;
       $scope.loadMetrics();
+      $scope.sortBy('median');
+      $scope.sortOrder = true;
     }
   ]);
 
