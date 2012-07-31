@@ -16,7 +16,14 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
 
       $scope.sortBy = function(fieldName){
         utils.sortBy($scope, fieldName, 'sortField', 'sortOrder');
-      };
+        _showSortArrow(fieldName);
+      }
+
+      _showSortArrow = function(fieldName){
+        $scope.sortArrow = $scope.sortOrder ? "▼" : "▲";
+        $("th > span.sortArrow").css("visibility", "hidden");
+        $("th#" + fieldName + " > span.sortArrow").css("visibility", "visible");
+      }
 
       $scope.showID = function(){
         return $scope.averageNodes ? "hide-id" : "show-id";
@@ -91,6 +98,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
       $scope.loadMetrics();
       $scope.sortBy('median');
       $scope.sortOrder = true;
+      _showSortArrow('median');
     }
   ]);
 

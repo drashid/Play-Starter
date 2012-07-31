@@ -21,13 +21,27 @@
 <div class="row" ng-cloak>
     <table class="table table-striped table-bordered table-condensed">
         <thead>
-          <th ng-class="showID()" ng-click="sortBy('machine')">Node ID</th>
-          <th ng-click="sortBy('name')">Meter Name</th>
-          <th ng-click="sortBy('count')">Count</th>
-          <th ng-click="sortBy('meanRate')">Mean Rate</th>
-          <th ng-click="sortBy('oneMinRate')">1 Minute Rate</th>
-          <th ng-click="sortBy('fiveMinRate')">5 Minute Rate</th>
-          <th ng-click="sortBy('fifteenMinRate')">15 Minute Rate</th>
+          <th ng-class="showID()" ng-click="sortBy('machine')" id="machine">
+            Node ID <span class="sortArrow">{{sortArrow}}</span>
+          </th>
+          <th ng-click="sortBy('name')" id="name">
+            Meter Name <span class="sortArrow">{{sortArrow}}</span>
+          </th>
+          <th ng-click="sortBy('count')" id="count">
+            Count <span class="sortArrow">{{sortArrow}}</span>
+          </th>
+          <th ng-click="sortBy('meanRate')" id="meanRate">
+            Mean Rate <span class="sortArrow">{{sortArrow}}</span>
+          </th>
+          <th ng-click="sortBy('oneMinRate')" id="oneMinRate">
+            1 Minute Rate <span class="sortArrow">{{sortArrow}}</span>
+          </th>
+          <th ng-click="sortBy('fiveMinRate')" id="fiveMinRate">
+            5 Minute Rate <span class="sortArrow">{{sortArrow}}</span>
+          </th>
+          <th ng-click="sortBy('fifteenMinRate')" id="fifteenMinRate">
+            15 Minute Rate <span class="sortArrow">{{sortArrow}}</span>
+          </th>
         </thead>
         <tbody>
             <tr ng-repeat="metric in metrics | filter:meterSearch | orderBy:sortField:sortOrder">
