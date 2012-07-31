@@ -27,7 +27,7 @@ A few notes about deployment:
 
 1. You should change the `conf/production.json` configuration file to match your environment
 2. The minified/processed files for the dashboard are currently checked in.  They are the result of running `play optimizejs` (combo/minifying using the RequireJS optimizer, currently requires [NodeJS](http://nodejs.org/) to be installed) and will need to be re-run after any front-end changes.  The reason for this has more to do with me targeting Heroku at the moment than a necessity.  Heroku executes certain build steps after a git push, and having this hooked into the build (which required I use the Java Rhino implementation of JS, rather than being able to use Node since Node isn't in their Java Cedar stack) took a long time to optimize and even with this small amount of JS would cause TimeoutErrors and fail the push.  As a result, the only way I can see to make this work with Heroku is to check in my compiled files.  
-3. There is currently a basic deploy (`build/deploy.sh`) shell script (not extensively tested or generalized) which performs the following steps:
+3. There is currently a basic deploy (`deploy/deploy-heroku.sh`) shell script (not extensively tested or generalized) which performs the following steps:
   1. Checks out the origin/master copy to a temporary directory
   2. Runs `play optimizejs` to generate any front-end changes (necessary for STAGING/PRODUCTION modes)
   3. Creates a git tag
