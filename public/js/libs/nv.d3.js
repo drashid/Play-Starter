@@ -1,4 +1,8774 @@
-(function(){function c(a,b,c){return function(d,e,f){var g=a(d),h=[];g<d&&b(g);if(f>1)while(g<e){var i=new Date(+g);c(i)%f===0&&h.push(i),b(g)}else while(g<e)h.push(new Date(+g)),b(g);return h}}function b(a,b){return(new Date(b,a+1,0)).getDate()}var a={version:"0.0.1a",dev:!0};window.nv=a,a.tooltip={},a.utils={},a.models={},a.charts={},a.graphs=[],a.logs={},a.dispatch=d3.dispatch("render_start","render_end"),a.dev&&(a.dispatch.on("render_start",function(b){a.logs.startTime=+(new Date)}),a.dispatch.on("render_end",function(b){a.logs.endTime=+(new Date),a.logs.totalTime=a.logs.endTime-a.logs.startTime,a.log("total",a.logs.totalTime)})),a.log=function(){a.dev&&console.log&&console.log.apply(console,arguments);return arguments[arguments.length-1]},a.render=function b(c){c=c||1,b.active=!0,a.dispatch.render_start(),setTimeout(function(){var d;for(var e=0;e<c&&(graph=b.queue[e]);e++)d=graph.generate(),typeof graph.callback==typeof Function&&graph.callback(d),a.graphs.push(d);b.queue.splice(0,e),b.queue.length?setTimeout(arguments.callee,0):(a.render.active=!1,a.dispatch.render_end())},0)},a.render.queue=[],a.addGraph=function(b){typeof arguments[0]==typeof Function&&(b={generate:arguments[0],callback:arguments[1]}),a.render.queue.push(b),a.render.active||a.render()},a.identity=function(a){return a},a.strip=function(a){return a.replace(/(\s|&)/g,"")},d3.time.monthEnd=function(a){return new Date(a.getFullYear(),a.getMonth(),0)},d3.time.monthEnds=c(d3.time.monthEnd,function(a){a.setUTCDate(a.getUTCDate()+1),a.setDate(b(a.getMonth()+1,a.getFullYear()))},function(a){return a.getMonth()}),function(){var b=window.nv.tooltip={};b.show=function(b,c,d,e,f,g){var h=document.createElement("div");h.className="nvtooltip "+(g?g:"xy-tooltip"),d=d||"s",e=e||20;var i=f?f:document.getElementsByTagName("body")[0];h.innerHTML=c,h.style.left=0,h.style.top=0,h.style.opacity=0,i.appendChild(h);var j=parseInt(h.offsetHeight),k=parseInt(h.offsetWidth),l=a.utils.windowSize().width,m=a.utils.windowSize().height,n=i.scrollTop,o=i.scrollLeft,p,q;switch(d){case"e":p=b[0]-k-e,q=b[1]-j/2,p<o&&(p=b[0]+e),q<n&&(q=n+5),q+j>n+m&&(q=n-j-5);break;case"w":p=b[0]+e,q=b[1]-j/2,p+k>l&&(p=b[0]-k-e),q<n&&(q=n+5),q+j>n+m&&(q=n-j-5);break;case"n":p=b[0]-k/2,q=b[1]+e,p<o&&(p=o+5),p+k>l&&(p=l-k-5),q+j>n+m&&(q=b[1]-j-e);break;case"s":p=b[0]-k/2,q=b[1]-j-e,p<o&&(p=o+5),p+k>l&&(p=l-k-5),n>q&&(q=b[1]+20)}h.style.left=p+"px",h.style.top=q+"px",h.style.opacity=1,h.style.position="absolute",h.style.pointerEvents="none";return h},b.cleanup=function(){var a=document.getElementsByClassName("nvtooltip"),b=[];while(a.length)b.push(a[0]),a[0].style.transitionDelay="0 !important",a[0].style.opacity=0,a[0].className="nvtooltip-pending-removal";setTimeout(function(){while(b.length){var a=b.pop();a.parentNode.removeChild(a)}},500)}}(),a.utils.windowSize=function(){var a={width:640,height:480};document.body&&document.body.offsetWidth&&(a.width=document.body.offsetWidth,a.height=document.body.offsetHeight),document.compatMode=="CSS1Compat"&&document.documentElement&&document.documentElement.offsetWidth&&(a.width=document.documentElement.offsetWidth,a.height=document.documentElement.offsetHeight),window.innerWidth&&window.innerHeight&&(a.width=window.innerWidth,a.height=window.innerHeight);return a},a.utils.windowResize=function(a){var b=window.onresize;window.onresize=function(c){typeof b=="function"&&b(c),a(c)}},a.models.axis=function(){function j(b){b.each(function(b){var j=d3.select(this),k=j.selectAll("g.wrap.axis").data([b]),l=k.enter().append("g").attr("class","wrap axis"),m=l.append("g"),n=k.select("g");(h.orient()=="top"||h.orient()=="bottom")&&h.ticks(Math.abs(c.range()[1]-c.range()[0])/100),d3.transition(n).call(h),i=i||h.scale();var o=n.selectAll("text.axislabel").data([d||null]);o.exit().remove();switch(h.orient()){case"top":o.enter().append("text").attr("class","axislabel").attr("text-anchor","middle").attr("y",0);var p=c.range().length==2?c.range()[1]:c.range()[c.range().length-1]+(c.range()[1]-c.range()[0]);o.attr("x",p/2);if(e){var q=k.selectAll("g.axisMaxMin").data(c.domain());q.enter().append("g").attr("class","axisMaxMin").append("text"),q.exit().remove(),q.attr("transform",function(a,b){return"translate("+c(a)+",0)"}).select("text").attr("dy","0em").attr("y",-h.tickPadding()).attr("text-anchor","middle").text(function(a,b){return(""+h.tickFormat()(a)).match("NaN")?"":h.tickFormat()(a)}),d3.transition(q).attr("transform",function(a,b){return"translate("+c.range()[b]+",0)"})}break;case"bottom":o.enter().append("text").attr("class","axislabel").attr("text-anchor","middle").attr("y",30);var p=c.range().length==2?c.range()[1]:c.range()[c.range().length-1]+(c.range()[1]-c.range()[0]);o.attr("x",p/2);if(e){var q=k.selectAll("g.axisMaxMin").data(c.domain());q.enter().append("g").attr("class","axisMaxMin").append("text"),q.exit().remove(),q.attr("transform",function(a,b){return"translate("+c(a)+",0)"}).select("text").attr("dy",".71em").attr("y",h.tickPadding()).attr("text-anchor","middle").text(function(a,b){return(""+h.tickFormat()(a)).match("NaN")?"":h.tickFormat()(a)}),d3.transition(q).attr("transform",function(a,b){return"translate("+c.range()[b]+",0)"})}break;case"right":o.enter().append("text").attr("class","axislabel").attr("text-anchor",g?"middle":"begin").attr("transform",g?"rotate(90)":"").attr("y",g?-Math.max(margin.right,a)-12:-10),o.attr("x",g?c.range()[0]/2:h.tickPadding());if(e){var q=k.selectAll("g.axisMaxMin").data(c.domain());q.enter().append("g").attr("class","axisMaxMin").append("text").style("opacity",0),q.exit().remove(),q.attr("transform",function(a,b){return"translate(0,"+c(a)+")"}).select("text").attr("dy",".32em").attr("y",0).attr("x",h.tickPadding()).attr("text-anchor","start").text(function(a,b){return(""+h.tickFormat()(a)).match("NaN")?"":h.tickFormat()(a)}),d3.transition(q).attr("transform",function(a,b){return"translate(0,"+c.range()[b]+")"}).select("text").style("opacity",1)}break;case"left":o.enter().append("text").attr("class","axislabel").attr("text-anchor",g?"middle":"end").attr("transform",g?"rotate(-90)":"").attr("y",g?-Math.max(margin.left,a)+12:-10),o.attr("x",g?-c.range()[0]/2:-h.tickPadding());if(e){var q=k.selectAll("g.axisMaxMin").data(c.domain());q.enter().append("g").attr("class","axisMaxMin").append("text").style("opacity",0),q.exit().remove(),q.attr("transform",function(a,b){return"translate(0,"+i(a)+")"}).select("text").attr("dy",".32em").attr("y",0).attr("x",-h.tickPadding()).attr("text-anchor","end").text(function(a,b){return(""+h.tickFormat()(a)).match("NaN")?"":h.tickFormat()(a)}),d3.transition(q).attr("transform",function(a,b){return"translate(0,"+c.range()[b]+")"}).select("text").style("opacity",1)}}o.text(function(a){return a}),e&&(h.orient()==="left"||h.orient()==="right")&&n.selectAll("g").each(function(a,b){if(c(a)<c.range()[1]+10||c(a)>c.range()[0]-10)a>1e-10||a<-1e-10?d3.select(this).remove():d3.select(this).select("text").remove()});if(e&&(h.orient()==="top"||h.orient()==="bottom")){var r=[];k.selectAll("g.axisMaxMin").each(function(a,b){b?r.push(c(a)-this.getBBox().width-4):r.push(c(a)+this.getBBox().width+4)}),n.selectAll("g").each(function(a,b){if(c(a)<r[0]||c(a)>r[1])a>1e-10||a<-1e-10?d3.select(this).remove():d3.select(this).select("text").remove()})}f&&n.selectAll("line.tick").filter(function(a){return!parseFloat(Math.round(a*1e5)/1e6)}).classed("zero",!0),i=c.copy()});return j}var a=60,b=60,c=d3.scale.linear(),d=null,e=!0,f=!0,g=!0;margin={top:0,right:0,bottom:0,left:0};var h=d3.svg.axis().scale(c).orient("bottom").tickFormat(function(a){return a}),i;d3.rebind(j,h,"orient","ticks","tickValues","tickSubdivide","tickSize","tickPadding","tickFormat"),d3.rebind(j,c,"domain","range","rangeBand","rangeBands"),j.width=function(b){if(!arguments.length)return a;a=b;return j},j.height=function(a){if(!arguments.length)return b;b=a;return j},j.axisLabel=function(a){if(!arguments.length)return d;d=a;return j},j.showMaxMin=function(a){if(!arguments.length)return e;e=a;return j},j.highlightZero=function(a){if(!arguments.length)return f;f=a;return j},j.scale=function(a){if(!arguments.length)return c;c=a,h.scale(c),d3.rebind(j,c,"domain","range","rangeBand","rangeBands");return j},j.rotateYLabel=function(a){if(!arguments.length)return g;g=a;return j},j.margin=function(a){if(!arguments.length)return margin;margin=a;return j};return j},a.models.historicalBar=function(){function r(o){o.each(function(o){var p=b-a.left-a.right,r=c-a.top-a.bottom;m.domain(k||d3.extent(o[0].values.map(e).concat(g))).range([0,p]),n.domain(l||d3.extent(o[0].values.map(f).concat(h))).range([r,0]);if(m.domain()[0]===m.domain()[1]||n.domain()[0]===n.domain()[1])singlePoint=!0;m.domain()[0]===m.domain()[1]&&(m.domain()[0]?m.domain([m.domain()[0]-m.domain()[0]*.01,m.domain()[1]+m.domain()[1]*.01]):m.domain([-1,1])),n.domain()[0]===n.domain()[1]&&(n.domain()[0]?n.domain([n.domain()[0]+n.domain()[0]*.01,n.domain()[1]-n.domain()[1]*.01]):n.domain([-1,1]));var s=d3.select(this).on("click",function(a,b){q.chartClick({data:a,index:b,pos:d3.event,id:d})}),t=d3.select(this).selectAll("g.wrap.bar").data([o[0].values]),u=t.enter().append("g").attr("class","wrap nvd3 bar"),v=u.append("g");v.append("g").attr("class","bars"),t.attr("width",b).attr("height",c);var w=t.select("g").attr("transform","translate("+a.left+","+a.top+")");u.append("defs").append("clipPath").attr("id","chart-clip-path-"+d).append("rect"),t.select("#chart-clip-path-"+d+" rect").attr("width",p).attr("height",r),v.attr("clip-path",i?"url(#chart-clip-path-"+d+")":"");var z=v.append("g").attr("class","shiftWrap"),A=t.select(".bars").selectAll(".bar").data(function(a){return a});A.exit().remove();var B=A.enter().append("svg:rect").attr("class",function(a,b){return f(a,b)<0?"bar negative":"bar positive"}).attr("fill",function(a,b){return j[0]}).attr("x",0).attr("y",function(a,b){return n(Math.max(0,f(a,b)))}).attr("height",function(a,b){return Math.abs(n(f(a,b))-n(0))}).on("mouseover",function(a,b){d3.select(this).classed("hover",!0),q.elementMouseover({point:a,series:o[0],pos:[m(e(a,b)),n(f(a,b))],pointIndex:b,seriesIndex:0,e:d3.event})}).on("mouseout",function(a,b){d3.select(this).classed("hover",!1),q.elementMouseout({point:a,series:o[0],pointIndex:b,seriesIndex:0,e:d3.event})}).on("click",function(a,b){q.elementClick({value:f(a,b),data:a,index:b,pos:[m(e(a,b)),n(f(a,b))],e:d3.event,id:d}),d3.event.stopPropagation()}).on("dblclick",function(a,b){q.elementDblClick({value:f(a,b),data:a,index:b,pos:[m(e(a,b)),n(f(a,b))],e:d3.event,id:d}),d3.event.stopPropagation()});A.attr("class",function(a,b){return f(a,b)<0?"bar negative":"bar positive"}).attr("transform",function(a,b){return"translate("+(m(e(a,b))-p/o[0].values.length*.5)+",0)"}).attr("width",p/o[0].values.length*.9),d3.transition(A).attr("y",function(a,b){return n(Math.max(0,f(a,b)))}).attr("height",function(a,b){return Math.abs(n(f(a,b))-n(0))})});return r}var a={top:0,right:0,bottom:0,left:0},b=960,c=500,d=Math.floor(Math.random()*1e4),e=function(a){return a.x},f=function(a){return a.y},g=[],h=[],i=!0,j=d3.scale.category20().range(),k,l,m=d3.scale.linear(),n=d3.scale.linear(),o=d3.svg.axis().scale(m).orient("bottom"),p=d3.svg.axis().scale(n).orient("left"),q=d3.dispatch("chartClick","elementClick","elementDblClick","elementMouseover","elementMouseout");r.dispatch=q,r.x=function(a){if(!arguments.length)return e;e=a;return r},r.y=function(a){if(!arguments.length)return f;f=a;return r},r.margin=function(b){if(!arguments.length)return a;a=b;return r},r.width=function(a){if(!arguments.length)return b;b=a;return r},r.height=function(a){if(!arguments.length)return c;c=a;return r},r.xScale=function(a){if(!arguments.length)return m;m=a;return r},r.yScale=function(a){if(!arguments.length)return n;n=a;return r},r.xDomain=function(a){if(!arguments.length)return k;k=a;return r},r.yDomain=function(a){if(!arguments.length)return l;l=a;return r},r.forceX=function(a){if(!arguments.length)return g;g=a;return r},r.forceY=function(a){if(!arguments.length)return h;h=a;return r},r.clipEdge=function(a){if(!arguments.length)return i;i=a;return r},r.color=function(a){if(!arguments.length)return j;j=a;return r},r.id=function(a){if(!arguments.length)return d;d=a;return r};return r},a.models.bullet=function(){function k(a){a.each(function(a,i){var k=g-c.left-c.right,l=h-c.top-c.bottom,m=d.call(this,a,i).slice().sort(d3.descending),n=e.call(this,a,i).slice().sort(d3.descending),o=f.call(this,a,i).slice().sort(d3.descending),p=d3.select(this).selectAll("g.wrap.bullet").data([a]),q=p.enter().append("g").attr("class","wrap nvd3 bullet"),r=q.append("g"),s=p.select("g");p.attr("transform","translate("+c.left+","+c.top+")");var t=d3.scale.linear().domain([0,Math.max(m[0],n[0],o[0])]).range(b?[k,0]:[0,k]),u=this.__chart__||d3.scale.linear().domain([0,Infinity]).range(t.range());this.__chart__=t;var v=function(a){return Math.abs(u(a)-u(0))},w=function(a){return Math.abs(t(a)-t(0))},x=s.selectAll("rect.range").data(m);x.enter().append("rect").attr("class",function(a,b){return"range s"+b}).attr("width",v).attr("height",l).attr("x",b?u:0).on("mouseover",function(a,b){j.elementMouseover({value:a,label:b<=0?"Maximum":b>1?"Minimum":"Mean",pos:[t(a),l/2]})}).on("mouseout",function(a,b){j.elementMouseout({value:a,label:b<=0?"Minimum":b>=1?"Maximum":"Mean"})}),d3.transition(x).attr("x",b?t:0).attr("width",w).attr("height",l);var y=s.selectAll("rect.measure").data(o);y.enter().append("rect").attr("class",function(a,b){return"measure s"+b}).attr("width",v).attr("height",l/3).attr("x",b?u:0).attr("y",l/3).on("mouseover",function(a){j.elementMouseover({value:a,label:"Current",pos:[t(a),l/2]})}).on("mouseout",function(a){j.elementMouseout({value:a,label:"Current"})}),d3.transition(y).attr("width",w).attr("height",l/3).attr("x",b?t:0).attr("y",l/3);var z=s.selectAll("path.markerTriangle").data(n),A=l/6;z.enter().append("path").attr("class","markerTriangle").attr("transform",function(a){return"translate("+u(a)+","+l/2+")"}).attr("d","M0,"+A+"L"+A+","+ -A+" "+ -A+","+ -A+"Z").on("mouseover",function(a,b){j.elementMouseover({value:a,label:"Previous",pos:[t(a),l/2]})}).on("mouseout",function(a,b){j.elementMouseout({value:a,label:"Previous"})}),d3.transition(z).attr("transform",function(a){return"translate("+t(a)+","+l/2+")"}),z.exit().remove()}),d3.timer.flush()}var a="left",b=!1,c={top:0,right:0,bottom:0,left:0},d=function(a){return a.ranges},e=function(a){return a.markers},f=function(a){return a.measures},g=380,h=30,i=null,j=d3.dispatch("elementMouseover","elementMouseout");k.dispatch=j,k.orient=function(c){if(!arguments.length)return a;a=c,b=a=="right"||a=="bottom";return k},k.ranges=function(a){if(!arguments.length)return d;d=a;return k},k.markers=function(a){if(!arguments.length)return e;e=a;return k},k.measures=function(a){if(!arguments.length)return f;f=a;return k},k.width=function(a){if(!arguments.length)return g;g=a;return k},k.height=function(a){if(!arguments.length)return h;h=a;return k},k.margin=function(a){if(!arguments.length)return c;c=a;return k},k.tickFormat=function(a){if(!arguments.length)return i;i=a;return k};return k},a.models.bulletChart=function(){function p(b){b.each(function(b,l){var p=d3.select(this),q=(h||parseInt(p.style("width"))||960)-d.left-d.right,r=i-d.top-d.bottom,s=this,t=e.call(this,b,l).slice().sort(d3.descending),u=f.call(this,b,l).slice().sort(d3.descending),v=g.call(this,b,l).slice().sort(d3.descending),w=p.selectAll("g.wrap.bulletChart").data([b]),x=w.enter().append("g").attr("class","wrap nvd3 bulletChart"),y=x.append("g");y.append("g").attr("class","bulletWrap"),y.append("g").attr("class","titles");var z=w.select("g");w.attr("transform","translate("+d.left+","+d.top+")");var A=d3.scale.linear().domain([0,Math.max(t[0],u[0],v[0])]).range(c?[q,0]:[0,q]),B=this.__chart__||d3.scale.linear().domain([0,Infinity]).range(A.range());this.__chart__=A;var C=function(a){return Math.abs(B(a)-B(0))},D=function(a){return Math.abs(A(a)-A(0))},E=z.select(".titles").append("g").attr("text-anchor","end").attr("transform","translate(-6,"+(i-d.top-d.bottom)/2+")");E.append("text").attr("class","title").text(function(a){return a.title}),E.append("text").attr("class","subtitle").attr("dy","1em").text(function(a){return a.subtitle}),n.width(q).height(r);var F=z.select(".bulletWrap");d3.transition(F).call(n);var G=j||A.tickFormat(8),H=z.selectAll("g.tick").data(A.ticks(8),function(a){return this.textContent||G(a)}),I=H.enter().append("g").attr("class","tick").attr("transform",function(a){return"translate("+B(a)+",0)"}).style("opacity",1e-6);I.append("line").attr("y1",r).attr("y2",r*7/6),I.append("text").attr("text-anchor","middle").attr("dy","1em").attr("y",r*7/6).text(G),d3.transition(I).attr("transform",function(a){return"translate("+A(a)+",0)"}).style("opacity",1);var J=d3.transition(H).attr("transform",function(a){return"translate("+A(a)+",0)"}).style("opacity",1);J.select("line").attr("y1",r).attr("y2",r*7/6),J.select("text").attr("y",r*7/6),d3.transition(H.exit()).attr("transform",function(a){return"translate("+A(a)+",0)"}).style("opacity",1e-6).remove(),n.dispatch.on("elementMouseover.tooltip",function(a){m.tooltipShow(a)}),k&&m.on("tooltipShow",function(a){o(a,s.parentNode)}),n.dispatch.on("elementMouseout.tooltip",function(a){m.tooltipHide(a)}),k&&m.on("tooltipHide",a.tooltip.cleanup)}),d3.timer.flush()}var b="left",c=!1,d={top:5,right:40,bottom:20,left:120},e=function(a){return a.ranges},f=function(a){return a.markers},g=function(a){return a.measures},h=null,i=55,j=null,k=!0,l=function(a,b,c,d,e){return"<h3>"+d.label+"</h3>"+"<p>"+d.value+"</p>"},m=d3.dispatch("tooltipShow","tooltipHide"),n=a.models.bullet(),o=function(b,c){var c=document.getElementById("chart"),e=b.pos[0]+c.offsetLeft+d.left,f=b.pos[1]+c.offsetTop+d.top,g="<h3>"+b.label+"</h3>"+"<p>"+b.value+"</p>";a.tooltip.show([e,f],g,b.value<0?"e":"w")};p.dispatch=m,p.bullet=n,p.orient=function(a){if(!arguments.length)return b;b=a,c=b=="right"||b=="bottom";return p},p.ranges=function(a){if(!arguments.length)return e;e=a;return p},p.markers=function(a){if(!arguments.length)return f;f=a;return p},p.measures=function(a){if(!arguments.length)return g;g=a;return p},p.width=function(a){if(!arguments.length)return h;h=a;return p},p.height=function(a){if(!arguments.length)return i;i=a;return p},p.margin=function(a){if(!arguments.length)return d;d=a;return p},p.tickFormat=function(a){if(!arguments.length)return j;j=a;return p},p.tooltips=function(a){if(!arguments.length)return k;k=a;return p},p.tooltipContent=function(a){if(!arguments.length)return l;l=a;return p};return p},a.models.cumulativeLineChart=function(){function C(a,b){return b.map(function(b,c){var d=m.y()(b.values[a],a);b.values=b.values.map(function(a,b){a.display={y:(m.y()(a,b)-d)/(1+d)};return a});return b})}function B(a){a.each(function(j){var y=d3.select(this).classed("chart-"+o,!0),z=this,A=(d||parseInt(y.style("width"))||960)-b.left-b.right,D=(e||parseInt(y.style("height"))||400)-b.top-b.bottom;k=m.xScale(),l=m.yScale(),n.domain([0,j[0].values.length-1]).range([0,A]).clamp(!0);var j=C(u.i,j),E=y.selectAll("g.wrap.cumulativeLine").data([j]),F=E.enter().append("g").attr("class","wrap nvd3 cumulativeLine").append("g");F.append("g").attr("class","x axis"),F.append("g").attr("class","y axis"),F.append("g").attr("class","linesWrap"),F.append("g").attr("class","legendWrap"),F.append("g").attr("class","controlsWrap");var G=E.select("g");f&&(r.width(A),G.select(".legendWrap").datum(j).call(r),b.top!=r.height()&&(b.top=r.height(),D=(e||parseInt(y.style("height"))||400)-b.top-b.bottom),G.select(".legendWrap").attr("transform","translate(0,"+ -b.top+")")),h&&(s.width(140).color(["#444","#444","#444"]),G.select(".controlsWrap").datum(v).attr("transform","translate(0,"+ -b.top+")").call(s)),m.y(function(a){return a.display.y}).width(A).height(D).color(j.map(function(a,b){return a.color||c[b%c.length]}).filter(function(a,b){return!j[b].disabled})),G.attr("transform","translate("+b.left+","+b.top+")");var H=G.select(".linesWrap").datum(j.filter(function(a){return!a.disabled}));d3.transition(H).call(m);var I=H.selectAll(".indexLine").data([u]);I.enter().append("rect").attr("class","indexLine").attr("width",3).attr("x",-2).attr("fill","red").attr("fill-opacity",.5).call(x),I.attr("transform",function(a){return"translate("+n(a.i)+",0)"}).attr("height",D),p.scale(k).ticks(A/100).tickSize(-D,0),G.select(".x.axis").attr("transform","translate(0,"+l.range()[0]+")"),d3.transition(G.select(".x.axis")).call(p),q.scale(l).ticks(D/36).tickSize(-A,0),d3.transition(G.select(".y.axis")).call(q),s.dispatch.on("legendClick",function(b,c){b.disabled=!b.disabled,i=!b.disabled,a.transition().call(B)}),r.dispatch.on("legendClick",function(b,c){b.disabled=!b.disabled,j.filter(function(a){return!a.disabled}).length||j.map(function(a){a.disabled=!1,E.selectAll(".series").classed("disabled",!1);return a}),a.transition().call(B)}),t.on("tooltipShow",function(a){g&&w(a,z.parentNode)})}),B.update=function(){B(a)},B.container=this;return B}function A(a,b){B.update()}function z(a,b){a.x+=d3.event.dx,a.i=Math.round(n.invert(a.x)),d3.select(this).attr("transform","translate("+n(a.i)+",0)")}function y(a,b){}var b={top:30,right:20,bottom:50,left:60},c=d3.scale.category20().range(),d=null,e=null,f=!0,g=!0,h=!1,i=!0,j=function(a,b,c,d,e){return"<h3>"+a+"</h3>"+"<p>"+c+" at "+b+"</p>"},k,l,m=a.models.line(),n=d3.scale.linear(),o=m.id(),p=a.models.axis().orient("bottom").tickPadding(5),q=a.models.axis().orient("left"),r=a.models.legend().height(30),s=a.models.legend().height(30),t=d3.dispatch("tooltipShow","tooltipHide"),u={i:0,x:0},v=[{key:"Re-scale y-axis"}],w=function(b,c){var d=b.pos[0]+(c.offsetLeft||0),e=b.pos[1]+(c.offsetTop||0),f=p.tickFormat()(m.x()(b.point,b.pointIndex)),g=q.tickFormat()(m.y()(b.point,b.pointIndex)),h=j(b.series.key,f,g,b,B);a.tooltip.show([d,e],h)},x=d3.behavior.drag().on("dragstart",y).on("drag",z).on("dragend",A);m.dispatch.on("elementMouseover.tooltip",function(a){a.pos=[a.pos[0]+b.left,a.pos[1]+b.top],t.tooltipShow(a)}),m.dispatch.on("elementMouseout.tooltip",function(a){t.tooltipHide(a)}),t.on("tooltipHide",function(){g&&a.tooltip.cleanup()}),B.dispatch=t,B.legend=r,B.xAxis=p,B.yAxis=q,d3.rebind(B,m,"defined","isArea","x","y","size","xDomain","yDomain","forceX","forceY","interactive","clipEdge","clipVoronoi","id"),B.margin=function(a){if(!arguments.length)return b;b=a;return B},B.width=function(a){if(!arguments.length)return d;d=a;return B},B.height=function(a){if(!arguments.length)return e;e=a;return B},B.color=function(a){if(!arguments.length)return c;c=a,r.color(a);return B},B.showLegend=function(a){if(!arguments.length)return f;f=a;return B},B.tooltips=function(a){if(!arguments.length)return g;g=a;return B},B.tooltipContent=function(a){if(!arguments.length)return j;j=a;return B};return B},a.models.discreteBar=function(){function r(d){d.each(function(s){var t=b-a.left-a.right,u=c-a.top-a.bottom;s=s.map(function(a,b){a.values=a.values.map(function(a){a.series=b;return a});return a});var v=m&&n?[]:s.map(function(a){return a.values.map(function(a,b){return{x:g(a,b),y:h(a,b),y0:a.y0}})});e.domain(m||d3.merge(v).map(function(a){return a.x})).rangeBands([0,t],.1),f.domain(n||d3.extent(d3.merge(v).map(function(a){return a.y}).concat(i))),k?f.range([u-(f.domain()[0]<0?12:0),f.domain()[1]>0?12:0]):f.range([u,0]),p=p||e,q=q||f.copy().range([f(0),f(0)]);var w=d3.select(this).selectAll("g.wrap.discretebar").data([s]),z=w.enter().append("g").attr("class","wrap nvd3 discretebar"),A=z.append("g");A.append("g").attr("class","groups");var B=w.select("g");w.attr("transform","translate("+a.left+","+a.top+")");var C=w.select(".groups").selectAll(".group").data(function(a){return a},function(a){return a.key});C.enter().append("g").style("stroke-opacity",1e-6).style("fill-opacity",1e-6),d3.transition(C.exit()).style("stroke-opacity",1e-6).style("fill-opacity",1e-6).remove(),C.attr("class",function(a,b){return"group series-"+b}).classed("hover",function(a){return a.hover}),d3.transition(C).style("stroke-opacity",1).style("fill-opacity",.75);var D=C.selectAll("g.bar").data(function(a){return a.values});D.exit().remove();var E=D.enter().append("g").attr("transform",function(a,b,c){return"translate("+e(g(a,b))+", "+f(0)+")"}).on("mouseover",function(a,b){d3.select(this).classed("hover",!0),o.elementMouseover({value:h(a,b),point:a,series:s[a.series],pos:[e(g(a,b))+e.rangeBand()*(a.series+.5)/s.length,f(h(a,b))],pointIndex:b,seriesIndex:a.series,e:d3.event})}).on("mouseout",function(a,b){d3.select(this).classed("hover",!1),o.elementMouseout({value:h(a,b),point:a,series:s[a.series],pointIndex:b,seriesIndex:a.series,e:d3.event})}).on("click",function(a,b){o.elementClick({value:h(a,b),point:a,series:s[a.series],pos:[e(g(a,b))+e.rangeBand()*(a.series+.5)/s.length,f(h(a,b))],pointIndex:b,seriesIndex:a.series,e:d3.event}),d3.event.stopPropagation()}).on("dblclick",function(a,b){o.elementDblClick({value:h(a,b),point:a,series:s[a.series],pos:[e(g(a,b))+e.rangeBand()*(a.series+.5)/s.length,f(h(a,b))],pointIndex:b,seriesIndex:a.series,e:d3.event}),d3.event.stopPropagation()});E.append("rect").attr("height",0).attr("width",e.rangeBand()/s.length).style("fill",function(a,b){return a.color||j[b%j.length]}).style("stroke",function(a,b){return a.color||j[b%j.length]}),k?(E.append("text").attr("text-anchor","middle"),D.selectAll("text").attr("x",e.rangeBand()/2).attr("y",function(a,b){return h(a,b)<0?f(h(a,b))-f(0)+12:-4}).text(function(a,b){return l(h(a,b))})):D.selectAll("text").remove(),D.attr("class",function(a,b){return h(a,b)<0?"bar negative":"bar positive"}).attr("transform",function(a,b){return"translate("+e(g(a,b))+", "+(h(a,b)<0?q(0):q(h(a,b)))+")"}).selectAll("rect").attr("width",e.rangeBand()/s.length),d3.transition(D).attr("transform",function(a,b){return"translate("+e(g(a,b))+", "+(h(a,b)<0?f(0):f(h(a,b)))+")"}).selectAll("rect").attr("height",function(a,b){return Math.abs(f(h(a,b))-f(0))}),r.update=function(){r(d)},p=e.copy(),q=f.copy()});return r}var a={top:0,right:0,bottom:0,left:0},b=960,c=500,d=Math.floor(Math.random()*1e4),e=d3.scale.ordinal(),f=d3.scale.linear(),g=function(a){return a.x},h=function(a){return a.y},i=[0],j=d3.scale.category20().range(),k=!1,l=d3.format(",.2f"),m,n,o=d3.dispatch("chartClick","elementClick","elementDblClick","elementMouseover","elementMouseout"),p,q;r.dispatch=o,r.x=function(a){if(!arguments.length)return g;g=a;return r},r.y=function(a){if(!arguments.length)return h;h=a;return r},r.margin=function(b){if(!arguments.length)return a;a=b;return r},r.width=function(a){if(!arguments.length)return b;b=a;return r},r.height=function(a){if(!arguments.length)return c;c=a;return r},r.xScale=function(a){if(!arguments.length)return e;e=a;return r},r.yScale=function(a){if(!arguments.length)return f;f=a;return r},r.xDomain=function(a){if(!arguments.length)return m;m=a;return r},r.yDomain=function(a){if(!arguments.length)return n;n=a;return r},r.forceY=function(a){if(!arguments.length)return i;i=a;return r},r.color=function(a){if(!arguments.length)return j;j=a;return r},r.id=function(a){if(!arguments.length)return d;d=a;return r},r.showValues=function(a){if(!arguments.length)return k;k=a;return r},r.valueFormat=function(a){if(!arguments.length)return l;l=a;return r};return r},a.models.discreteBarChart=function(){function r(e){e.each(function(i){var q=d3.select(this),s=this,t=(c||parseInt(q.style("width"))||960)-b.left-b.right,u=(d||parseInt(q.style("height"))||400)-b.top-b.bottom;j.width(t).height(u);var v=q.selectAll("g.wrap.discreteBarWithAxes").data([i]),w=v.enter().append("g").attr("class","wrap nvd3 discreteBarWithAxes").append("g"),z=w.append("defs");w.append("g").attr("class","x axis"),w.append("g").attr("class","y axis"),w.append("g").attr("class","barsWrap");var A=v.select("g");A.attr("transform","translate("+b.left+","+b.top+")");var B=A.select(".barsWrap").datum(i.filter(function(a){return!a.disabled}));d3.transition(B).call(j),z.append("clipPath").attr("id","x-label-clip-"+j.id()).append("rect"),A.select("#x-label-clip-"+j.id()+" rect").attr("width",k.rangeBand()*(f?2:1)).attr("height",16).attr("x",-k.rangeBand()/(f?1:2)),m.ticks(t/100).tickSize(-u,0),A.select(".x.axis").attr("transform","translate(0,"+(l.range()[0]+(j.showValues()&&l.domain()[0]<0?16:0))+")"),A.select(".x.axis").transition().duration(0).call(m);var C=A.select(".x.axis").selectAll("g");f&&C.selectAll("text").attr("transform",function(a,b,c){return"translate(0,"+(c%2==0?"0":"12")+")"}),g&&C.selectAll("text").attr("transform",function(a,b,c){return"rotate("+g+" 0,0)"}).attr("text-anchor",g>0?"start":"end"),C.selectAll("text").attr("clip-path",function(a,b,c){return g?"":"url(#x-label-clip-"+j.id()+")"}),n.ticks(u/36).tickSize(-t,0),d3.transition(A.select(".y.axis")).call(n),j.dispatch.on("elementMouseover.tooltip",function(a){a.pos=[a.pos[0]+b.left,a.pos[1]+b.top],o.tooltipShow(a)}),h&&o.on("tooltipShow",function(a){p(a,s.parentNode)}),j.dispatch.on("elementMouseout.tooltip",function(a){o.tooltipHide(a)}),h&&o.on("tooltipHide",a.tooltip.cleanup),r.update=function(){e.transition().call(r)},r.container=this});return r}var b={top:10,right:10,bottom:50,left:60},c=null,d=null,e=d3.scale.category20().range(),f=!1,g=0,h=!0,i=function(a,b,c,d,e){return"<h3>"+b+"</h3>"+"<p>"+c+"</p>"},j=a.models.discreteBar(),k=j.xScale(),l=j.yScale(),m=a.models.axis().scale(k).orient("bottom").highlightZero(!1).showMaxMin(!1),n=a.models.axis().scale(l).orient("left"),o=d3.dispatch("tooltipShow","tooltipHide");m.tickFormat(function(a){return a}),n.tickFormat(d3.format(",.1f"));var p=function(b,c){var d=b.pos[0]+(c.offsetLeft||0),e=b.pos[1]+(c.offsetTop||0),f=m.tickFormat()(j.x()(b.point,b.pointIndex)),g=n.tickFormat()(j.y()(b.point,b.pointIndex)),h=i(b.series.key,f,g,b,r);a.tooltip.show([d,e],h,b.value<0?"n":"s")},q=[{key:"Grouped"},{key:"Stacked",disabled:!0}];r.dispatch=o,r.discretebar=j,r.xAxis=m,r.yAxis=n,d3.rebind(r,j,"x","y","xDomain","yDomain","forceX","forceY","id","showValues","valueFormat"),r.margin=function(a){if(!arguments.length)return b;b=a;return r},r.width=function(a){if(!arguments.length)return c;c=a;return r},r.height=function(a){if(!arguments.length)return d;d=a;return r},r.color=function(a){if(!arguments.length)return e;e=a,j.color(a);return r},r.staggerLabels=function(a){if(!arguments.length)return f;f=a;return r},r.rotateLabels=function(a){if(!arguments.length)return g;g=a;return r},r.tooltips=function(a){if(!arguments.length)return h;h=a;return r},r.tooltipContent=function(a){if(!arguments.length)return i;i=a;return r};return r},a.models.distribution=function(){function j(g){g.each(function(g){var j=b-(d==="x"?a.left+a.right:a.top+a.bottom),k=d=="x"?"y":"x";i=i||h;var l=d3.select(this).selectAll("g.distribution").data([g]),m=l.enter().append("g").attr("class","nvd3 distribution"),n=m.append("g"),o=l.select("g");l.attr("transform","translate("+a.left+","+a.top+")");var p=o.selectAll("g.dist").data(function(a){return a},function(a){return a.key});p.enter().append("g"),p.attr("class",function(a,b){return"dist series-"+b}).style("stroke",function(a,b){return f[b%f.length]});var q=p.selectAll("line.dist"+d).data(function(a){return a.values});q.enter().append("line").attr(d+"1",function(a,b){return i(e(a,b))}).attr(d+"2",function(a,b){return i(e(a,b))}),d3.transition(p.exit().selectAll("line.dist"+d)).attr(d+"1",function(a,b){return h(e(a,b))}).attr(d+"2",function(a,b){return h(e(a,b))}).style("stroke-opacity",0).remove(),q.attr("class",function(a,b){return"dist"+d+" dist"+d+"-"+b}).attr(k+"1",0).attr(k+"2",c),d3.transition(q).attr(d+"1",function(a,b){return h(e(a,b))}).attr(d+"2",function(a,b){return h(e(a,b))}),i=h.copy()});return j}var a={top:0,right:0,bottom:0,left:0},b=400,c=8,d="x",e=function(a){return a[d]},f=d3.scale.category20().range(),g,h=d3.scale.linear(),i;j.margin=function(b){if(!arguments.length)return a;a=b;return j},j.width=function(a){if(!arguments.length)return b;b=a;return j},j.axis=function(a){if(!arguments.length)return d;d=a;return j},j.size=function(a){if(!arguments.length)return c;c=a;return j},j.getData=function(a){if(!arguments.length)return e;e=d3.functor(a);return j},j.scale=function(a){if(!arguments.length)return h;h=a;return j},j.color=function(a){if(!arguments.length)return f;f=a;return j};return j},a.models.indentedTree=function(){function i(d){d.each(function(e){function B(a){var b=a.values||a._values;return b&&b.length}function A(a){return a._values&&a._values.length}function z(a){return a._values&&a._values.length?iconOpen:a.values&&a.values.length?iconClose:""}function y(a,b,c){d3.event.stopPropagation();if(d3.event.shiftKey&&!c){d3.event.shiftKey=!1,a.values&&a.values.forEach(function(a){(a.values||
-a._values)&&y(a,0,!0)});return!0}if(!B(a))return!0;a.values?(a._values=a.values,a.values=null):(a.values=a._values,a._values=null),i.update()}var j=b-a.left-a.right,k=c-a.top-a.bottom;i.update=function(){d.transition().call(i)};var l=0,m=1,n=d3.layout.tree().children(function(a){return a.values}).size([c,childIndent]);e[0].key||(e[0].key=g);var o=n.nodes(e[0]),p=d3.select(this).selectAll("div").data([[o]]),q=p.enter().append("div").attr("class","wrap nvd3 indentedtree"),r=q.append("table"),s=p.select("table").attr("width","100%").attr("class",tableClass);if(f){var t=r.append("thead"),u=t.append("tr");columns.forEach(function(a){u.append("th").attr("width",a.width?a.width:"10%").style("text-align",a.type=="numeric"?"right":"left").append("span").text(a.label)})}var v=s.selectAll("tbody").data(function(a){return a});v.enter().append("tbody"),m=d3.max(o,function(a){return a.depth}),n.size([c,m*childIndent]);var w=v.selectAll("tr").data(function(a){return a},function(a){return a.id||a.id==++l});w.exit().remove(),w.select("img.treeicon").attr("src",z).classed("folded",A);var x=w.enter().append("tr");columns.forEach(function(a,b){var c=x.append("td").style("padding-left",function(a){return(b?0:a.depth*childIndent+12+(z(a)?0:16))+"px"},"important").style("text-align",a.type=="numeric"?"right":"left");b==0&&c.append("img").classed("treeicon",!0).classed("folded",A).attr("src",z).style("width","14px").style("height","14px").style("padding","0 1px").style("display",function(a){return z(a)?"inline-block":"none"}).on("click",y),c.append("span").attr("class",d3.functor(a.classes)).text(function(b){return a.format?a.format(b):b[a.key]||"-"}),a.showCount&&c.append("span").attr("class","childrenCount").text(function(a){return a.values&&a.values.length||a._values&&a._values.length?"("+(a.values&&a.values.length||a._values&&a._values.length)+")":""}),a.click&&c.select("span").on("click",a.click)}),w.order().on("click",function(a){h.elementClick({row:this,data:a,pos:[a.x,a.y]})}).on("dblclick",function(a){h.elementDblclick({row:this,data:a,pos:[a.x,a.y]})}).on("mouseover",function(a){h.elementMouseover({row:this,data:a,pos:[a.x,a.y]})}).on("mouseout",function(a){h.elementMouseout({row:this,data:a,pos:[a.x,a.y]})})});return i}var a={top:0,right:0,bottom:0,left:0},b=960,c=500,d=d3.scale.category20().range(),e=Math.floor(Math.random()*1e4),f=!0,g="No Results found.";childIndent=20,columns=[{key:"key",label:"Name",type:"text"}],tableClass=null,iconOpen="images/grey-plus.png",iconClose="images/grey-minus.png";var h=d3.dispatch("elementClick","elementDblclick","elementMouseover","elementMouseout");i.margin=function(b){if(!arguments.length)return a;a=b;return i},i.width=function(a){if(!arguments.length)return b;b=a;return i},i.height=function(a){if(!arguments.length)return c;c=a;return i},i.color=function(a){if(!arguments.length)return d;d=a,scatter.color(a);return i},i.id=function(a){if(!arguments.length)return e;e=a;return i},i.header=function(a){if(!arguments.length)return f;f=a;return i},i.noResultsText=function(a){if(!arguments.length)return g;g=a;return i},i.columns=function(a){if(!arguments.length)return columns;columns=a;return i},i.tableClass=function(a){if(!arguments.length)return tableClass;tableClass=a;return i},i.iconOpen=function(a){if(!arguments.length)return iconOpen;iconOpen=a;return i},i.iconClose=function(a){if(!arguments.length)return iconClose;iconClose=a;return i};return i},a.models.legend=function(){function h(i){i.each(function(h){var i=b-a.left-a.right,j=d3.select(this).selectAll("g.legend").data([h]),l=j.enter().append("g").attr("class","nvd3 legend").append("g"),m=j.select("g").attr("transform","translate("+a.left+","+a.top+")"),n=m.selectAll(".series").data(function(a){return a}),o=n.enter().append("g").attr("class","series").on("mouseover",function(a,b){g.legendMouseover(a,b)}).on("mouseout",function(a,b){g.legendMouseout(a,b)}).on("click",function(a,b){g.legendClick(a,b)}).on("dblclick",function(a,b){g.legendDblclick(a,b)});o.append("circle").style("fill",function(a,b){return a.color||e[b%e.length]}).style("stroke",function(a,b){return a.color||e[b%e.length]}).style("stroke-width",2).attr("r",5),o.append("text").text(d).attr("text-anchor","start").attr("dy",".32em").attr("dx","8"),n.classed("disabled",function(a){return a.disabled}),n.exit().remove();if(f){var p=[];n.each(function(a,b){p.push(d3.select(this).select("text").node().getComputedTextLength()+28)});var q=0,r=0,s=[];while(r<i&&q<p.length)s[q]=p[q],r+=p[q++];while(r>i&&q>1){s=[],q--;for(k=0;k<p.length;k++)p[k]>(s[k%q]||0)&&(s[k%q]=p[k]);r=s.reduce(function(a,b,c,d){return a+b})}var t=[];for(var u=0,v=0;u<q;u++)t[u]=v,v+=s[u];n.attr("transform",function(a,b){return"translate("+t[b%q]+","+(5+Math.floor(b/q)*20)+")"}),m.attr("transform","translate("+(b-a.right-r)+","+a.top+")"),c=a.top+a.bottom+Math.ceil(p.length/q)*20}else{var w=5,x=5,y=0,z;n.attr("transform",function(c,d){var e=d3.select(this).select("text").node().getComputedTextLength()+28;z=x,b<a.left+a.right+z+e&&(x=z=5,w+=20),x+=e,x>y&&(y=x);return"translate("+z+","+w+")"}),m.attr("transform","translate("+(b-a.right-y)+","+a.top+")"),c=a.top+a.bottom+w+15}});return h}var a={top:5,right:0,bottom:5,left:0},b=400,c=20,d=function(a){return a.key},e=d3.scale.category20().range(),f=!0,g=d3.dispatch("legendClick","legendDblclick","legendMouseover","legendMouseout");h.dispatch=g,h.margin=function(b){if(!arguments.length)return a;a=b;return h},h.width=function(a){if(!arguments.length)return b;b=a;return h},h.height=function(a){if(!arguments.length)return c;c=a;return h},h.key=function(a){if(!arguments.length)return d;d=a;return h},h.color=function(a){if(!arguments.length)return e;e=a;return h},h.align=function(a){if(!arguments.length)return f;f=a;return h};return h},a.models.line=function(){function s(a){a.each(function(a){var r=c-b.left-b.right,s=d-b.top-b.bottom,t=d3.select(this);l=o.xScale(),m=o.yScale(),p=p||l,q=q||m;var u=t.selectAll("g.wrap.line").data([a]),v=u.enter().append("g").attr("class","wrap nvd3 line"),w=v.append("defs"),z=v.append("g"),A=u.select("g");z.append("g").attr("class","groups"),z.append("g").attr("class","scatterWrap");var B=u.select(".scatterWrap");o.width(r).height(s),d3.transition(B).call(o),u.attr("transform","translate("+b.left+","+b.top+")"),w.append("clipPath").attr("id","edge-clip-"+f).append("rect"),u.select("#edge-clip-"+f+" rect").attr("width",r).attr("height",s),A.attr("clip-path",k?"url(#edge-clip-"+f+")":""),B.attr("clip-path",k?"url(#edge-clip-"+f+")":"");var C=u.select(".groups").selectAll(".group").data(function(a){return a},function(a){return a.key});C.enter().append("g").style("stroke-opacity",1e-6).style("fill-opacity",1e-6),d3.transition(C.exit()).style("stroke-opacity",1e-6).style("fill-opacity",1e-6).remove(),C.attr("class",function(a,b){return"group series-"+b}).classed("hover",function(a){return a.hover}).style("fill",function(a,b){return e[b%e.length]}).style("stroke",function(a,b){return e[b%e.length]}),d3.transition(C).style("stroke-opacity",1).style("fill-opacity",.5);var D=C.selectAll("path.area").data(function(a){return[a]});D.enter().append("path").filter(j).attr("class","area").attr("d",function(a){return d3.svg.area().interpolate(n).defined(i).x(function(a,b){return p(g(a,b))}).y0(function(a,b){return q(h(a,b))}).y1(function(a,b){return q(m.domain()[0]<=0?m.domain()[1]>=0?0:m.domain()[1]:m.domain()[0])}).apply(this,[a.values])}),d3.transition(C.exit().selectAll("path.area")).attr("d",function(a){return d3.svg.area().interpolate(n).defined(i).x(function(a,b){return p(g(a,b))}).y0(function(a,b){return q(h(a,b))}).y1(function(a,b){return q(m.domain()[0]<=0?m.domain()[1]>=0?0:m.domain()[1]:m.domain()[0])}).apply(this,[a.values])}),d3.transition(D.filter(j)).attr("d",function(a){return d3.svg.area().interpolate(n).defined(i).x(function(a,b){return p(g(a,b))}).y0(function(a,b){return q(h(a,b))}).y1(function(a,b){return q(m.domain()[0]<=0?m.domain()[1]>=0?0:m.domain()[1]:m.domain()[0])}).apply(this,[a.values])});var E=C.selectAll("path.line").data(function(a){return[a.values]});E.enter().append("path").attr("class",function(a){return"line"}).attr("d",d3.svg.line().interpolate(n).defined(i).x(function(a,b){return p(g(a,b))}).y(function(a,b){return q(h(a,b))})),d3.transition(C.exit().selectAll("path.line")).attr("d",d3.svg.line().interpolate(n).defined(i).x(function(a,b){return l(g(a,b))}).y(function(a,b){return m(h(a,b))})),d3.transition(E).attr("d",d3.svg.line().interpolate(n).defined(i).x(function(a,b){return l(g(a,b))}).y(function(a,b){return m(h(a,b))})),p=l.copy(),q=m.copy()});return s}var b={top:0,right:0,bottom:0,left:0},c=960,d=500,e=d3.scale.category20().range(),f=Math.floor(Math.random()*1e4),g=function(a){return a.x},h=function(a){return a.y},i=function(a,b){return!isNaN(h(a,b))&&h(a,b)!==null},j=function(a){return a.area},k=!1,l,m,n="linear",o=a.models.scatter().id(f).size(16).sizeDomain([16,256]),p,q,r;s.dispatch=o.dispatch,d3.rebind(s,o,"interactive","size","xScale","yScale","zScale","xDomain","yDomain","sizeDomain","forceX","forceY","forceSize","clipVoronoi","clipRadius"),s.margin=function(a){if(!arguments.length)return b;b=a;return s},s.width=function(a){if(!arguments.length)return c;c=a;return s},s.height=function(a){if(!arguments.length)return d;d=a;return s},s.x=function(a){if(!arguments.length)return g;g=a,o.x(a);return s},s.y=function(a){if(!arguments.length)return h;h=a,o.y(a);return s},s.clipEdge=function(a){if(!arguments.length)return k;k=a;return s},s.color=function(a){if(!arguments.length)return e;e=a,o.color(a);return s},s.id=function(a){if(!arguments.length)return f;f=a;return s},s.interpolate=function(a){if(!arguments.length)return n;n=a;return s},s.defined=function(a){if(!arguments.length)return i;i=a;return s},s.isArea=function(a){if(!arguments.length)return j;j=d3.functor(a);return s};return s},a.models.lineChart=function(){function q(a){a.each(function(h){var r=d3.select(this),s=this,t=(d||parseInt(r.style("width"))||960)-b.left-b.right,u=(e||parseInt(r.style("height"))||400)-b.top-b.bottom;i=k.xScale(),j=k.yScale();var v=r.selectAll("g.wrap.lineChart").data([h]),w=v.enter().append("g").attr("class","wrap nvd3 lineChart").append("g");w.append("g").attr("class","x axis"),w.append("g").attr("class","y axis"),w.append("g").attr("class","linesWrap"),w.append("g").attr("class","legendWrap");var z=v.select("g");f&&(n.width(t),z.select(".legendWrap").datum(h).call(n),b.top!=n.height()&&(b.top=n.height(),u=(e||parseInt(r.style("height"))||400)-b.top-b.bottom),z.select(".legendWrap").attr("transform","translate(0,"+ -b.top+")")),k.width(t).height(u).color(h.map(function(a,b){return a.color||c[b%c.length]}).filter(function(a,b){return!h[b].disabled})),z.attr("transform","translate("+b.left+","+b.top+")");var A=z.select(".linesWrap").datum(h.filter(function(a){return!a.disabled}));d3.transition(A).call(k),l.scale(i).ticks(t/100).tickSize(-u,0),z.select(".x.axis").attr("transform","translate(0,"+j.range()[0]+")"),d3.transition(z.select(".x.axis")).call(l),m.scale(j).ticks(u/36).tickSize(-t,0),d3.transition(z.select(".y.axis")).call(m),n.dispatch.on("legendClick",function(b,c){b.disabled=!b.disabled,h.filter(function(a){return!a.disabled}).length||h.map(function(a){a.disabled=!1,v.selectAll(".series").classed("disabled",!1);return a}),a.transition().call(q)}),o.on("tooltipShow",function(a){g&&p(a,s.parentNode)})}),q.update=function(){q(a)},q.container=this;return q}var b={top:30,right:20,bottom:50,left:60},c=d3.scale.category20().range(),d=null,e=null,f=!0,g=!0,h=function(a,b,c,d,e){return"<h3>"+a+"</h3>"+"<p>"+c+" at "+b+"</p>"},i,j,k=a.models.line(),l=a.models.axis().orient("bottom").tickPadding(5),m=a.models.axis().orient("left"),n=a.models.legend().height(30),o=d3.dispatch("tooltipShow","tooltipHide"),p=function(b,c){if(c){var d=d3.select(c).select("svg"),e=d.attr("viewBox");if(e){e=e.split(" ");var f=parseInt(d.style("width"))/e[2];b.pos[0]=b.pos[0]*f,b.pos[1]=b.pos[1]*f}}var g=b.pos[0]+(c.offsetLeft||0),i=b.pos[1]+(c.offsetTop||0),j=l.tickFormat()(k.x()(b.point,b.pointIndex)),n=m.tickFormat()(k.y()(b.point,b.pointIndex)),o=h(b.series.key,j,n,b,q);a.tooltip.show([g,i],o)};k.dispatch.on("elementMouseover.tooltip",function(a){a.pos=[a.pos[0]+b.left,a.pos[1]+b.top],o.tooltipShow(a)}),k.dispatch.on("elementMouseout.tooltip",function(a){o.tooltipHide(a)}),o.on("tooltipHide",function(){g&&a.tooltip.cleanup()}),q.dispatch=o,q.legend=n,q.xAxis=l,q.yAxis=m,d3.rebind(q,k,"defined","isArea","x","y","size","xScale","yScale","xDomain","yDomain","forceX","forceY","interactive","clipEdge","clipVoronoi","id","interpolate"),q.margin=function(a){if(!arguments.length)return b;b=a;return q},q.width=function(a){if(!arguments.length)return d;d=a;return q},q.height=function(a){if(!arguments.length)return e;e=a;return q},q.color=function(a){if(!arguments.length)return c;c=a,n.color(a);return q},q.showLegend=function(a){if(!arguments.length)return f;f=a;return q},q.tooltips=function(a){if(!arguments.length)return g;g=a;return q},q.tooltipContent=function(a){if(!arguments.length)return h;h=a;return q};return q},a.models.linePlusBarChart=function(){function v(j){j.each(function(o){var w=d3.select(this),y=this,z=(c||parseInt(w.style("width"))||960)-b.left-b.right,A=(d||parseInt(w.style("height"))||400)-b.top-b.bottom,B=o.filter(function(a){return!a.disabled&&a.bar}),C=o.filter(function(a){return!a.disabled&&!a.bar}),D=o.filter(function(a){return!a.disabled&&a.bar}).map(function(a){return a.values.map(function(a,b){return{x:e(a,b),y:f(a,b)}})}),E=o.filter(function(a){return!a.disabled&&!a.bar}).map(function(a){return a.values.map(function(a,b){return{x:e(a,b),y:f(a,b)}})});m.domain(d3.extent(d3.merge(D.concat(E)),function(a){return a.x})).range([0,z]);var F=d3.select(this).selectAll("g.wrap.linePlusBar").data([o]),G=F.enter().append("g").attr("class","wrap nvd3 linePlusBar").append("g");G.append("g").attr("class","x axis"),G.append("g").attr("class","y1 axis"),G.append("g").attr("class","y2 axis"),G.append("g").attr("class","barsWrap"),G.append("g").attr("class","linesWrap"),G.append("g").attr("class","legendWrap");var H=F.select("g");h&&(s.width(z/2),H.select(".legendWrap").datum(o.map(function(a){a.originalKey=a.originalKey===undefined?a.key:a.originalKey,a.key=a.originalKey+(a.bar?" (left axis)":" (right axis)");return a})).call(s),b.top!=s.height()&&(b.top=s.height(),A=(d||parseInt(w.style("height"))||400)-b.top-b.bottom),H.select(".legendWrap").attr("transform","translate("+z/2+","+ -b.top+")")),k.width(z).height(A).color(o.map(function(a,b){return a.color||g[b%g.length]}).filter(function(a,b){return!o[b].disabled&&!o[b].bar})),l.width(z).height(A).color(o.map(function(a,b){return a.color||g[b%g.length]}).filter(function(a,b){return!o[b].disabled&&o[b].bar}));var I=H.select(".barsWrap").datum(B.length?B:[{values:[]}]),J=H.select(".linesWrap").datum(C.length?C:[{values:[]}]);d3.transition(I).call(l),d3.transition(J).call(k),H.attr("transform","translate("+b.left+","+b.top+")"),p.ticks(z/100).tickSize(-A,0),H.select(".x.axis").attr("transform","translate(0,"+n.range()[0]+")"),d3.transition(H.select(".x.axis")).call(p),q.ticks(A/36).tickSize(-z,0),d3.transition(H.select(".y1.axis")).style("opacity",B.length?1:0).call(q),r.ticks(A/36).tickSize(B.length?0:-z,0),H.select(".y2.axis").style("opacity",C.length?1:0).attr("transform","translate("+m.range()[1]+",0)"),d3.transition(H.select(".y2.axis")).call(r),s.dispatch.on("legendClick",function(a,b){a.disabled=!a.disabled,o.filter(function(a){return!a.disabled}).length||o.map(function(a){a.disabled=!1,F.selectAll(".series").classed("disabled",!1);return a}),j.transition().call(v)}),k.dispatch.on("elementMouseover.tooltip",function(a){a.pos=[a.pos[0]+b.left,a.pos[1]+b.top],t.tooltipShow(a)}),i&&t.on("tooltipShow",function(a){u(a,y.parentNode)}),k.dispatch.on("elementMouseout.tooltip",function(a){t.tooltipHide(a)}),i&&t.on("tooltipHide",a.tooltip.cleanup),l.dispatch.on("elementMouseover.tooltip",function(a){a.pos=[a.pos[0]+b.left,a.pos[1]+b.top],t.tooltipShow(a)}),i&&t.on("tooltipShow",function(a){u(a,y.parentNode)}),l.dispatch.on("elementMouseout.tooltip",function(a){t.tooltipHide(a)}),i&&t.on("tooltipHide",a.tooltip.cleanup),v.update=function(){j.transition().call(v)},v.container=this});return v}var b={top:30,right:60,bottom:50,left:60},c=null,d=null,e=function(a){return a.x},f=function(a){return a.y},g=d3.scale.category20().range(),h=!0,i=!0,j=function(a,b,c,d,e){return"<h3>"+a+"</h3>"+"<p>"+c+" at "+b+"</p>"},k=a.models.line(),l=a.models.historicalBar(),m=d3.scale.linear(),n=l.yScale(),o=k.yScale(),p=a.models.axis().scale(m).orient("bottom").tickPadding(5),q=a.models.axis().scale(n).orient("left"),r=a.models.axis().scale(o).orient("right"),s=a.models.legend().height(30),t=d3.dispatch("tooltipShow","tooltipHide"),u=function(b,c){var d=b.pos[0]+(c.offsetLeft||0),e=b.pos[1]+(c.offsetTop||0),f=p.tickFormat()(k.x()(b.point,b.pointIndex)),g=(b.series.bar?q:r).tickFormat()(k.y()(b.point,b.pointIndex)),h=j(b.series.key,f,g,b,v);a.tooltip.show([d,e],h,b.value<0?"n":"s")};v.dispatch=t,v.legend=s,v.lines=k,v.bars=l,v.xAxis=p,v.yAxis1=q,v.yAxis2=r,d3.rebind(v,k,"defined","size","clipVoronoi","interpolate"),v.x=function(a){if(!arguments.length)return e;e=a,k.x(a),l.x(a);return v},v.y=function(a){if(!arguments.length)return f;f=a,k.y(a),l.y(a);return v},v.margin=function(a){if(!arguments.length)return b;b=a;return v},v.width=function(a){if(!arguments.length)return c;c=a;return v},v.height=function(a){if(!arguments.length)return d;d=a;return v},v.color=function(a){if(!arguments.length)return g;g=a,s.color(a);return v},v.showLegend=function(a){if(!arguments.length)return h;h=a;return v},v.tooltips=function(a){if(!arguments.length)return i;i=a;return v},v.tooltipContent=function(a){if(!arguments.length)return j;j=a;return v};return v},a.models.lineWithFocusChart=function(){function y(j){j.each(function(z){function O(){var a=w.empty()?p.domain():d3.extent(d3.merge(z.filter(function(a){return!a.disabled}).map(function(a){return a.values})).filter(function(a){return k.x()(a)>=w.extent()[0]&&k.x()(a)<=w.extent()[1]}),k.y());typeof a[0]=="undefined"&&(a=p.domain()),m.domain(w.empty()?o.domain():w.extent()),n.domain(a),k.xDomain(m.domain()),k.yDomain(n.domain())}function N(){O(),K.call(k),J.select(".focus .x.axis").call(q),J.select(".focus .y.axis").call(r)}function M(a){var b=+(a=="e"),c=b?1:-1,d=E/3;return"M"+.5*c+","+d+"A6,6 0 0 "+b+" "+6.5*c+","+(d+6)+"V"+(2*d-6)+"A6,6 0 0 "+b+" "+.5*c+","+2*d+"Z"+"M"+2.5*c+","+(d+8)+"V"+(2*d-8)+"M"+4.5*c+","+(d+8)+"V"+(2*d-8)}var A=d3.select(this),B=this,C=(e||parseInt(A.style("width"))||960)-b.left-b.right,D=(f||parseInt(A.style("height"))||400)-b.top-b.bottom-g,E=g-c.top-c.bottom;w.on("brush",N);var F=A.selectAll("g.wrap.lineWithFocusChart").data([z]),G=F.enter().append("g").attr("class","wrap nvd3 lineWithFocusChart").append("g"),H=G.append("g").attr("class","focus");H.append("g").attr("class","x axis"),H.append("g").attr("class","y axis"),H.append("g").attr("class","linesWrap");var I=G.append("g").attr("class","context");I.append("g").attr("class","x axis"),I.append("g").attr("class","y axis"),I.append("g").attr("class","linesWrap"),I.append("g").attr("class","x brush"),G.append("g").attr("class","legendWrap");var J=F.select("g");h&&(u.width(C),J.select(".legendWrap").datum(z).call(u),b.top!=u.height()&&(b.top=u.height(),D=(f||parseInt(A.style("height"))||400)-b.top-b.bottom),J.select(".legendWrap").attr("transform","translate(0,"+ -b.top+")")),k.width(C).height(D).color(z.map(function(a,b){return a.color||d[b%d.length]}).filter(function(a,b){return!z[b].disabled})),l.defined(k.defined()).width(C).height(E).x(k.x()).y(k.y()).color(z.map(function(a,b){return a.color||d[b%d.length]}).filter(function(a,b){return!z[b].disabled})),J.attr("transform","translate("+b.left+","+b.top+")");var K=J.select(".focus .linesWrap").datum(z.filter(function(a){return!a.disabled}));d3.transition(K).call(k),q.ticks(C/100).tickSize(-D,0),J.select(".focus .x.axis").attr("transform","translate(0,"+n.range()[0]+")"),d3.transition(J.select(".focus .x.axis")).call(q),r.ticks(D/36).tickSize(-C,0),d3.transition(J.select(".focus .y.axis")).call(r),J.select(".context").attr("transform","translate(0,"+(D+b.bottom+c.top)+")");var L=J.select(".context .linesWrap").datum(z.filter(function(a){return!a.disabled}));d3.transition(L).call(l),gBrush=J.select(".x.brush").call(w),gBrush.selectAll("rect").attr("height",E),gBrush.selectAll(".resize").append("path").attr("d",M),s.ticks(C/100).tickSize(-E,0),J.select(".context .x.axis").attr("transform","translate(0,"+p.range()[0]+")"),d3.transition(J.select(".context .x.axis")).call(s),t.ticks(E/36).tickSize(-C,0),d3.transition(J.select(".context .y.axis")).call(t),O(),u.dispatch.on("legendClick",function(a,b){a.disabled=!a.disabled,z.filter(function(a){return!a.disabled}).length||z.map(function(a){a.disabled=!1,F.selectAll(".series").classed("disabled",!1);return a}),j.transition().call(y)}),k.dispatch.on("elementMouseover.tooltip",function(a){a.pos=[a.pos[0]+b.left,a.pos[1]+b.top],v.tooltipShow(a)}),i&&v.on("tooltipShow",function(a){x(a,B.parentNode)}),k.dispatch.on("elementMouseout.tooltip",function(a){v.tooltipHide(a)}),i&&v.on("tooltipHide",a.tooltip.cleanup)}),y.update=function(){y(j)},y.container=this;return y}var b={top:30,right:20,bottom:50,left:60},c={top:0,right:20,bottom:20,left:60},d=d3.scale.category20().range(),e=null,f=null,g=100,h=!0,i=!0,j=function(a,b,c,d,e){return"<h3>"+a+"</h3>"+"<p>"+c+" at "+b+"</p>"},k=a.models.line().clipEdge(!0),l=a.models.line().interactive(!1),m=k.xScale(),n=k.yScale(),o=l.xScale(),p=l.yScale(),q=a.models.axis().scale(m).orient("bottom").tickPadding(5),r=a.models.axis().scale(n).orient("left"),s=a.models.axis().scale(m).orient("bottom").tickPadding(5),t=a.models.axis().scale(p).orient("left"),u=a.models.legend().height(30),v=d3.dispatch("tooltipShow","tooltipHide"),w=d3.svg.brush().x(o),x=function(b,c){var d=b.pos[0]+(c.offsetLeft||0),e=b.pos[1]+(c.offsetTop||0),f=q.tickFormat()(k.x()(b.point,b.pointIndex)),g=r.tickFormat()(k.y()(b.point,b.pointIndex)),h=j(b.series.key,f,g,b,y);a.tooltip.show([d,e],h)};y.dispatch=v,y.legend=u,y.xAxis=q,y.yAxis=r,y.x2Axis=s,y.y2Axis=t,d3.rebind(y,k,"defined","isArea","x","y","size","xDomain","yDomain","forceX","forceY","interactive","clipEdge","clipVoronoi","id"),y.margin=function(a){if(!arguments.length)return b;b=a;return y},y.width=function(a){if(!arguments.length)return e;e=a;return y},y.height=function(a){if(!arguments.length)return f;f=a;return y},y.color=function(a){if(!arguments.length)return d;d=a,u.color(a);return y},y.showLegend=function(a){if(!arguments.length)return h;h=a;return y},y.tooltips=function(a){if(!arguments.length)return i;i=a;return y},y.tooltipContent=function(a){if(!arguments.length)return j;j=a;return y},y.interpolate=function(a){if(!arguments.length)return k.interpolate();k.interpolate(a),l.interpolate(a);return y};return y},a.models.multiBar=function(){function t(u){u.each(function(v){var w=c-b.left-b.right,z=d-b.top-b.bottom;l&&(v=d3.layout.stack().offset("zero").values(function(a){return a.values}).y(i)(v)),v=v.map(function(a,b){a.values=a.values.map(function(a){a.series=b;return a});return a});var A=o&&p?[]:v.map(function(a){return a.values.map(function(a,b){return{x:h(a,b),y:i(a,b),y0:a.y0}})});e.domain(d3.merge(A).map(function(a){return a.x})).rangeBands([0,w],.1),f.domain(p||d3.extent(d3.merge(A).map(function(a){return a.y+(l?a.y0:0)}).concat(j))).range([z,0]);if(e.domain()[0]===e.domain()[1]||f.domain()[0]===f.domain()[1])singlePoint=!0;e.domain()[0]===e.domain()[1]&&(e.domain()[0]?e.domain([e.domain()[0]-e.domain()[0]*.01,e.domain()[1]+e.domain()[1]*.01]):e.domain([-1,1])),a.log(f.domain()),f.domain()[0]===f.domain()[1]&&(f.domain()[0]?f.domain([f.domain()[0]+f.domain()[0]*.01,f.domain()[1]-f.domain()[1]*.01]):f.domain([-1,1])),r=r||e,s=s||f;var B=d3.select(this).selectAll("g.wrap.multibar").data([v]),C=B.enter().append("g").attr("class","wrap nvd3 multibar"),D=C.append("defs"),E=C.append("g");E.append("g").attr("class","groups");var F=B.select("g");B.attr("transform","translate("+b.left+","+b.top+")"),D.append("clipPath").attr("id","edge-clip-"+g).append("rect"),B.select("#edge-clip-"+g+" rect").attr("width",w).attr("height",z),F.attr("clip-path",k?"url(#edge-clip-"+g+")":"");var G=B.select(".groups").selectAll(".group").data(function(a){return a},function(a){return a.key});G.enter().append("g").style("stroke-opacity",1e-6).style("fill-opacity",1e-6),d3.transition(G.exit()).selectAll("rect.bar").delay(function(a,b){return b*n/v[0].values.length}).attr("y",function(a){return l?s(a.y0):s(0)}).attr("height",0).remove(),G.attr("class",function(a,b){return"group series-"+b}).classed("hover",function(a){return a.hover}).style("fill",function(a,b){return m[b%m.length]}).style("stroke",function(a,b){return m[b%m.length]}),d3.transition(G).style("stroke-opacity",1).style("fill-opacity",.75);var H=G.selectAll("rect.bar").data(function(a){return a.values});H.exit().remove();var I=H.enter().append("rect").attr("class",function(a,b){return i(a,b)<0?"bar negative":"bar positive"}).attr("x",function(a,b,c){return l?0:c*e.rangeBand()/v.length}).attr("y",function(a){return s(l?a.y0:0)}).attr("height",0).attr("width",e.rangeBand()/(l?1:v.length));H.on("mouseover",function(a,b){d3.select(this).classed("hover",!0),q.elementMouseover({value:i(a,b),point:a,series:v[a.series],pos:[e(h(a,b))+e.rangeBand()*(l?v.length/2:a.series+.5)/v.length,f(i(a,b)+(l?a.y0:0))],pointIndex:b,seriesIndex:a.series,e:d3.event})}).on("mouseout",function(a,b){d3.select(this).classed("hover",!1),q.elementMouseout({value:i(a,b),point:a,series:v[a.series],pointIndex:b,seriesIndex:a.series,e:d3.event})}).on("click",function(a,b){q.elementClick({value:i(a,b),point:a,series:v[a.series],pos:[e(h(a,b))+e.rangeBand()*(l?v.length/2:a.series+.5)/v.length,f(i(a,b)+(l?a.y0:0))],pointIndex:b,seriesIndex:a.series,e:d3.event}),d3.event.stopPropagation()}).on("dblclick",function(a,b){q.elementDblClick({value:i(a,b),point:a,series:v[a.series],pos:[e(h(a,b))+e.rangeBand()*(l?v.length/2:a.series+.5)/v.length,f(i(a,b)+(l?a.y0:0))],pointIndex:b,seriesIndex:a.series,e:d3.event}),d3.event.stopPropagation()}),H.attr("class",function(a,b){return i(a,b)<0?"bar negative":"bar positive"}).attr("transform",function(a,b){return"translate("+e(h(a,b))+",0)"}),l?d3.transition(H).delay(function(a,b){return b*n/v[0].values.length}).attr("y",function(a,b){return f(i(a,b)+(l?a.y0:0))}).attr("height",function(a,b){return Math.abs(f(a.y+(l?a.y0:0))-f(l?a.y0:0))}).each("end",function(){d3.transition(d3.select(this)).attr("x",function(a,b){return l?0:a.series*e.rangeBand()/v.length}).attr("width",e.rangeBand()/(l?1:v.length))}):d3.transition(H).delay(function(a,b){return b*n/v[0].values.length}).attr("x",function(a,b){return a.series*e.rangeBand()/v.length}).attr("width",e.rangeBand()/v.length).each("end",function(){d3.transition(d3.select(this)).attr("y",function(a,b){return i(a,b)<0?f(0):f(i(a,b))}).attr("height",function(a,b){return Math.abs(f(i(a,b))-f(0))})}),t.update=function(){t(u)},r=e.copy(),s=f.copy()});return t}var b={top:0,right:0,bottom:0,left:0},c=960,d=500,e=d3.scale.ordinal(),f=d3.scale.linear(),g=Math.floor(Math.random()*1e4),h=function(a){return a.x},i=function(a){return a.y},j=[0],k=!0,l=!1,m=d3.scale.category20().range(),n=1200,o,p,q=d3.dispatch("chartClick","elementClick","elementDblClick","elementMouseover","elementMouseout"),r,s;t.dispatch=q,t.x=function(a){if(!arguments.length)return h;h=a;return t},t.y=function(a){if(!arguments.length)return i;i=a;return t},t.margin=function(a){if(!arguments.length)return b;b=a;return t},t.width=function(a){if(!arguments.length)return c;c=a;return t},t.height=function(a){if(!arguments.length)return d;d=a;return t},t.xScale=function(a){if(!arguments.length)return e;e=a;return t},t.yScale=function(a){if(!arguments.length)return f;f=a;return t},t.xDomain=function(a){if(!arguments.length)return o;o=a;return t},t.yDomain=function(a){if(!arguments.length)return p;p=a;return t},t.forceY=function(a){if(!arguments.length)return j;j=a;return t},t.stacked=function(a){if(!arguments.length)return l;l=a;return t},t.clipEdge=function(a){if(!arguments.length)return k;k=a;return t},t.color=function(a){if(!arguments.length)return m;m=a;return t},t.id=function(a){if(!arguments.length)return g;g=a;return t},t.delay=function(a){if(!arguments.length)return n;n=a;return t};return t},a.models.multiBarChart=function(){function t(a){a.each(function(j){var u=d3.select(this),v=this,w=(c||parseInt(u.style("width"))||960)-b.left-b.right,z=(d||parseInt(u.style("height"))||400)-b.top-b.bottom;k=m.xScale(),l=m.yScale();var A=u.selectAll("g.wrap.multiBarWithLegend").data([j]),B=A.enter().append("g").attr("class","wrap nvd3 multiBarWithLegend").append("g");B.append("g").attr("class","x axis"),B.append("g").attr("class","y axis"),B.append("g").attr("class","barsWrap"),B.append("g").attr("class","legendWrap"),B.append("g").attr("class","controlsWrap");var C=A.select("g");g&&(p.width(w/2),C.select(".legendWrap").datum(j).call(p),b.top!=p.height()&&(b.top=p.height(),z=(d||parseInt(u.style("height"))||400)-b.top-b.bottom),C.select(".legendWrap").attr("transform","translate("+w/2+","+ -b.top+")")),m.width(w).height(z).color(j.map(function(a,b){return a.color||e[b%e.length]}).filter(function(a,b){return!j[b].disabled}));if(f){var D=[{key:"Grouped",disabled:m.stacked()},{key:"Stacked",disabled:!m.stacked()}];q.width(180).color(["#444","#444","#444"]),C.select(".controlsWrap").datum(D).attr("transform","translate(0,"+ -b.top+")").call(q)}C.attr("transform","translate("+b.left+","+b.top+")");var E=C.select(".barsWrap").datum(j.filter(function(a){return!a.disabled}));d3.transition(E).call(m),n.scale(k).ticks(w/100).tickSize(-z,0),C.select(".x.axis").attr("transform","translate(0,"+l.range()[0]+")"),d3.transition(C.select(".x.axis")).call(n);var F=C.select(".x.axis > g").selectAll("g");F.selectAll("line, text").style("opacity",1),h&&F.filter(function(a,b){return b%Math.ceil(j[0].values.length/(w/100))!==0}).selectAll("text, line").style("opacity",0),o.scale(l).ticks(z/36).tickSize(-w,0),d3.transition(C.select(".y.axis")).call(o),p.dispatch.on("legendClick",function(b,c){b.disabled=!b.disabled,j.filter(function(a){return!a.disabled}).length||j.map(function(a){a.disabled=!1,A.selectAll(".series").classed("disabled",!1);return a}),a.transition().call(t)}),q.dispatch.on("legendClick",function(b,c){if(!!b.disabled){D=D.map(function(a){a.disabled=!0;return a}),b.disabled=!1;switch(b.key){case"Grouped":m.stacked(!1);break;case"Stacked":m.stacked(!0)}a.transition().call(t)}}),r.on("tooltipShow",function(a){i&&s(a,v.parentNode)}),t.update=function(){a.transition().call(t)},t.container=this});return t}var b={top:30,right:20,bottom:50,left:60},c=null,d=null,e=d3.scale.category20().range(),f=!0,g=!0,h=!0,i=!0,j=function(a,b,c,d,e){return"<h3>"+a+"</h3>"+"<p>"+c+" on "+b+"</p>"},k,l,m=a.models.multiBar().stacked(!1),n=a.models.axis().orient("bottom").highlightZero(!1).showMaxMin(!1),o=a.models.axis().orient("left"),p=a.models.legend().height(30),q=a.models.legend().height(30),r=d3.dispatch("tooltipShow","tooltipHide");n.tickFormat(function(a){return a}),o.tickFormat(d3.format(",.1f"));var s=function(b,c){var d=b.pos[0]+(c.offsetLeft||0),e=b.pos[1]+(c.offsetTop||0),f=n.tickFormat()(m.x()(b.point,b.pointIndex)),g=o.tickFormat()(m.y()(b.point,b.pointIndex)),h=j(b.series.key,f,g,b,t);a.tooltip.show([d,e],h,b.value<0?"n":"s")};m.dispatch.on("elementMouseover.tooltip2",function(a){a.pos=[a.pos[0]+b.left,a.pos[1]+b.top],r.tooltipShow(a)}),m.dispatch.on("elementMouseout.tooltip",function(a){r.tooltipHide(a)}),r.on("tooltipHide",function(){i&&a.tooltip.cleanup()}),t.dispatch=r,t.legend=p,t.xAxis=n,t.yAxis=o,d3.rebind(t,m,"x","y","xDomain","yDomain","forceX","forceY","clipEdge","id","stacked","delay"),t.margin=function(a){if(!arguments.length)return b;b=a;return t},t.width=function(a){if(!arguments.length)return c;c=a;return t},t.height=function(a){if(!arguments.length)return d;d=a;return t},t.color=function(a){if(!arguments.length)return e;e=a,p.color(a);return t},t.showControls=function(a){if(!arguments.length)return f;f=a;return t},t.showLegend=function(a){if(!arguments.length)return g;g=a;return t},t.reduceXTicks=function(a){if(!arguments.length)return h;h=a;return t},t.tooltips=function(a){if(!arguments.length)return i;i=a;return t},t.tooltipContent=function(a){if(!arguments.length)return j;j=a;return t};return t},a.models.multiBarHorizontal=function(){function v(d){d.each(function(p){var w=b-a.left-a.right,z=c-a.top-a.bottom;l&&(p=d3.layout.stack().offset("zero").values(function(a){
-return a.values}).y(h)(p)),p=p.map(function(a,b){a.values=a.values.map(function(a){a.series=b;return a});return a});var A=q&&r?[]:p.map(function(a){return a.values.map(function(a,b){return{x:g(a,b),y:h(a,b),y0:a.y0}})});e.domain(q||d3.merge(A).map(function(a){return a.x})).rangeBands([0,z],.1),f.domain(r||d3.extent(d3.merge(A).map(function(a){return a.y+(l?a.y0:0)}).concat(i))),m&&!l?f.range([f.domain()[0]<0?n:0,w-(f.domain()[1]>0?n:0)]):f.range([0,w]),s=s||e,t=t||d3.scale.linear().domain(f.domain()).range([f(0),f(0)]);var B=d3.select(this).selectAll("g.wrap.multibarHorizontal").data([p]),C=B.enter().append("g").attr("class","wrap nvd3 multibarHorizontal"),D=C.append("defs"),E=C.append("g");E.append("g").attr("class","groups");var F=B.select("g");B.attr("transform","translate("+a.left+","+a.top+")");var G=B.select(".groups").selectAll(".group").data(function(a){return a},function(a){return a.key});G.enter().append("g").style("stroke-opacity",1e-6).style("fill-opacity",1e-6),d3.transition(G.exit()).style("stroke-opacity",1e-6).style("fill-opacity",1e-6).remove(),G.attr("class",function(a,b){return"group series-"+b}).classed("hover",function(a){return a.hover}).style("fill",function(a,b){return k[b%k.length]}).style("stroke",function(a,b){return k[b%k.length]}),d3.transition(G).style("stroke-opacity",1).style("fill-opacity",.75);var H=G.selectAll("g.bar").data(function(a){return a.values});H.exit().remove();var I=H.enter().append("g").attr("transform",function(a,b,c){return"translate("+t(l?a.y0:0)+","+(l?0:c*e.rangeBand()/p.length+e(g(a,b)))+")"});I.append("rect").attr("width",0).attr("height",e.rangeBand()/(l?1:p.length)),H.on("mouseover",function(a,b){d3.select(this).classed("hover",!0),u.elementMouseover({value:h(a,b),point:a,series:p[a.series],pos:[f(h(a,b)+(l?a.y0:0)),e(g(a,b))+e.rangeBand()*(l?p.length/2:a.series+.5)/p.length],pointIndex:b,seriesIndex:a.series,e:d3.event})}).on("mouseout",function(a,b){d3.select(this).classed("hover",!1),u.elementMouseout({value:h(a,b),point:a,series:p[a.series],pointIndex:b,seriesIndex:a.series,e:d3.event})}).on("click",function(a,b){u.elementClick({value:h(a,b),point:a,series:p[a.series],pos:[e(g(a,b))+e.rangeBand()*(l?p.length/2:a.series+.5)/p.length,f(h(a,b)+(l?a.y0:0))],pointIndex:b,seriesIndex:a.series,e:d3.event}),d3.event.stopPropagation()}).on("dblclick",function(a,b){u.elementDblClick({value:h(a,b),point:a,series:p[a.series],pos:[e(g(a,b))+e.rangeBand()*(l?p.length/2:a.series+.5)/p.length,f(h(a,b)+(l?a.y0:0))],pointIndex:b,seriesIndex:a.series,e:d3.event}),d3.event.stopPropagation()}),m&&!l?(I.append("text").attr("text-anchor",function(a,b){return h(a,b)<0?"end":"start"}),H.select("text").attr("y",e.rangeBand()/2).attr("dy","-.32em").text(function(a,b){return o(h(a,b))}),d3.transition(H).select("text").attr("x",function(a,b){return h(a,b)<0?-4:f(h(a,b))-f(0)+4})):H.selectAll("text").remove(),H.attr("class",function(a,b){return h(a,b)<0?"bar negative":"bar positive"}),l?d3.transition(H).attr("transform",function(a,b){return"translate("+f(a.y0)+","+(l?0:j*e.rangeBand()/p.length)+")"}).select("rect").attr("width",function(a,b){return Math.abs(f(h(a,b)+a.y0)-f(a.y0))}).attr("height",e.rangeBand()):d3.transition(H).attr("transform",function(a,b){return"translate("+(h(a,b)<0?f(h(a,b)):f(0))+","+(a.series*e.rangeBand()/p.length+e(g(a,b)))+")"}).select("rect").attr("height",e.rangeBand()/p.length).attr("width",function(a,b){return Math.abs(f(h(a,b))-f(0))}),v.update=function(){d.transition().call(v)},s=e.copy(),t=f.copy()});return v}var a={top:0,right:0,bottom:0,left:0},b=960,c=500,d=Math.floor(Math.random()*1e4),e=d3.scale.ordinal(),f=d3.scale.linear(),g=function(a){return a.x},h=function(a){return a.y},i=[0],k=d3.scale.category20().range(),l=!1,m=!1,n=60,o=d3.format(",.2f"),p=1200,q,r,s,t,u=d3.dispatch("chartClick","elementClick","elementDblClick","elementMouseover","elementMouseout");v.dispatch=u,v.x=function(a){if(!arguments.length)return g;g=a;return v},v.y=function(a){if(!arguments.length)return h;h=a;return v},v.margin=function(b){if(!arguments.length)return a;a=b;return v},v.width=function(a){if(!arguments.length)return b;b=a;return v},v.height=function(a){if(!arguments.length)return c;c=a;return v},v.xScale=function(a){if(!arguments.length)return e;e=a;return v},v.yScale=function(a){if(!arguments.length)return f;f=a;return v},v.xDomain=function(a){if(!arguments.length)return q;q=a;return v},v.yDomain=function(a){if(!arguments.length)return r;r=a;return v},v.forceY=function(a){if(!arguments.length)return i;i=a;return v},v.stacked=function(a){if(!arguments.length)return l;l=a;return v},v.color=function(a){if(!arguments.length)return k;k=a;return v},v.id=function(a){if(!arguments.length)return d;d=a;return v},v.delay=function(a){if(!arguments.length)return p;p=a;return v},v.showValues=function(a){if(!arguments.length)return m;m=a;return v},v.valueFormat=function(a){if(!arguments.length)return o;o=a;return v},v.valuePadding=function(a){if(!arguments.length)return n;n=a;return v};return v},a.models.multiBarHorizontalChart=function(){function t(i){i.each(function(k){var l=d3.select(this),u=this,v=(c||parseInt(l.style("width"))||960)-b.left-b.right,w=(d||parseInt(l.style("height"))||400)-b.top-b.bottom,x=l.selectAll("g.wrap.multiBarHorizontalChart").data([k]),y=x.enter().append("g").attr("class","wrap nvd3 multiBarHorizontalChart").append("g");y.append("g").attr("class","x axis"),y.append("g").attr("class","y axis"),y.append("g").attr("class","barsWrap"),y.append("g").attr("class","legendWrap"),y.append("g").attr("class","controlsWrap"),b.top=o.height();var z=x.select("g");g&&(o.width(v/2),z.select(".legendWrap").datum(k).call(o),b.top!=o.height()&&(b.top=o.height(),w=(d||parseInt(l.style("height"))||400)-b.top-b.bottom),z.select(".legendWrap").attr("transform","translate("+v/2+","+ -b.top+")")),j.width(v).height(w).color(k.map(function(a,b){return a.color||e[b%e.length]}).filter(function(a,b){return!k[b].disabled})),f&&(p.width(180).color(["#444","#444","#444"]),z.select(".controlsWrap").datum(s).attr("transform","translate(0,"+ -b.top+")").call(p)),z.attr("transform","translate("+b.left+","+b.top+")");var A=z.select(".barsWrap").datum(k.filter(function(a){return!a.disabled}));d3.transition(A).call(j),m.ticks(w/24).tickSize(-v,0),z.select(".x.axis").transition().duration(0).call(m);var B=z.select(".x.axis").selectAll("g");B.selectAll("line, text").style("opacity",1),n.ticks(v/100).tickSize(-w,0),z.select(".y.axis").attr("transform","translate(0,"+w+")"),d3.transition(z.select(".y.axis")).call(n),o.dispatch.on("legendClick",function(a,b){a.disabled=!a.disabled,k.filter(function(a){return!a.disabled}).length||k.map(function(a){a.disabled=!1,x.selectAll(".series").classed("disabled",!1);return a}),i.transition().call(t)}),p.dispatch.on("legendClick",function(a,b){if(!!a.disabled){s=s.map(function(a){a.disabled=!0;return a}),a.disabled=!1;switch(a.key){case"Grouped":j.stacked(!1);break;case"Stacked":j.stacked(!0)}i.transition().call(t)}}),j.dispatch.on("elementMouseover.tooltip",function(a){a.pos=[a.pos[0]+b.left,a.pos[1]+b.top],q.tooltipShow(a)}),h&&q.on("tooltipShow",function(a){r(a,u.parentNode)}),j.dispatch.on("elementMouseout.tooltip",function(a){q.tooltipHide(a)}),h&&q.on("tooltipHide",a.tooltip.cleanup),t.update=function(){i.transition().call(t)},t.container=this});return t}var b={top:30,right:20,bottom:50,left:60},c=null,d=null,e=d3.scale.category20().range(),f=!0,g=!0,h=!0,i=function(a,b,c,d,e){return"<h3>"+a+" - "+b+"</h3>"+"<p>"+c+"</p>"},j=a.models.multiBarHorizontal().stacked(!1),k=j.xScale(),l=j.yScale(),m=a.models.axis().scale(k).orient("left").highlightZero(!1).showMaxMin(!1),n=a.models.axis().scale(l).orient("bottom"),o=a.models.legend().height(30),p=a.models.legend().height(30),q=d3.dispatch("tooltipShow","tooltipHide");m.tickFormat(function(a){return a}),n.tickFormat(d3.format(",.1f"));var r=function(b,c){var d=b.pos[0]+(c.offsetLeft||0),e=b.pos[1]+(c.offsetTop||0),f=m.tickFormat()(j.x()(b.point,b.pointIndex)),g=n.tickFormat()(j.y()(b.point,b.pointIndex)),h=i(b.series.key,f,g,b,t);a.tooltip.show([d,e],h,b.value<0?"e":"w")},s=[{key:"Grouped"},{key:"Stacked",disabled:!0}];t.dispatch=q,t.multibar=j,t.legend=o,t.xAxis=m,t.yAxis=n,d3.rebind(t,j,"x","y","xDomain","yDomain","forceX","forceY","clipEdge","id","delay","showValues","valueFormat"),t.margin=function(a){if(!arguments.length)return b;b=a;return t},t.width=function(a){if(!arguments.length)return c;c=a;return t},t.height=function(a){if(!arguments.length)return d;d=a;return t},t.color=function(a){if(!arguments.length)return e;e=a,o.color(a);return t},t.showControls=function(a){if(!arguments.length)return f;f=a;return t},t.showLegend=function(a){if(!arguments.length)return g;g=a;return t},t.tooltips=function(a){if(!arguments.length)return h;h=a;return t},t.tooltipContent=function(a){if(!arguments.length)return i;i=a;return t};return t},a.models.ohlcBar=function(){function v(n){n.each(function(n){var s=b-a.left-a.right,t=c-a.top-a.bottom;q.domain(o||d3.extent(n[0].values.map(e).concat(k))).range([0,s]),r.domain(p||[d3.min(n[0].values.map(j).concat(l)),d3.max(n[0].values.map(i).concat(l))]).range([t,0]);if(q.domain()[0]===q.domain()[1]||r.domain()[0]===r.domain()[1])singlePoint=!0;q.domain()[0]===q.domain()[1]&&(q.domain()[0]?q.domain([q.domain()[0]-q.domain()[0]*.01,q.domain()[1]+q.domain()[1]*.01]):q.domain([-1,1])),r.domain()[0]===r.domain()[1]&&(r.domain()[0]?r.domain([r.domain()[0]+r.domain()[0]*.01,r.domain()[1]-r.domain()[1]*.01]):r.domain([-1,1]));var v=d3.select(this).on("click",function(a,b){u.chartClick({data:a,index:b,pos:d3.event,id:d})}),w=d3.select(this).selectAll("g.wrap.historicalStock").data([n[0].values]),z=w.enter().append("g").attr("class","wrap nvd3 historicalStock"),A=z.append("g");A.append("g").attr("class","ticks"),w.attr("width",b).attr("height",c);var B=w.select("g").attr("transform","translate("+a.left+","+a.top+")");z.append("defs").append("clipPath").attr("id","chart-clip-path-"+d).append("rect"),w.select("#chart-clip-path-"+d+" rect").attr("width",s).attr("height",t),A.attr("clip-path",m?"url(#chart-clip-path-"+d+")":"");var C=A.append("g").attr("class","shiftWrap"),D=w.select(".ticks").selectAll(".tick").data(function(a){return a});D.exit().remove();var E=D.enter().append("path").attr("class",function(a,b){return g(a,b)>h(a,b)?"tick negative":"tick positive"}).on("mouseover",function(a,b){d3.select(this).classed("hover",!0),u.elementMouseover({point:a,series:n[0],pos:[q(e(a,b)),r(f(a,b))],pointIndex:b,seriesIndex:0,e:d3.event})}).on("mouseout",function(a,b){d3.select(this).classed("hover",!1),u.elementMouseout({point:a,series:n[0],pointIndex:b,seriesIndex:0,e:d3.event})}).on("click",function(a,b){u.elementClick({value:f(a,b),data:a,index:b,pos:[q(e(a,b)),r(f(a,b))],e:d3.event,id:d}),d3.event.stopPropagation()}).on("dblclick",function(a,b){u.elementDblClick({value:f(a,b),data:a,index:b,pos:[q(e(a,b)),r(f(a,b))],e:d3.event,id:d}),d3.event.stopPropagation()});D.attr("class",function(a,b){return g(a,b)>h(a,b)?"tick negative":"tick positive"}).attr("transform",function(a,b){return"translate("+q(e(a,b))+","+r(i(a,b))+")"}).attr("d",function(a,b){var c=s/n[0].values.length*.9;return"m0,0l0,"+(r(g(a,b))-r(i(a,b)))+"l"+ -c/2+",0l"+c/2+",0l0,"+(r(j(a,b))-r(g(a,b)))+"l0,"+(r(h(a,b))-r(j(a,b)))+"l"+c/2+",0l"+ -c/2+",0z"})});return v}var a={top:0,right:0,bottom:0,left:0},b=960,c=500,d=Math.floor(Math.random()*1e4),e=function(a){return a.x},f=function(a){return a.y},g=function(a){return a.open},h=function(a){return a.close},i=function(a){return a.high},j=function(a){return a.low},k=[],l=[],m=!0,n=d3.scale.category20().range(),o,p,q=d3.scale.linear(),r=d3.scale.linear(),s=d3.svg.axis().scale(q).orient("bottom"),t=d3.svg.axis().scale(r).orient("left"),u=d3.dispatch("chartClick","elementClick","elementDblClick","elementMouseover","elementMouseout");v.dispatch=u,v.x=function(a){if(!arguments.length)return e;e=a;return v},v.y=function(a){if(!arguments.length)return f;f=a;return v},v.open=function(a){if(!arguments.length)return g;g=a;return v},v.close=function(a){if(!arguments.length)return h;h=a;return v},v.high=function(a){if(!arguments.length)return i;i=a;return v},v.low=function(a){if(!arguments.length)return j;j=a;return v},v.margin=function(b){if(!arguments.length)return a;a=b;return v},v.width=function(a){if(!arguments.length)return b;b=a;return v},v.height=function(a){if(!arguments.length)return c;c=a;return v},v.xScale=function(a){if(!arguments.length)return q;q=a;return v},v.yScale=function(a){if(!arguments.length)return r;r=a;return v},v.xDomain=function(a){if(!arguments.length)return o;o=a;return v},v.yDomain=function(a){if(!arguments.length)return p;p=a;return v},v.forceX=function(a){if(!arguments.length)return k;k=a;return v},v.forceY=function(a){if(!arguments.length)return l;l=a;return v},v.clipEdge=function(a){if(!arguments.length)return m;m=a;return v},v.color=function(a){if(!arguments.length)return n;n=a;return v},v.id=function(a){if(!arguments.length)return d;d=a;return v};return v},a.models.pie=function(){function n(i){i.each(function(i){function C(a){a.innerRadius=0;var b=d3.interpolate({startAngle:0,endAngle:0},a);return function(a){return v(b(a))}}function B(a){l||(a.innerRadius=0);var b=d3.interpolate(this._current,a);this._current=b(0);return function(a){return v(b(a))}}function A(a){var b=(a.startAngle+a.endAngle)*90/Math.PI-90;return b>90?b-180:b}var n=b-a.left-a.right,o=c-a.top-a.bottom,p=Math.min(n,o)/2,q=d3.select(this).on("click",function(a,b){m.chartClick({data:a,index:b,pos:d3.event,id:g})}),r=q.selectAll(".wrap.pie").data([d(i[0])]),s=r.enter().append("g").attr("class","wrap nvd3 pie chart-"+g),t=s.append("g"),u=r.select("g");t.append("g").attr("class","pie"),r.attr("transform","translate("+a.left+","+a.top+")"),u.select(".pie").attr("transform","translate("+n/2+","+o/2+")");var v=d3.svg.arc().outerRadius(p-p/5);l&&v.innerRadius(p/2);var w=d3.layout.pie().sort(null).value(function(a){return a.disabled?0:f(a)}),x=r.select(".pie").selectAll(".slice").data(w);x.exit().remove();var y=x.enter().append("svg:g").attr("class","slice").on("mouseover",function(a,b){d3.select(this).classed("hover",!0),m.elementMouseover({label:e(a.data),value:f(a.data),point:a.data,pointIndex:b,pos:[d3.event.pageX,d3.event.pageY],id:g})}).on("mouseout",function(a,b){d3.select(this).classed("hover",!1),m.elementMouseout({label:e(a.data),value:f(a.data),point:a.data,index:b,id:g})}).on("click",function(a,b){m.elementClick({label:e(a.data),value:f(a.data),point:a.data,index:b,pos:d3.event,id:g}),d3.event.stopPropagation()}).on("dblclick",function(a,b){m.elementDblClick({label:e(a.data),value:f(a.data),point:a.data,index:b,pos:d3.event,id:g}),d3.event.stopPropagation()});x.attr("fill",function(a,b){return h[b]}).attr("stroke",function(a,b){return h[b]});var z=y.append("svg:path").each(function(a){this._current=a});d3.transition(x.select("path")).attr("d",v).attrTween("d",B),j&&(y.append("text").attr("transform",function(a){a.outerRadius=p+10,a.innerRadius=p+15;return"translate("+v.centroid(a)+")"}).style("text-anchor","middle").style("fill","#000"),d3.transition(x.select("text")).attr("transform",function(a){a.outerRadius=p+10,a.innerRadius=p+15;return"translate("+v.centroid(a)+")"}).text(function(a,b){var c=(a.endAngle-a.startAngle)/(2*Math.PI);return a.value&&c>k?e(a.data):""}))});return n}var a={top:0,right:0,bottom:0,left:0},b=500,c=500,d=function(a){return a.values},e=function(a){return a.x},f=function(a){return a.y},g=Math.floor(Math.random()*1e4),h=d3.scale.category20().range(),i=d3.format(",.2f"),j=!0,k=.02,l=!1,m=d3.dispatch("chartClick","elementClick","elementDblClick","elementMouseover","elementMouseout");n.dispatch=m,n.margin=function(b){if(!arguments.length)return a;a=b;return n},n.width=function(a){if(!arguments.length)return b;b=a;return n},n.height=function(a){if(!arguments.length)return c;c=a;return n},n.values=function(a){if(!arguments.length)return d;d=a;return n},n.x=function(a){if(!arguments.length)return e;e=a;return n},n.y=function(a){if(!arguments.length)return f;f=d3.functor(a);return n},n.showLabels=function(a){if(!arguments.length)return j;j=a;return n},n.donut=function(a){if(!arguments.length)return l;l=a;return n},n.id=function(a){if(!arguments.length)return g;g=a;return n},n.color=function(a){if(!arguments.length)return h;h=a;return n},n.valueFormat=function(a){if(!arguments.length)return i;i=a;return n},n.labelThreshold=function(a){if(!arguments.length)return k;k=a;return n};return n},a.models.pieChart=function(){function m(f){f.each(function(h){var n=d3.select(this),o=this,p=(c||parseInt(n.style("width"))||960)-b.left-b.right,q=(d||parseInt(n.style("height"))||400)-b.top-b.bottom,r=n.selectAll("g.wrap.pieChart").data([h]),s=r.enter().append("g").attr("class","wrap nvd3 pieChart").append("g");s.append("g").attr("class","pieWrap"),s.append("g").attr("class","legendWrap");var t=r.select("g");e&&(j.width(p).key(i.x()),r.select(".legendWrap").datum(i.values()(h[0])).call(j),b.top!=j.height()&&(b.top=j.height(),q=(d||parseInt(n.style("height"))||400)-b.top-b.bottom),r.select(".legendWrap").attr("transform","translate(0,"+ -b.top+")")),i.width(p).height(q),t.attr("transform","translate("+b.left+","+b.top+")");var u=t.select(".pieWrap").datum(h);d3.transition(u).call(i),j.dispatch.on("legendClick",function(a,b,c){a.disabled=!a.disabled,i.values()(h[0]).filter(function(a){return!a.disabled}).length||i.values()(h[0]).map(function(a){a.disabled=!1,r.selectAll(".series").classed("disabled",!1);return a}),f.transition().call(m)}),i.dispatch.on("elementMouseover.tooltip",function(a){a.pos=[a.pos[0]+b.left,a.pos[1]+b.top],k.tooltipShow(a)}),g&&k.on("tooltipShow",function(a){l(a)}),i.dispatch.on("elementMouseout.tooltip",function(a){k.tooltipHide(a)}),g&&k.on("tooltipHide",a.tooltip.cleanup),m.update=function(){f.transition().call(m)},m.container=this});return m}var b={top:30,right:20,bottom:20,left:20},c=null,d=null,e=!0,f=d3.scale.category20().range(),g=!0,h=function(a,b,c,d){return"<h3>"+a+"</h3>"+"<p>"+b+"</p>"},i=a.models.pie(),j=a.models.legend().height(30),k=d3.dispatch("tooltipShow","tooltipHide"),l=function(b,c){var d=b.pos[0]+(c&&c.offsetLeft||0),e=b.pos[1]+(c&&c.offsetTop||0),f=i.valueFormat()(i.y()(b.point)),g=h(i.x()(b.point),f,b,m);a.tooltip.show([d,e],g,b.value<0?"n":"s")};m.dispatch=k,m.pie=i,d3.rebind(m,i,"values","x","y","id","showLabels","donut","labelThreshold"),m.margin=function(a){if(!arguments.length)return b;b=a;return m},m.width=function(a){if(!arguments.length)return c;c=a;return m},m.height=function(a){if(!arguments.length)return d;d=a;return m},m.color=function(a){if(!arguments.length)return f;f=a,j.color(a),i.color(a);return m},m.showLegend=function(a){if(!arguments.length)return e;e=a;return m},m.tooltips=function(a){if(!arguments.length)return g;g=a;return m},m.tooltipContent=function(a){if(!arguments.length)return h;h=a;return m};return m},a.models.scatter=function(){function D(E){E.each(function(D){function N(){if(!p)return!1;var b=d3.merge(D.map(function(a,b){return a.values.filter(q).map(function(a,c){return[f(i(a,c))*(Math.random()/1e12+1),g(j(a,c))*(Math.random()/1e12+1),b,c]})}));if(s){K.append("clipPath").attr("id","points-clip-"+e);var c=I.select("#points-clip-"+e).selectAll("circle").data(b);c.enter().append("circle").attr("r",t),c.exit().remove(),c.attr("cx",function(a){return a[0]}).attr("cy",function(a){return a[1]}),I.select(".point-paths").attr("clip-path","url(#points-clip-"+e+")")}var d=d3.geom.voronoi(b).map(function(a,c){return{data:a,series:b[c][2],point:b[c][3]}}),h=I.select(".point-paths").selectAll("path").data(d);h.enter().append("path").attr("class",function(a,b){return"path-"+b}),h.exit().remove(),h.attr("d",function(a){return"M"+a.data.join(",")+"Z"}).on("click",function(b){var c=D[b.series],d=c.values[b.point];y.elementClick({point:d,series:c,pos:[f(i(d,b.point))+a.left,g(j(d,b.point))+a.top],seriesIndex:b.series,pointIndex:b.point})}).on("mouseover",function(b){var c=D[b.series],d=c.values[b.point];y.elementMouseover({point:d,series:c,pos:[f(i(d,b.point))+a.left,g(j(d,b.point))+a.top],seriesIndex:b.series,pointIndex:b.point})}).on("mouseout",function(a,b){var c=D[a.series],d=c.values[a.point];y.elementMouseout({point:d,series:c,seriesIndex:a.series,pointIndex:a.point})})}var E=b-a.left-a.right,F=c-a.top-a.bottom,G=d3.select(this);D=D.map(function(a,b){a.values=a.values.map(function(a){a.series=b;return a});return a});var H=u&&v&&w?[]:d3.merge(D.map(function(a){return a.values.map(function(a,b){return{x:i(a,b),y:j(a,b),size:k(a,b)}})}));f.domain(u||d3.extent(H.map(function(a){return a.x}).concat(m))).range([0,E]),g.domain(v||d3.extent(H.map(function(a){return a.y}).concat(n))).range([F,0]),h.domain(w||d3.extent(H.map(function(a){return a.size}).concat(o))).range([16,256]);if(f.domain()[0]===f.domain()[1]||g.domain()[0]===g.domain()[1])x=!0;f.domain()[0]===f.domain()[1]&&(f.domain()[0]?f.domain([f.domain()[0]-f.domain()[0]*.01,f.domain()[1]+f.domain()[1]*.01]):f.domain([-1,1])),g.domain()[0]===g.domain()[1]&&(g.domain()[0]?g.domain([g.domain()[0]+g.domain()[0]*.01,g.domain()[1]-g.domain()[1]*.01]):g.domain([-1,1])),z=z||f,A=A||g,B=B||h;var I=G.selectAll("g.wrap.scatter").data([D]),J=I.enter().append("g").attr("class","wrap nvd3 scatter chart-"+e+(x?" single-point":"")),K=J.append("defs"),L=J.append("g"),M=I.select("g");L.append("g").attr("class","groups"),L.append("g").attr("class","point-paths"),I.attr("transform","translate("+a.left+","+a.top+")"),K.append("clipPath").attr("id","edge-clip-"+e).append("rect"),I.select("#edge-clip-"+e+" rect").attr("width",E).attr("height",F),M.attr("clip-path",r?"url(#edge-clip-"+e+")":"");var O=I.select(".groups").selectAll(".group").data(function(a){return a},function(a){return a.key});O.enter().append("g").style("stroke-opacity",1e-6).style("fill-opacity",1e-6),d3.transition(O.exit()).style("stroke-opacity",1e-6).style("fill-opacity",1e-6).remove(),O.attr("class",function(a,b){return"group series-"+b}).classed("hover",function(a){return a.hover}),d3.transition(O).style("fill",function(a,b){return d[b%d.length]}).style("stroke",function(a,b){return d[b%d.length]}).style("stroke-opacity",1).style("fill-opacity",.5);var P=O.selectAll("path.point").data(function(a){return a.values});P.enter().append("path").attr("transform",function(a,b){return"translate("+z(i(a,b))+","+A(j(a,b))+")"}).attr("d",d3.svg.symbol().type(l).size(function(a,b){return h(k(a,b))})),d3.transition(O.exit().selectAll("path.point")).attr("transform",function(a,b){return"translate("+f(i(a,b))+","+g(j(a,b))+")"}).remove(),P.attr("class",function(a,b){return"point point-"+b}),d3.transition(P).attr("transform",function(a,b){return"translate("+f(i(a,b))+","+g(j(a,b))+")"}).attr("d",d3.svg.symbol().type(l).size(function(a,b){return h(k(a,b))})),clearTimeout(C),C=setTimeout(N,1e3),z=f.copy(),A=g.copy(),B=h.copy()});return D}var a={top:0,right:0,bottom:0,left:0},b=960,c=500,d=d3.scale.category20().range(),e=Math.floor(Math.random()*1e5),f=d3.scale.linear(),g=d3.scale.linear(),h=d3.scale.linear(),i=function(a){return a.x},j=function(a){return a.y},k=function(a){return a.size},l=function(a){return a.shape||"circle"},m=[],n=[],o=[],p=!0,q=function(a){return!a.notActive},r=!1,s=!0,t=function(){return 25},u=null,v=null,w=null,x=!1,y=d3.dispatch("elementClick","elementMouseover","elementMouseout"),z,A,B,C;y.on("elementMouseover.point",function(a){p&&d3.select(".chart-"+e+" .series-"+a.seriesIndex+" .point-"+a.pointIndex).classed("hover",!0)}),y.on("elementMouseout.point",function(a){p&&d3.select(".chart-"+e+" .series-"+a.seriesIndex+" .point-"+a.pointIndex).classed("hover",!1)}),D.dispatch=y,D.x=function(a){if(!arguments.length)return i;i=d3.functor(a);return D},D.y=function(a){if(!arguments.length)return j;j=d3.functor(a);return D},D.size=function(a){if(!arguments.length)return k;k=d3.functor(a);return D},D.margin=function(b){if(!arguments.length)return a;a=b;return D},D.width=function(a){if(!arguments.length)return b;b=a;return D},D.height=function(a){if(!arguments.length)return c;c=a;return D},D.xScale=function(a){if(!arguments.length)return f;f=a;return D},D.yScale=function(a){if(!arguments.length)return g;g=a;return D},D.zScale=function(a){if(!arguments.length)return h;h=a;return D},D.xDomain=function(a){if(!arguments.length)return u;u=a;return D},D.yDomain=function(a){if(!arguments.length)return v;v=a;return D},D.sizeDomain=function(a){if(!arguments.length)return w;w=a;return D},D.forceX=function(a){if(!arguments.length)return m;m=a;return D},D.forceY=function(a){if(!arguments.length)return n;n=a;return D},D.forceSize=function(a){if(!arguments.length)return o;o=a;return D},D.interactive=function(a){if(!arguments.length)return p;p=a;return D},D.pointActive=function(a){if(!arguments.length)return q;q=a;return D},D.clipEdge=function(a){if(!arguments.length)return r;r=a;return D},D.clipVoronoi=function(a){if(!arguments.length)return s;s=a;return D},D.clipRadius=function(a){if(!arguments.length)return t;t=a;return D},D.color=function(a){if(!arguments.length)return d;d=a;return D},D.shape=function(a){if(!arguments.length)return l;l=a;return D},D.id=function(a){if(!arguments.length)return e;e=a;return D},D.singlePoint=function(a){if(!arguments.length)return x;x=a;return D};return D},a.models.scatterChart=function(){function D(a){a.each(function(h){function I(){if(m){H.select(".point-paths").style("pointer-events","all");return!1}H.select(".point-paths").style("pointer-events","none");var a=d3.mouse(this);f.distortion(l).focus(a[0]),g.distortion(l).focus(a[1]),H.select(".scatterWrap").datum(h.filter(function(a){return!a.disabled})).call(r),H.select(".x.axis").call(s),H.select(".y.axis").call(t),H.select(".distributionX").datum(h.filter(function(a){return!a.disabled})).call(w),H.select(".distributionY").datum(h.filter(function(a){return!a.disabled})).call(x)}var i=d3.select(this),o=this,p=(c||parseInt(i.style("width"))||960)-b.left-b.right,q=(d||parseInt(i.style("height"))||400)-b.top-b.bottom;f=r.xScale(),g=r.yScale(),z=z||f,A=A||g;var E=i.selectAll("g.wrap.scatterChart").data([h]),F=E.enter().append("g").attr("class","wrap nvd3 scatterChart chart-"+r.id()),G=F.append("g"),H=E.select("g");G.append("rect").attr("class","nvd3 background"),G.append("g").attr("class","x axis"),G.append("g").attr("class","y axis"),G.append("g").attr("class","scatterWrap"),G.append("g").attr("class","distWrap"),G.append("g").attr("class","legendWrap"),G.append("g").attr("class","controlsWrap"),E.attr("transform","translate("+b.left+","+b.top+")"),j&&(u.width(p/2),E.select(".legendWrap").datum(h).call(u),b.top!=u.height()&&(b.top=u.height(),q=(d||parseInt(i.style("height"))||400)-b.top-b.bottom),E.select(".legendWrap").attr("transform","translate("+p/2+","+ -b.top+")")),k&&(v.width(180).color(["#444"]),H.select(".controlsWrap").datum(C).attr("transform","translate(0,"+ -b.top+")").call(v)),H.select(".background").attr("width",p).attr("height",q),r.width(p).height(q).color(h.map(function(a,b){return a.color||e[b%e.length]}).filter(function(a,b){return!h[b].disabled})),E.select(".scatterWrap").datum(h.filter(function(a){return!a.disabled})).call(r),s.scale(f).ticks(p/100).tickSize(-q,0),H.select(".x.axis").attr("transform","translate(0,"+g.range()[0]+")").call(s),t.scale(g).ticks(q/36).tickSize(-p,0),H.select(".y.axis").call(t),w.scale(f).width(p).color(h.map(function(a,b){return a.color||e[b%e.length]}).filter(function(a,b){return!h[b].disabled})),G.select(".distWrap").append("g").attr("class","distributionX").attr("transform","translate(0,"+g.range()[0]+")"),H.select(".distributionX").datum(h.filter(function(a){return!a.disabled})).call(w),x.scale(g).width(q).color(h.map(function(a,b){return a.color||e[b%e.length]}).filter(function(a,b){return!h[b].disabled})),G.select(".distWrap").append("g").attr("class","distributionY").attr("transform","translate(-"+x.size()+",0)"),H.select(".distributionY").datum(h.filter(function(a){return!a.disabled})).call(x),H.select(".background").on("mousemove",I),H.select(".background").on("click",function(){m=!m}),r.dispatch.on("elementClick.freezeFisheye",function(){m=!m}),v.dispatch.on("legendClick",function(b,c){b.disabled=!b.disabled,l=b.disabled?0:2.5,H.select(".background").style("pointer-events",b.disabled?"none":"all"),H.select(".point-paths").style("pointer-events",b.disabled?"all":"none"),b.disabled?(f.distortion(l).focus(0),g.distortion(l).focus(0),H.select(".scatterWrap").call(r),H.select(".x.axis").call(s),H.select(".y.axis").call(t)):m=!1,D(a)}),u.dispatch.on("legendClick",function(b,c,d){b.disabled=!b.disabled,h.filter(function(a){return!a.disabled}).length||h.map(function(a){a.disabled=!1,E.selectAll(".series").classed("disabled",!1);return a}),D(a)}),r.dispatch.on("elementMouseover.tooltip",function(a){d3.select(".chart-"+r.id()+" .series-"+a.seriesIndex+" .distx-"+a.pointIndex).attr("y1",a.pos[1]-q),d3.select(".chart-"+r.id()+" .series-"+a.seriesIndex+" .disty-"+a.pointIndex).attr("x2",a.pos[0]+w.size()),a.pos=[a.pos[0]+b.left,a.pos[1]+b.top],y.tooltipShow(a)}),y.on("tooltipShow",function(a){n&&B(a,o.parentNode)}),z=f.copy(),A=g.copy(),D.update=function(){D(a)},D.container=this});return D}var b={top:30,right:20,bottom:50,left:60},c=null,d=null,e=d3.scale.category20().range(),f=d3.fisheye.scale(d3.scale.linear).distortion(0),g=d3.fisheye.scale(d3.scale.linear).distortion(0),h=!1,i=!1,j=!0,k=!0,l=0,m=!1,n=!0,o=function(a,b,c){return"<strong>"+b+"</strong>"},p=function(a,b,c){return"<strong>"+c+"</strong>"},q=null,r=a.models.scatter().xScale(f).yScale(g),s=a.models.axis().orient("bottom").tickPadding(10),t=a.models.axis().orient("left").tickPadding(10),u=a.models.legend().height(30),v=a.models.legend().height(30),w=a.models.distribution().axis("x"),x=a.models.distribution().axis("y"),y=d3.dispatch("tooltipShow","tooltipHide"),z,A,B=function(c,d){var e=c.pos[0]+(d.offsetLeft||0),h=c.pos[1]+(d.offsetTop||0),i=c.pos[0]+(d.offsetLeft||0),j=g.range()[0]+b.top+(d.offsetTop||0),k=f.range()[0]+b.left+(d.offsetLeft||0),l=c.pos[1]+(d.offsetTop||0),m=s.tickFormat()(r.x()(c.point,c.pointIndex)),n=t.tickFormat()(r.y()(c.point,c.pointIndex));o!=null&&a.tooltip.show([i,j],o(c.series.key,m,n,c,D),"n",1,null,"x-nvtooltip"),p!=null&&a.tooltip.show([k,l],p(c.series.key,m,n,c,D),"e",1,null,"y-nvtooltip"),q!=null&&a.tooltip.show([e,h],q(c.series.key,m,n,c,D),c.value<0?"n":"s")},C=[{key:"Magnify",disabled:!0}];r.dispatch.on("elementMouseout.tooltip",function(a){y.tooltipHide(a),d3.select(".chart-"+r.id()+" .series-"+a.seriesIndex+" .distx-"+a.pointIndex).attr("y1",0),d3.select(".chart-"+r.id()+" .series-"+a.seriesIndex+" .disty-"+a.pointIndex).attr("x2",x.size())}),y.on("tooltipHide",function(){n&&a.tooltip.cleanup()}),D.dispatch=y,D.legend=u,D.controls=u,D.xAxis=s,D.yAxis=t,D.distX=w,D.distY=x,d3.rebind(D,r,"id","interactive","pointActive","shape","size","xScale","yScale","zScale","xDomain","yDomain","sizeDomain","forceX","forceY","forceSize","clipVoronoi","clipRadius"),D.margin=function(a){if(!arguments.length)return b;b=a;return D},D.width=function(a){if(!arguments.length)return c;c=a;return D},D.height=function(a){if(!arguments.length)return d;d=a;return D},D.color=function(a){if(!arguments.length)return e;e=a,u.color(a),w.color(a),x.color(a);return D},D.showDistX=function(a){if(!arguments.length)return h;h=a;return D},D.showDistY=function(a){if(!arguments.length)return i;i=a;return D},D.showControls=function(a){if(!arguments.length)return k;k=a;return D},D.showLegend=function(a){if(!arguments.length)return j;j=a;return D},D.fisheye=function(a){if(!arguments.length)return l;l=a;return D},D.tooltips=function(a){if(!arguments.length)return n;n=a;return D},D.tooltipContent=function(a){if(!arguments.length)return q;q=a;return D},D.tooltipXContent=function(a){if(!arguments.length)return o;o=a;return D},D.tooltipYContent=function(a){if(!arguments.length)return p;p=a;return D};return D},a.models.sparkline=function(){function l(d){d.each(function(d){var l=b-a.left-a.right,m=c-a.top-a.bottom;j.domain(h||d3.extent(d,e)).range([0,l]),k.domain(i||d3.extent(d,f)).range([m,0]);var n=d3.select(this).selectAll("g.sparkline").data([d]),o=n.enter().append("g").attr("class","nvd3 sparkline");o.attr("transform","translate("+a.left+","+a.top+")").style("stroke",function(a,b){return a.color||g[b*g.length]});var p=o.selectAll("path").data(function(a){return[a]});p.enter().append("path"),p.exit().remove(),p.attr("d",d3.svg.line().x(function(a,b){return j(e(a,b))}).y(function(a,b){return k(f(a,b))}));var q=o.selectAll("circle.point").data(function(a){return a.filter(function(a,b){return k.domain().indexOf(f(a,b))!=-1||e(a,b)==j.domain()[1]})});q.enter().append("circle").attr("class"
-,"point"),q.exit().remove(),q.attr("cx",function(a,b){return j(e(a,b))}).attr("cy",function(a,b){return k(f(a,b))}).attr("r",2).style("stroke",function(a,b){return a.x==j.domain()[1]?"#444":a.y==k.domain()[0]?"#d62728":"#2ca02c"}).style("fill",function(a,b){return a.x==j.domain()[1]?"#444":a.y==k.domain()[0]?"#d62728":"#2ca02c"})});return l}var a={top:0,right:0,bottom:0,left:0},b=400,c=32,d=!0,e=function(a){return a.x},f=function(a){return a.y},g=d3.scale.category20().range(),h,i,j=d3.scale.linear(),k=d3.scale.linear();l.margin=function(b){if(!arguments.length)return a;a=b;return l},l.width=function(a){if(!arguments.length)return b;b=a;return l},l.height=function(a){if(!arguments.length)return c;c=a;return l},l.x=function(a){if(!arguments.length)return e;e=d3.functor(a);return l},l.y=function(a){if(!arguments.length)return f;f=d3.functor(a);return l},l.xDomain=function(a){if(!arguments.length)return h;h=a;return l},l.yDomain=function(a){if(!arguments.length)return i;i=a;return l},l.animate=function(a){if(!arguments.length)return d;d=a;return l};return l},a.models.sparklinePlus=function(){function o(a){a.each(function(a){function w(){var c=d3.event.offsetX-b.left;t.attr("x1",c).attr("x2",c),u.attr("transform",function(a){return"translate("+(c-6)+","+ -b.top+")"}).text(j(Math.round(l.invert(c)))),v.attr("transform",function(a){return"translate("+(c+6)+","+ -b.top+")"}).text(k(g(a[Math.round(l.invert(c))])))}var e=c-b.left-b.right,i=d-b.top-b.bottom;l.domain(d3.extent(a,f)).range([0,e]),m.domain(d3.extent(a,g)).range([i,0]);var o=d3.select(this).selectAll("g.sparklineplus").data([a]),p=o.enter().append("g"),q=p.append("g").attr("class","nvd3 sparklineplus").attr("transform","translate("+b.left+","+b.top+")").style("stroke",function(a,b){return a.color||h[b%h.length]});n.xDomain(l.domain()).yDomain(m.domain()),q.call(n);var r=q.append("g").attr("class","hoverValue"),s=q.append("g").attr("class","hoverArea");r.attr("transform",function(a){return"translate("+l(a)+",0)"});var t=r.append("line").attr("x1",l.range()[1]).attr("y1",-b.top).attr("x2",l.range()[1]).attr("y2",d),u=r.append("text").attr("class","xValue").attr("text-anchor","end").attr("dy",".9em"),v=r.append("text").attr("class","yValue").attr("text-anchor","start").attr("dy",".9em");s.append("rect").attr("width",e).attr("height",i).on("mousemove",w)});return o}var b={top:15,right:40,bottom:3,left:40},c=400,d=50,e=!0,f=function(a){return a.x},g=function(a){return a.y},h=d3.scale.category20().range(),i=Math.floor(Math.random()*1e5),j=d3.format(",r"),k=d3.format(",.2f"),l=d3.scale.linear(),m=d3.scale.linear(),n=a.models.sparkline();o.margin=function(a){if(!arguments.length)return b;b=a;return o},o.width=function(a){if(!arguments.length)return c;c=a,n.width(a-b.left-b.right);return o},o.height=function(a){if(!arguments.length)return d;d=a,n.height(a-b.top-b.bottom);return o},o.x=function(a){if(!arguments.length)return f;f=d3.functor(a),n.x(a);return o},o.y=function(a){if(!arguments.length)return g;g=d3.functor(a),n.y(a);return o},o.id=function(a){if(!arguments.length)return i;i=a;return o},o.animate=function(a){if(!arguments.length)return e;e=a;return o};return o},a.models.stackedArea=function(){function r(a){a.each(function(a){var i=c-b.left-b.right,o=d-b.top-b.bottom;m=p.xScale(),n=p.yScale(),a=a.map(function(a,b){a.values=a.values.map(function(b,c){b.index=c,b.stackedY=a.disabled?0:h(b,c);return b});return a}),a=d3.layout.stack().order(k).offset(j).values(function(a){return a.values}).x(g).y(function(a){return a.stackedY}).out(function(a,b,c){a.display={y:c,y0:b}})(a);var r=d3.select(this).selectAll("g.wrap.stackedarea").data([a]),s=r.enter().append("g").attr("class","wrap nvd3 stackedarea"),t=s.append("defs"),u=s.append("g"),v=r.select("g");u.append("g").attr("class","areaWrap"),p.width(i).height(o).x(g).y(function(a){return a.display.y+a.display.y0}).forceY([0]).color(a.map(function(a,b){return a.color||e[b%e.length]}).filter(function(b,c){return!a[c].disabled})),u.append("g").attr("class","scatterWrap");var w=v.select(".scatterWrap").datum(a.filter(function(a){return!a.disabled}));d3.transition(w).call(p),r.attr("transform","translate("+b.left+","+b.top+")"),t.append("clipPath").attr("id","edge-clip-"+f).append("rect"),r.select("#edge-clip-"+f+" rect").attr("width",i).attr("height",o),v.attr("clip-path",l?"url(#edge-clip-"+f+")":"");var z=d3.svg.area().x(function(a,b){return m(g(a,b))}).y0(function(a){return n(a.display.y0)}).y1(function(a){return n(a.display.y+a.display.y0)}),A=d3.svg.area().x(function(a,b){return m(g(a,b))}).y0(function(a){return n(a.display.y0)}).y1(function(a){return n(a.display.y0)}),B=v.select(".areaWrap").selectAll("path.area").data(function(a){return a});B.enter().append("path").attr("class",function(a,b){return"area area-"+b}).on("mouseover",function(a,b){d3.select(this).classed("hover",!0),q.areaMouseover({point:a,series:a.key,pos:[d3.event.pageX,d3.event.pageY],seriesIndex:b})}).on("mouseout",function(a,b){d3.select(this).classed("hover",!1),q.areaMouseout({point:a,series:a.key,pos:[d3.event.pageX,d3.event.pageY],seriesIndex:b})}).on("click",function(a,b){d3.select(this).classed("hover",!1),q.areaClick({point:a,series:a.key,pos:[d3.event.pageX,d3.event.pageY],seriesIndex:b})}),d3.transition(B.exit()).attr("d",function(a,b){return A(a.values,b)}).remove(),B.style("fill",function(a,b){return a.color||e[b%e.length]}).style("stroke",function(a,b){return a.color||e[b%e.length]}),d3.transition(B).attr("d",function(a,b){return z(a.values,b)}),p.dispatch.on("elementMouseover.area",function(a){v.select(".chart-"+f+" .area-"+a.seriesIndex).classed("hover",!0)}),p.dispatch.on("elementMouseout.area",function(a){v.select(".chart-"+f+" .area-"+a.seriesIndex).classed("hover",!1)})});return r}var b={top:0,right:0,bottom:0,left:0},c=960,d=500,e=d3.scale.category20().range(),f=Math.floor(Math.random()*1e5),g=function(a){return a.x},h=function(a){return a.y},i="stack",j="zero",k="default",l=!1,m,n,o=d3.layout.stack().values(function(a){return a.values}).x(g).y(function(a){return a.stackedY}).out(function(a,b,c){a.display={y:c,y0:b}}),p=a.models.scatter().size(2.2).sizeDomain([2.5]),q=d3.dispatch("tooltipShow","tooltipHide","areaClick","areaMouseover","areaMouseout");p.dispatch.on("elementClick.area",function(a){q.areaClick(a)}),p.dispatch.on("elementMouseover.tooltip",function(a){a.pos=[a.pos[0]+b.left,a.pos[1]+b.top],q.tooltipShow(a)}),p.dispatch.on("elementMouseout.tooltip",function(a){q.tooltipHide(a)}),r.dispatch=q,r.scatter=p,d3.rebind(r,p,"interactive","size","xScale","yScale","zScale","xDomain","yDomain","sizeDomain","forceX","forceY","forceSize","clipVoronoi","clipRadius"),r.x=function(a){if(!arguments.length)return g;g=d3.functor(a);return r},r.y=function(a){if(!arguments.length)return h;h=d3.functor(a);return r},r.margin=function(a){if(!arguments.length)return b;b=a;return r},r.width=function(a){if(!arguments.length)return c;c=a;return r},r.height=function(a){if(!arguments.length)return d;d=a;return r},r.clipEdge=function(a){if(!arguments.length)return l;l=a;return r},r.color=function(a){if(!arguments.length)return e;e=a;return r},r.offset=function(a){if(!arguments.length)return j;j=a;return r},r.order=function(a){if(!arguments.length)return k;k=a;return r},r.style=function(a){if(!arguments.length)return i;i=a;switch(i){case"stack":r.offset("zero"),r.order("default");break;case"stream":r.offset("wiggle"),r.order("inside-out");break;case"expand":r.offset("expand"),r.order("default")}return r};return r},a.models.stackedAreaChart=function(){function t(a){a.each(function(e){var i=d3.select(this),u=this,v=(c||parseInt(i.style("width"))||960)-b.left-b.right,w=(d||parseInt(i.style("height"))||400)-b.top-b.bottom;j=l.xScale(),k=l.yScale();var z=i.selectAll("g.wrap.stackedAreaChart").data([e]),A=z.enter().append("g").attr("class","wrap nvd3 stackedAreaChart").append("g");A.append("g").attr("class","x axis"),A.append("g").attr("class","y axis"),A.append("g").attr("class","stackedWrap"),A.append("g").attr("class","legendWrap"),A.append("g").attr("class","controlsWrap");var B=z.select("g");g&&(o.width(v/2),B.select(".legendWrap").datum(e).call(o),b.top!=o.height()&&(b.top=o.height(),w=(d||parseInt(i.style("height"))||400)-b.top-b.bottom),B.select(".legendWrap").attr("transform","translate("+v/2+","+ -b.top+")")),l.width(v).height(w),f&&(p.width(280).color(["#444","#444","#444"]),B.select(".controlsWrap").datum(r).attr("transform","translate(0,"+ -b.top+")").call(p)),B.attr("transform","translate("+b.left+","+b.top+")");var C=B.select(".stackedWrap").datum(e);d3.transition(C).call(l),m.scale(j).ticks(v/100).tickSize(-w,0),B.select(".x.axis").attr("transform","translate(0,"+w+")"),d3.transition(B.select(".x.axis")).call(m),n.scale(k).ticks(l.offset()=="wiggle"?0:w/36).tickSize(-v,0).tickFormat(l.offset()=="expand"?d3.format("%"):d3.format(",.2f")),d3.transition(B.select(".y.axis")).call(n),l.dispatch.on("areaClick.toggle",function(b){e.filter(function(a){return!a.disabled}).length===1?e=e.map(function(a){a.disabled=!1;return a}):e=e.map(function(a,c){a.disabled=c!=b.seriesIndex;return a}),a.transition().call(t)}),o.dispatch.on("legendClick",function(b,c){b.disabled=!b.disabled,e.filter(function(a){return!a.disabled}).length||e.map(function(a){a.disabled=!1;return a}),a.transition().call(t)}),p.dispatch.on("legendClick",function(b,c){if(!!b.disabled){r=r.map(function(a){a.disabled=!0;return a}),b.disabled=!1;switch(b.key){case"Stacked":l.style("stack");break;case"Stream":l.style("stream");break;case"Expanded":l.style("expand")}a.transition().call(t)}}),q.on("tooltipShow",function(a){h&&s(a,u.parentNode)})}),t.update=function(){a.transition().call(t)},t.container=this;return t}var b={top:30,right:25,bottom:50,left:60},c=null,d=null,e=d3.scale.category20().range(),f=!0,g=!0,h=!0,i=function(a,b,c,d,e){return"<h3>"+a+"</h3>"+"<p>"+c+" on "+b+"</p>"},j,k,l=a.models.stackedArea(),m=a.models.axis().orient("bottom").tickPadding(5),n=a.models.axis().orient("left"),o=a.models.legend().height(30),p=a.models.legend().height(30),q=d3.dispatch("tooltipShow","tooltipHide"),r=[{key:"Stacked"},{key:"Stream",disabled:!0},{key:"Expanded",disabled:!0}],s=function(b,c){var d=b.pos[0]+(c.offsetLeft||0),e=b.pos[1]+(c.offsetTop||0),f=m.tickFormat()(l.x()(b.point,b.pointIndex)),g=n.tickFormat()(l.y()(b.point,b.pointIndex)),h=i(b.series.key,f,g,b,t);a.tooltip.show([d,e],h,b.value<0?"n":"s")};l.dispatch.on("tooltipShow",function(a){if(!Math.round(l.y()(a.point)*100)){setTimeout(function(){d3.selectAll(".point.hover").classed("hover",!1)},0);return!1}a.pos=[a.pos[0]+b.left,a.pos[1]+b.top],q.tooltipShow(a)}),l.dispatch.on("tooltipHide",function(a){q.tooltipHide(a)}),q.on("tooltipHide",function(){h&&a.tooltip.cleanup()}),t.dispatch=q,t.stacked=l,t.xAxis=m,t.yAxis=n,d3.rebind(t,l,"x","y","size","xScale","yScale","xDomain","yDomain","sizeDomain","interactive","offset","order","style","clipEdge","forceX","forceY","forceSize"),t.margin=function(a){if(!arguments.length)return b;b=a;return t},t.width=function(a){if(!arguments.length)return getWidth;c=a;return t},t.height=function(a){if(!arguments.length)return getHeight;d=a;return t},t.color=function(a){if(!arguments.length)return e;e=a,o.color(a);return t},t.showControls=function(a){if(!arguments.length)return f;f=a;return t},t.showLegend=function(a){if(!arguments.length)return g;g=a;return t},t.tooltips=function(a){if(!arguments.length)return h;h=a;return t},t.tooltipContent=function(a){if(!arguments.length)return i;i=a;return t};return t}})()
+(function(){
+var nv = {
+  version: '0.0.1a',
+  dev: true //set false when in production
+};
+
+window.nv = nv;
+
+nv.tooltip = {}; // For the tooltip system
+nv.utils = {}; // Utility subsystem
+nv.models = {}; //stores all the possible models/components
+nv.charts = {}; //stores all the ready to use charts
+nv.graphs = []; //stores all the graphs currently on the page
+nv.logs = {}; //stores some statistics and potential error messages
+
+nv.dispatch = d3.dispatch('render_start', 'render_end');
+
+// *************************************************************************
+//  Development render timers - disabled if dev = false
+
+if (nv.dev) {
+  nv.dispatch.on('render_start', function(e) {
+    nv.logs.startTime = +new Date();
+  });
+
+  nv.dispatch.on('render_end', function(e) {
+    nv.logs.endTime = +new Date();
+    nv.logs.totalTime = nv.logs.endTime - nv.logs.startTime;
+    nv.log('total', nv.logs.totalTime); // used for development, to keep track of graph generation times
+  });
+}
+
+// ********************************************
+//  Public Core NV functions
+
+// Logs all arguments, and returns the last so you can test things in place
+nv.log = function() {
+  if (nv.dev && console.log) console.log.apply(console, arguments);
+  return arguments[arguments.length - 1];
+};
+
+
+nv.render = function render(step) {
+  step = step || 1; // number of graphs to generate in each timout loop
+
+  render.active = true;
+  nv.dispatch.render_start();
+
+  setTimeout(function() {
+    var chart;
+
+    for (var i = 0; i < step && (graph = render.queue[i]); i++) {
+      chart = graph.generate();
+      if (typeof graph.callback == typeof(Function)) graph.callback(chart);
+      nv.graphs.push(chart);
+    }
+
+    render.queue.splice(0, i);
+
+    if (render.queue.length) setTimeout(arguments.callee, 0);
+    else { nv.render.active = false; nv.dispatch.render_end(); }
+  }, 0);
+};
+
+nv.render.queue = [];
+
+nv.addGraph = function(obj) {
+  if (typeof arguments[0] === typeof(Function))
+    obj = {generate: arguments[0], callback: arguments[1]};
+
+  nv.render.queue.push(obj);
+
+  if (!nv.render.active) nv.render();
+};
+
+nv.identity = function(d) { return d; };
+
+nv.strip = function(s) { return s.replace(/(\s|&)/g,''); };
+
+function daysInMonth(month,year) {
+  return (new Date(year, month+1, 0)).getDate();
+}
+
+function d3_time_range(floor, step, number) {
+  return function(t0, t1, dt) {
+    var time = floor(t0), times = [];
+    if (time < t0) step(time);
+    if (dt > 1) {
+      while (time < t1) {
+        var date = new Date(+time);
+        if ((number(date) % dt === 0)) times.push(date);
+        step(time);
+      }
+    } else {
+      while (time < t1) { times.push(new Date(+time)); step(time); }
+    }
+    return times;
+  };
+}
+
+d3.time.monthEnd = function(date) {
+  return new Date(date.getFullYear(), date.getMonth(), 0);
+};
+
+d3.time.monthEnds = d3_time_range(d3.time.monthEnd, function(date) {
+    date.setUTCDate(date.getUTCDate() + 1);
+    date.setDate(daysInMonth(date.getMonth() + 1, date.getFullYear()));
+  }, function(date) {
+    return date.getMonth();
+  }
+);
+
+
+/*****
+ * A no frills tooltip implementation.
+ *****/
+
+
+(function() {
+
+  var nvtooltip = window.nv.tooltip = {};
+
+  nvtooltip.show = function(pos, content, gravity, dist, parentContainer, classes) {
+
+    var container = document.createElement('div');
+        container.className = 'nvtooltip ' + (classes ? classes : 'xy-tooltip');
+
+    gravity = gravity || 's';
+    dist = dist || 20;
+
+    var body = parentContainer ? parentContainer : document.getElementsByTagName('body')[0];
+
+    container.innerHTML = content;
+    container.style.left = 0;
+    container.style.top = 0;
+    container.style.opacity = 0;
+
+    body.appendChild(container);
+
+    var height = parseInt(container.offsetHeight),
+        width = parseInt(container.offsetWidth),
+        windowWidth = nv.utils.windowSize().width,
+        windowHeight = nv.utils.windowSize().height,
+        scrollTop = body.scrollTop,
+        scrollLeft = body.scrollLeft,
+        left, top;
+
+
+    switch (gravity) {
+      case 'e':
+        left = pos[0] - width - dist;
+        top = pos[1] - (height / 2);
+        if (left < scrollLeft) left = pos[0] + dist;
+        if (top < scrollTop) top = scrollTop + 5;
+        if (top + height > scrollTop + windowHeight) top = scrollTop - height - 5;
+        break;
+      case 'w':
+        left = pos[0] + dist;
+        top = pos[1] - (height / 2);
+        if (left + width > windowWidth) left = pos[0] - width - dist;
+        if (top < scrollTop) top = scrollTop + 5;
+        if (top + height > scrollTop + windowHeight) top = scrollTop - height - 5;
+        break;
+      case 'n':
+        left = pos[0] - (width / 2);
+        top = pos[1] + dist;
+        if (left < scrollLeft) left = scrollLeft + 5;
+        if (left + width > windowWidth) left = windowWidth - width - 5;
+        if (top + height > scrollTop + windowHeight) top = pos[1] - height - dist;
+        break;
+      case 's':
+        left = pos[0] - (width / 2);
+        top = pos[1] - height - dist;
+        if (left < scrollLeft) left = scrollLeft + 5;
+        if (left + width > windowWidth) left = windowWidth - width - 5;
+        if (scrollTop > top) top = pos[1] + 20;
+        break;
+    }
+
+
+    container.style.left = left+'px';
+    container.style.top = top+'px';
+    container.style.opacity = 1;
+    container.style.position = 'absolute'; //fix scroll bar issue
+    container.style.pointerEvents = 'none'; //fix scroll bar issue
+
+    return container;
+  };
+
+  nvtooltip.cleanup = function() {
+
+      // Find the tooltips, mark them for removal by this class (so others cleanups won't find it)
+      var tooltips = document.getElementsByClassName('nvtooltip');
+      var purging = [];
+      while(tooltips.length) {
+        purging.push(tooltips[0]);
+        tooltips[0].style.transitionDelay = '0 !important';
+        tooltips[0].style.opacity = 0;
+        tooltips[0].className = 'nvtooltip-pending-removal';
+      }
+
+
+      setTimeout(function() {
+
+          while (purging.length) {
+             var removeMe = purging.pop();
+              removeMe.parentNode.removeChild(removeMe);
+          }
+    }, 500);
+  };
+
+
+})();
+
+nv.utils.windowSize = function() {
+    // Sane defaults
+    var size = {width: 640, height: 480};
+
+    // Earlier IE uses Doc.body
+    if (document.body && document.body.offsetWidth) {
+        size.width = document.body.offsetWidth;
+        size.height = document.body.offsetHeight;
+    }
+
+    // IE can use depending on mode it is in
+    if (document.compatMode=='CSS1Compat' &&
+        document.documentElement &&
+        document.documentElement.offsetWidth ) {
+        size.width = document.documentElement.offsetWidth;
+        size.height = document.documentElement.offsetHeight;
+    }
+
+    // Most recent browsers use
+    if (window.innerWidth && window.innerHeight) {
+        size.width = window.innerWidth;
+        size.height = window.innerHeight;
+    }
+    return (size);
+};
+
+
+
+// Easy way to bind multiple functions to window.onresize
+// TODO: give a way to remove a function after its bound, other than removing alkl of them
+nv.utils.windowResize = function(fun){
+  var oldresize = window.onresize;
+
+  window.onresize = function(e) {
+    if (typeof oldresize == 'function') oldresize(e);
+    fun(e);
+  }
+}
+
+// Backwards compatible way to implement more d3-like coloring of graphs.
+// If passed an array, wrap it in a function which implements the old default
+// behaviour
+nv.utils.getColor = function(color){
+    if( Object.prototype.toString.call( color ) === '[object Array]' )
+        return function(d, i) { return d.color || color[i % color.length]; };
+    else
+        return color;
+        //can't really help it if someone passes rubish as color
+}
+
+// Default color chooser uses the index of an object as before.
+//
+//
+nv.utils.defaultColor = function(){
+    var colors = d3.scale.category20().range();
+    return function(d, i) {return colors[i % colors.length]};
+}
+
+
+
+// From the PJAX example on d3js.org, while this is not really directly needed
+// it's a very cool method for doing pjax, I may expand upon it a little bit,
+// open to suggestions on anything that may be useful
+nv.utils.pjax = function(links, content) {
+  d3.selectAll(links).on("click", function() {
+    history.pushState(this.href, this.textContent, this.href);
+    load(this.href);
+    d3.event.preventDefault();
+  });
+
+  function load(href) {
+    d3.html(href, function(fragment) {
+      var target = d3.select(content).node();
+      target.parentNode.replaceChild(d3.select(fragment).select(content).node(), target);
+      nv.utils.pjax(links, content);
+    });
+  }
+
+  d3.select(window).on("popstate", function() {
+    if (d3.event.state) load(d3.event.state);
+  });
+}
+
+nv.models.axis = function() {
+  //Default Settings
+  var width = 60, //only used for tickLabel currently
+      height = 60, //only used for tickLabel currently
+      scale = d3.scale.linear(),
+      axisLabelText = null,
+      showMaxMin = true, //TODO: showMaxMin should be disabled on all ordinal scaled axes
+      highlightZero = true,
+      rotateYLabel = true;
+      margin = {top: 0, right: 0, bottom: 0, left: 0}
+
+  var axis = d3.svg.axis()
+               .scale(scale)
+               .orient('bottom')
+               .tickFormat(function(d) { return d }), //TODO: decide if we want to keep this
+      scale0;
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var container = d3.select(this);
+
+      var wrap = container.selectAll('g.nv-wrap.nv-axis').data([data]);
+      var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-axis');
+      var gEnter = wrapEnter.append('g');
+      var g = wrap.select('g')
+
+      if (axis.orient() == 'top' || axis.orient() == 'bottom')
+        axis.ticks(Math.abs(scale.range()[1] - scale.range()[0]) / 100);
+
+      //TODO: consider calculating width/height based on whether or not label is added, for reference in charts using this component
+
+
+      d3.transition(g)
+          .call(axis);
+
+      scale0 = scale0 || axis.scale();
+
+      var axisLabel = g.selectAll('text.nv-axislabel')
+          .data([axisLabelText || null]);
+      axisLabel.exit().remove();
+      switch (axis.orient()) {
+        case 'top':
+          axisLabel.enter().append('text').attr('class', 'nv-axislabel')
+              .attr('text-anchor', 'middle')
+              .attr('y', 0);
+          var w = (scale.range().length==2) ? scale.range()[1] : (scale.range()[scale.range().length-1]+(scale.range()[1]-scale.range()[0]));
+          axisLabel
+              .attr('x', w/2);
+          if (showMaxMin) {
+            var axisMaxMin = wrap.selectAll('g.nv-axisMaxMin')
+                           .data(scale.domain());
+            axisMaxMin.enter().append('g').attr('class', 'nv-axisMaxMin').append('text');
+            axisMaxMin.exit().remove();
+            axisMaxMin
+                .attr('transform', function(d,i) {
+                  return 'translate(' + scale(d) + ',0)'
+                })
+              .select('text')
+                .attr('dy', '0em')
+                .attr('y', -axis.tickPadding())
+                .attr('text-anchor', 'middle')
+                .text(function(d,i) {
+                  return ('' + axis.tickFormat()(d)).match('NaN') ? '' : axis.tickFormat()(d)
+                });
+            d3.transition(axisMaxMin)
+                .attr('transform', function(d,i) {
+                  return 'translate(' + scale.range()[i] + ',0)'
+                });
+          }
+          break;
+        case 'bottom':
+          axisLabel.enter().append('text').attr('class', 'nv-axislabel')
+              .attr('text-anchor', 'middle')
+              .attr('y', 30);
+          var w = (scale.range().length==2) ? scale.range()[1] : (scale.range()[scale.range().length-1]+(scale.range()[1]-scale.range()[0]));
+          axisLabel
+              .attr('x', w/2);
+          if (showMaxMin) {
+            var axisMaxMin = wrap.selectAll('g.nv-axisMaxMin')
+                           .data(scale.domain());
+            axisMaxMin.enter().append('g').attr('class', 'nv-axisMaxMin').append('text');
+            axisMaxMin.exit().remove();
+            axisMaxMin
+                .attr('transform', function(d,i) {
+                  return 'translate(' + scale(d) + ',0)'
+                })
+              .select('text')
+                .attr('dy', '.71em')
+                .attr('y', axis.tickPadding())
+                .attr('text-anchor', 'middle')
+                .text(function(d,i) {
+                  return ('' + axis.tickFormat()(d)).match('NaN') ? '' : axis.tickFormat()(d)
+                });
+            d3.transition(axisMaxMin)
+                .attr('transform', function(d,i) {
+                  return 'translate(' + scale.range()[i] + ',0)'
+                });
+          }
+          break;
+        case 'right':
+          axisLabel.enter().append('text').attr('class', 'nv-axislabel')
+              .attr('text-anchor', rotateYLabel ? 'middle' : 'begin')
+              .attr('transform', rotateYLabel ? 'rotate(90)' : '')
+              .attr('y', rotateYLabel ? (-Math.max(margin.right,width) - 12) : -10); //TODO: consider calculating this based on largest tick width... OR at least expose this on chart
+          axisLabel
+              .attr('x', rotateYLabel ? (scale.range()[0] / 2) : axis.tickPadding());
+          if (showMaxMin) {
+            var axisMaxMin = wrap.selectAll('g.nv-axisMaxMin')
+                           .data(scale.domain());
+            axisMaxMin.enter().append('g').attr('class', 'nv-axisMaxMin').append('text')
+                .style('opacity', 0);
+            axisMaxMin.exit().remove();
+            axisMaxMin
+                .attr('transform', function(d,i) {
+                  return 'translate(0,' + scale(d) + ')'
+                })
+              .select('text')
+                .attr('dy', '.32em')
+                .attr('y', 0)
+                .attr('x', axis.tickPadding())
+                .attr('text-anchor', 'start')
+                .text(function(d,i) {
+                  return ('' + axis.tickFormat()(d)).match('NaN') ? '' : axis.tickFormat()(d)
+                });
+            d3.transition(axisMaxMin)
+                .attr('transform', function(d,i) {
+                  return 'translate(0,' + scale.range()[i] + ')'
+                })
+              .select('text')
+                .style('opacity', 1);
+          }
+          break;
+        case 'left':
+          axisLabel.enter().append('text').attr('class', 'nv-axislabel')
+              .attr('text-anchor', rotateYLabel ? 'middle' : 'end')
+              .attr('transform', rotateYLabel ? 'rotate(-90)' : '')
+              .attr('y', rotateYLabel ? (-Math.max(margin.left,width) + 12) : -10); //TODO: consider calculating this based on largest tick width... OR at least expose this on chart
+          axisLabel
+              .attr('x', rotateYLabel ? (-scale.range()[0] / 2) : -axis.tickPadding());
+          if (showMaxMin) {
+            var axisMaxMin = wrap.selectAll('g.nv-axisMaxMin')
+                           .data(scale.domain());
+            axisMaxMin.enter().append('g').attr('class', 'nv-axisMaxMin').append('text')
+                .style('opacity', 0);
+            axisMaxMin.exit().remove();
+            axisMaxMin
+                .attr('transform', function(d,i) {
+                  return 'translate(0,' + scale0(d) + ')'
+                })
+              .select('text')
+                .attr('dy', '.32em')
+                .attr('y', 0)
+                .attr('x', -axis.tickPadding())
+                .attr('text-anchor', 'end')
+                .text(function(d,i) {
+                  return ('' + axis.tickFormat()(d)).match('NaN') ? '' : axis.tickFormat()(d)
+                });
+            d3.transition(axisMaxMin)
+                .attr('transform', function(d,i) {
+                  return 'translate(0,' + scale.range()[i] + ')'
+                })
+              .select('text')
+                .style('opacity', 1);
+          }
+          break;
+      }
+      axisLabel
+          .text(function(d) { return d });
+
+
+      //check if max and min overlap other values, if so, hide the values that overlap
+      if (showMaxMin && (axis.orient() === 'left' || axis.orient() === 'right')) {
+        g.selectAll('g') // the g's wrapping each tick
+            .each(function(d,i) {
+              if (scale(d) < scale.range()[1] + 10 || scale(d) > scale.range()[0] - 10) { // 10 is assuming text height is 16... if d is 0, leave it!
+                if (d > 1e-10 || d < -1e-10) // accounts for minor floating point errors... though could be problematic if the scale is EXTREMELY SMALL
+                  d3.select(this).remove();
+                else
+                  d3.select(this).select('text').remove(); // Don't remove the ZERO line!!
+              }
+            });
+      }
+
+      if (showMaxMin && (axis.orient() === 'top' || axis.orient() === 'bottom')) {
+        var maxMinRange = [];
+        wrap.selectAll('g.nv-axisMaxMin')
+            .each(function(d,i) {
+              if (i) // i== 1, max position
+                maxMinRange.push(scale(d) - this.getBBox().width - 4)  //assuming the max and min labels are as wide as the next tick (with an extra 4 pixels just in case)
+              else // i==0, min position
+                maxMinRange.push(scale(d) + this.getBBox().width + 4)
+            });
+        g.selectAll('g') // the g's wrapping each tick
+            .each(function(d,i) {
+              if (scale(d) < maxMinRange[0] || scale(d) > maxMinRange[1]) {
+                if (d > 1e-10 || d < -1e-10) // accounts for minor floating point errors... though could be problematic if the scale is EXTREMELY SMALL
+                  d3.select(this).remove();
+                else
+                  d3.select(this).select('text').remove(); // Don't remove the ZERO line!!
+              }
+            });
+      }
+
+
+      //highlight zero line ... Maybe should not be an option and should just be in CSS?
+      if (highlightZero)
+        g.selectAll('line.tick')
+          .filter(function(d) { return !parseFloat(Math.round(d*100000)/1000000) }) //this is because sometimes the 0 tick is a very small fraction, TODO: think of cleaner technique
+            .classed('zero', true);
+
+      scale0 = scale.copy();
+
+    });
+
+
+    return chart;
+  }
+
+
+  d3.rebind(chart, axis, 'orient', 'ticks', 'tickValues', 'tickSubdivide', 'tickSize', 'tickPadding', 'tickFormat');
+  d3.rebind(chart, scale, 'domain', 'range', 'rangeBand', 'rangeBands'); //these are also accessible by chart.scale(), but added common ones directly for ease of use
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.axisLabel = function(_) {
+    if (!arguments.length) return axisLabelText;
+    axisLabelText = _;
+    return chart;
+  }
+
+  chart.showMaxMin = function(_) {
+    if (!arguments.length) return showMaxMin;
+    showMaxMin = _;
+    return chart;
+  }
+
+  chart.highlightZero = function(_) {
+    if (!arguments.length) return highlightZero;
+    highlightZero = _;
+    return chart;
+  }
+
+  chart.scale = function(_) {
+    if (!arguments.length) return scale;
+    scale = _;
+    axis.scale(scale);
+    d3.rebind(chart, scale, 'domain', 'range', 'rangeBand', 'rangeBands');
+    return chart;
+  }
+  chart.rotateYLabel = function(_) {
+  	if(!arguments.length) return rotateYLabel;
+  	rotateYLabel = _;
+  	return chart;
+  }
+  chart.margin = function(_) {
+  	if(!arguments.length) return margin;
+  	margin = _;
+  	return chart;
+  }
+
+  return chart;
+}
+//TODO: eitehr drastically clean up or deprecate this model
+nv.models.historicalBar = function() {
+  var margin = {top: 0, right: 0, bottom: 0, left: 0},
+      width = 960,
+      height = 500,
+      id = Math.floor(Math.random() * 10000), //Create semi-unique ID in case user doesn't select one
+      getX = function(d) { return d.x },
+      getY = function(d) { return d.y },
+      forceX = [],
+      forceY = [],
+      clipEdge = true,
+      color = nv.utils.defaultColor(),
+      xDomain, yDomain;
+
+  var x = d3.scale.linear(),
+      y = d3.scale.linear(),
+      xAxis = d3.svg.axis().scale(x).orient('bottom'),
+      yAxis = d3.svg.axis().scale(y).orient('left'),
+      dispatch = d3.dispatch('chartClick', 'elementClick', 'elementDblClick', 'elementMouseover', 'elementMouseout');
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableWidth = width - margin.left - margin.right,
+          availableHeight = height - margin.top - margin.bottom;
+
+
+      x   .domain(xDomain || d3.extent(data[0].values.map(getX).concat(forceX) ))
+          .range([0, availableWidth]);
+
+      y   .domain(yDomain || d3.extent(data[0].values.map(getY).concat(forceY) )) 
+          .range([availableHeight, 0]);
+
+      // If scale's domain don't have a range, slightly adjust to make one... so a chart can show a single data point
+      if (x.domain()[0] === x.domain()[1] || y.domain()[0] === y.domain()[1]) singlePoint = true;
+      if (x.domain()[0] === x.domain()[1])
+        x.domain()[0] ?
+            x.domain([x.domain()[0] - x.domain()[0] * 0.01, x.domain()[1] + x.domain()[1] * 0.01])
+          : x.domain([-1,1]);
+
+      if (y.domain()[0] === y.domain()[1])
+        y.domain()[0] ?
+            y.domain([y.domain()[0] + y.domain()[0] * 0.01, y.domain()[1] - y.domain()[1] * 0.01])
+          : y.domain([-1,1]);
+
+
+      var parent = d3.select(this)
+          .on('click', function(d,i) {
+            dispatch.chartClick({
+                data: d,
+                index: i,
+                pos: d3.event,
+                id: id
+            });
+          });
+
+
+      var wrap = d3.select(this).selectAll('g.nv-wrap.nv-bar').data([data[0].values]);
+      var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-bar');
+      var gEnter = wrapEnter.append('g');
+
+      gEnter.append('g').attr('class', 'nv-bars');
+
+
+      wrap.attr('width', width)
+          .attr('height', height);
+
+      var g = wrap.select('g')
+          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      wrapEnter.append('defs').append('clipPath')
+          .attr('id', 'nv-chart-clip-path-' + id)
+        .append('rect');
+      wrap.select('#nv-chart-clip-path-' + id + ' rect')
+          .attr('width', availableWidth)
+          .attr('height', availableHeight);
+
+      gEnter
+          .attr('clip-path', clipEdge ? 'url(#nv-chart-clip-path-' + id + ')' : '');
+
+      var shiftWrap = gEnter.append('g').attr('class', 'nv-shiftWrap');
+
+
+
+      var bars = wrap.select('.nv-bars').selectAll('.nv-bar')
+          .data(function(d) { return d });
+
+      bars.exit().remove();
+
+
+      var barsEnter = bars.enter().append('rect')
+          .attr('class', function(d,i,j) { return (getY(d,i) < 0 ? 'nv-bar negative' : 'nv-bar positive') + ' nv-bar-' + j + '-' + i })
+          .attr('fill', function(d,i) { return color(d, i); })
+          .attr('x', 0 )
+          .attr('y', function(d,i) {  return y(Math.max(0, getY(d,i))) })
+          .attr('height', function(d,i) { return Math.abs(y(getY(d,i)) - y(0)) })
+          .on('mouseover', function(d,i) {
+            d3.select(this).classed('hover', true);
+            dispatch.elementMouseover({
+                point: d,
+                series: data[0],
+                pos: [x(getX(d,i)), y(getY(d,i))],  // TODO: Figure out why the value appears to be shifted
+                pointIndex: i,
+                seriesIndex: 0,
+                e: d3.event
+            });
+
+          })
+          .on('mouseout', function(d,i) {
+                d3.select(this).classed('hover', false);
+                dispatch.elementMouseout({
+                    point: d,
+                    series: data[0],
+                    pointIndex: i,
+                    seriesIndex: 0,
+                    e: d3.event
+                });
+          })
+          .on('click', function(d,i) {
+                dispatch.elementClick({
+                    //label: d[label],
+                    value: getY(d,i),
+                    data: d,
+                    index: i,
+                    pos: [x(getX(d,i)), y(getY(d,i))],
+                    e: d3.event,
+                    id: id
+                });
+              d3.event.stopPropagation();
+          })
+          .on('dblclick', function(d,i) {
+              dispatch.elementDblClick({
+                  //label: d[label],
+                  value: getY(d,i),
+                  data: d,
+                  index: i,
+                  pos: [x(getX(d,i)), y(getY(d,i))],
+                  e: d3.event,
+                  id: id
+              });
+              d3.event.stopPropagation();
+          });
+
+      bars
+          .attr('class', function(d,i,j) { return (getY(d,i) < 0 ? 'nv-bar negative' : 'nv-bar positive') + ' nv-bar-' + j + '-' + i })
+          .attr('transform', function(d,i) { return 'translate(' + (x(getX(d,i)) - ((availableWidth / data[0].values.length) * .5)) + ',0)'; })  //TODO: better width calculations that don't assume always uniform data spacing;w
+          .attr('width', (availableWidth / data[0].values.length) * .9 )
+
+
+      d3.transition(bars)
+          .attr('y', function(d,i) {  return y(Math.max(0, getY(d,i))) })
+          .attr('height', function(d,i) { return Math.abs(y(getY(d,i)) - y(0)) });
+          //.order();  // not sure if this makes any sense for this model
+
+    });
+
+    return chart;
+  }
+
+
+  chart.dispatch = dispatch;
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = _;
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = _;
+    return chart;
+  };
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.xScale = function(_) {
+    if (!arguments.length) return x;
+    x = _;
+    return chart;
+  };
+
+  chart.yScale = function(_) {
+    if (!arguments.length) return y;
+    y = _;
+    return chart;
+  };
+
+  chart.xDomain = function(_) {
+    if (!arguments.length) return xDomain;
+    xDomain = _;
+    return chart;
+  };
+
+  chart.yDomain = function(_) {
+    if (!arguments.length) return yDomain;
+    yDomain = _;
+    return chart;
+  };
+
+  chart.forceX = function(_) {
+    if (!arguments.length) return forceX;
+    forceX = _;
+    return chart;
+  };
+
+  chart.forceY = function(_) {
+    if (!arguments.length) return forceY;
+    forceY = _;
+    return chart;
+  };
+
+  chart.clipEdge = function(_) {
+    if (!arguments.length) return clipEdge;
+    clipEdge = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    return chart;
+  };
+
+  chart.id = function(_) {
+    if (!arguments.length) return id;
+    id = _;
+    return chart;
+  };
+
+
+
+  return chart;
+}
+
+// Chart design based on the recommendations of Stephen Few. Implementation
+// based on the work of Clint Ivy, Jamie Love, and Jason Davies.
+// http://projects.instantcognition.com/protovis/bulletchart/
+nv.models.bullet = function() {
+  var orient = 'left', // TODO top & bottom
+      reverse = false,
+      margin = {top: 0, right: 0, bottom: 0, left: 0},
+      ranges = function(d) { return d.ranges },
+      markers = function(d) { return d.markers },
+      measures = function(d) { return d.measures },
+      width = 380,
+      height = 30,
+      tickFormat = null;
+
+  var dispatch = d3.dispatch('elementMouseover', 'elementMouseout');
+
+  // For each small multipleâ€¦
+  function chart(g) {
+    g.each(function(d, i) {
+      var availableWidth = width - margin.left - margin.right,
+          availableHeight = height - margin.top - margin.bottom;
+
+      var rangez = ranges.call(this, d, i).slice().sort(d3.descending),
+          markerz = markers.call(this, d, i).slice().sort(d3.descending),
+          measurez = measures.call(this, d, i).slice().sort(d3.descending);
+
+
+      var wrap = d3.select(this).selectAll('g.nv-wrap.nv-bullet').data([d]);
+      var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-bullet');
+      var gEnter = wrapEnter.append('g');
+
+      var g = wrap.select('g')
+      wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      // Compute the new x-scale.
+      var x1 = d3.scale.linear()
+          .domain([0, Math.max(rangez[0], markerz[0], measurez[0])])  // TODO: need to allow forceX and forceY, and xDomain, yDomain
+          .range(reverse ? [availableWidth, 0] : [0, availableWidth]);
+
+      // Retrieve the old x-scale, if this is an update.
+      var x0 = this.__chart__ || d3.scale.linear()
+          .domain([0, Infinity])
+          .range(x1.range());
+
+      // Stash the new scale.
+      this.__chart__ = x1;
+
+      /*
+      // Derive width-scales from the x-scales.
+      var w0 = bulletWidth(x0),
+          w1 = bulletWidth(x1);
+
+      function bulletWidth(x) {
+        var x0 = x(0);
+        return function(d) {
+          return Math.abs(x(d) - x(0));
+        };
+      }
+
+      function bulletTranslate(x) {
+        return function(d) {
+          return 'translate(' + x(d) + ',0)';
+        };
+      }
+      */
+
+      var w0 = function(d) { return Math.abs(x0(d) - x0(0)) }, // TODO: could optimize by precalculating x0(0) and x1(0)
+          w1 = function(d) { return Math.abs(x1(d) - x1(0)) };
+
+
+      // Update the range rects.
+      var range = g.selectAll('rect.nv-range')
+          .data(rangez);
+
+      range.enter().append('rect')
+          .attr('class', function(d, i) { return 'nv-range nv-s' + i; })
+          .attr('width', w0)
+          .attr('height', availableHeight)
+          .attr('x', reverse ? x0 : 0)
+          .on('mouseover', function(d,i) { 
+              dispatch.elementMouseover({
+                value: d,
+                label: (i <= 0) ? 'Maximum' : (i > 1) ? 'Minimum' : 'Mean', //TODO: make these labels a variable
+                pos: [x1(d), availableHeight/2]
+              })
+          })
+          .on('mouseout', function(d,i) { 
+              dispatch.elementMouseout({
+                value: d,
+                label: (i <= 0) ? 'Minimum' : (i >=1) ? 'Maximum' : 'Mean', //TODO: make these labels a variable
+              })
+          })
+
+      d3.transition(range)
+          .attr('x', reverse ? x1 : 0)
+          .attr('width', w1)
+          .attr('height', availableHeight);
+
+
+      // Update the measure rects.
+      var measure = g.selectAll('rect.nv-measure')
+          .data(measurez);
+
+      measure.enter().append('rect')
+          .attr('class', function(d, i) { return 'nv-measure nv-s' + i; })
+          .attr('width', w0)
+          .attr('height', availableHeight / 3)
+          .attr('x', reverse ? x0 : 0)
+          .attr('y', availableHeight / 3)
+          .on('mouseover', function(d) { 
+              dispatch.elementMouseover({
+                value: d,
+                label: 'Current', //TODO: make these labels a variable
+                pos: [x1(d), availableHeight/2]
+              })
+          })
+          .on('mouseout', function(d) { 
+              dispatch.elementMouseout({
+                value: d,
+                label: 'Current' //TODO: make these labels a variable
+              })
+          })
+
+      d3.transition(measure)
+          .attr('width', w1)
+          .attr('height', availableHeight / 3)
+          .attr('x', reverse ? x1 : 0)
+          .attr('y', availableHeight / 3);
+
+
+
+      // Update the marker lines.
+      var marker = g.selectAll('path.nv-markerTriangle')
+          .data(markerz);
+
+      var h3 =  availableHeight / 6;
+      marker.enter().append('path')
+          .attr('class', 'nv-markerTriangle')
+          .attr('transform', function(d) { return 'translate(' + x0(d) + ',' + (availableHeight / 2) + ')' })
+          .attr('d', 'M0,' + h3 + 'L' + h3 + ',' + (-h3) + ' ' + (-h3) + ',' + (-h3) + 'Z')
+          .on('mouseover', function(d,i) {
+              dispatch.elementMouseover({
+                value: d,
+                label: 'Previous',
+                pos: [x1(d), availableHeight/2]
+              })
+          })
+          .on('mouseout', function(d,i) {
+              dispatch.elementMouseout({
+                value: d,
+                label: 'Previous'
+              })
+          });
+
+      d3.transition(marker)
+          .attr('transform', function(d) { return 'translate(' + x1(d) + ',' + (availableHeight / 2) + ')' });
+
+      marker.exit().remove();
+
+
+    });
+    d3.timer.flush();
+  }
+
+
+  chart.dispatch = dispatch;
+
+  // left, right, top, bottom
+  chart.orient = function(_) {
+    if (!arguments.length) return orient;
+    orient = _;
+    reverse = orient == 'right' || orient == 'bottom';
+    return chart;
+  };
+
+  // ranges (bad, satisfactory, good)
+  chart.ranges = function(_) {
+    if (!arguments.length) return ranges;
+    ranges = _;
+    return chart;
+  };
+
+  // markers (previous, goal)
+  chart.markers = function(_) {
+    if (!arguments.length) return markers;
+    markers = _;
+    return chart;
+  };
+
+  // measures (actual, forecast)
+  chart.measures = function(_) {
+    if (!arguments.length) return measures;
+    measures = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.tickFormat = function(_) {
+    if (!arguments.length) return tickFormat;
+    tickFormat = _;
+    return chart;
+  };
+
+  return chart;
+};
+
+
+
+// Chart design based on the recommendations of Stephen Few. Implementation
+// based on the work of Clint Ivy, Jamie Love, and Jason Davies.
+// http://projects.instantcognition.com/protovis/bulletchart/
+nv.models.bulletChart = function() {
+  var orient = 'left', // TODO top & bottom
+      reverse = false,
+      margin = {top: 5, right: 40, bottom: 20, left: 120},
+      ranges = function(d) { return d.ranges },
+      markers = function(d) { return d.markers },
+      measures = function(d) { return d.measures },
+      width = null,
+      height = 55,
+      tickFormat = null,
+      tooltips = true,
+      tooltip = function(key, x, y, e, graph) {
+        return '<h3>' + e.label + '</h3>' +
+               '<p>' +  e.value + '</p>'
+      },
+      noData = "No Data Available."
+      ;
+
+
+  var dispatch = d3.dispatch('tooltipShow', 'tooltipHide'),
+      bullet = nv.models.bullet();
+
+
+  var showTooltip = function(e, offsetElement) {
+    var offsetElement = document.getElementById("chart"),
+        left = e.pos[0] + offsetElement.offsetLeft + margin.left,
+        top = e.pos[1] + offsetElement.offsetTop + margin.top;
+
+    var content = '<h3>' + e.label + '</h3>' +
+            '<p>' + e.value + '</p>';
+
+    nv.tooltip.show([left, top], content, e.value < 0 ? 'e' : 'w');
+  };
+
+
+  // For each small multipleâ€¦
+  function chart(g) {
+    g.each(function(d, i) {
+      var container = d3.select(this);
+
+      var availableWidth = (width  || parseInt(container.style('width')) || 960)
+                             - margin.left - margin.right,
+          availableHeight = height - margin.top - margin.bottom,
+          that = this;
+
+
+      //------------------------------------------------------------
+      // Display No Data message if there's nothing to show.
+
+      if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
+        container.append('text')
+          .attr('class', 'nvd3 nv-noData')
+          .attr('x', availableWidth / 2)
+          .attr('y', availableHeight / 2)
+          .attr('dy', '-.7em')
+          .style('text-anchor', 'middle')
+          .text(noData);
+          return chart;
+      } else {
+        container.select('.nv-noData').remove();
+      }
+
+      //------------------------------------------------------------
+
+
+
+      var rangez = ranges.call(this, d, i).slice().sort(d3.descending),
+          markerz = markers.call(this, d, i).slice().sort(d3.descending),
+          measurez = measures.call(this, d, i).slice().sort(d3.descending);
+
+      var wrap = container.selectAll('g.nv-wrap.nv-bulletChart').data([d]);
+      var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-bulletChart');
+      var gEnter = wrapEnter.append('g');
+
+      gEnter.append('g').attr('class', 'nv-bulletWrap');
+      gEnter.append('g').attr('class', 'nv-titles');
+
+      var g = wrap.select('g')
+      wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      // Compute the new x-scale.
+      var x1 = d3.scale.linear()
+          .domain([0, Math.max(rangez[0], markerz[0], measurez[0])])  // TODO: need to allow forceX and forceY, and xDomain, yDomain
+          .range(reverse ? [availableWidth, 0] : [0, availableWidth]);
+
+      // Retrieve the old x-scale, if this is an update.
+      var x0 = this.__chart__ || d3.scale.linear()
+          .domain([0, Infinity])
+          .range(x1.range());
+
+      // Stash the new scale.
+      this.__chart__ = x1;
+
+      /*
+      // Derive width-scales from the x-scales.
+      var w0 = bulletWidth(x0),
+          w1 = bulletWidth(x1);
+
+      function bulletWidth(x) {
+        var x0 = x(0);
+        return function(d) {
+          return Math.abs(x(d) - x(0));
+        };
+      }
+
+      function bulletTranslate(x) {
+        return function(d) {
+          return 'translate(' + x(d) + ',0)';
+        };
+      }
+      */
+
+      var w0 = function(d) { return Math.abs(x0(d) - x0(0)) }, // TODO: could optimize by precalculating x0(0) and x1(0)
+          w1 = function(d) { return Math.abs(x1(d) - x1(0)) };
+
+
+      var title = g.select('.nv-titles').append("g")
+          .attr("text-anchor", "end")
+          .attr("transform", "translate(-6," + (height - margin.top - margin.bottom) / 2 + ")");
+      title.append("text")
+          .attr("class", "nv-title")
+          .text(function(d) { return d.title; });
+
+      title.append("text")
+          .attr("class", "nv-subtitle")
+          .attr("dy", "1em")
+          .text(function(d) { return d.subtitle; });
+
+
+
+      bullet
+        .width(availableWidth)
+        .height(availableHeight)
+
+      var bulletWrap = g.select('.nv-bulletWrap')
+          //.datum(data);
+
+      d3.transition(bulletWrap).call(bullet);
+
+
+
+      // Compute the tick format.
+      var format = tickFormat || x1.tickFormat(8);
+
+      // Update the tick groups.
+      var tick = g.selectAll('g.nv-tick')
+          .data(x1.ticks(8), function(d) {
+            return this.textContent || format(d);
+          });
+
+      // Initialize the ticks with the old scale, x0.
+      var tickEnter = tick.enter().append('g')
+          .attr('class', 'nv-tick')
+          .attr('transform', function(d) { return 'translate(' + x0(d) + ',0)' })
+          .style('opacity', 1e-6);
+
+      tickEnter.append('line')
+          .attr('y1', availableHeight)
+          .attr('y2', availableHeight * 7 / 6);
+
+      tickEnter.append('text')
+          .attr('text-anchor', 'middle')
+          .attr('dy', '1em')
+          .attr('y', availableHeight * 7 / 6)
+          .text(format);
+
+      // Transition the entering ticks to the new scale, x1.
+      d3.transition(tickEnter)
+          .attr('transform', function(d) { return 'translate(' + x1(d) + ',0)' })
+          .style('opacity', 1);
+
+      // Transition the updating ticks to the new scale, x1.
+      var tickUpdate = d3.transition(tick)
+          .attr('transform', function(d) { return 'translate(' + x1(d) + ',0)' })
+          .style('opacity', 1);
+
+      tickUpdate.select('line')
+          .attr('y1', availableHeight)
+          .attr('y2', availableHeight * 7 / 6);
+
+      tickUpdate.select('text')
+          .attr('y', availableHeight * 7 / 6);
+
+      // Transition the exiting ticks to the new scale, x1.
+      d3.transition(tick.exit())
+          .attr('transform', function(d) { return 'translate(' + x1(d) + ',0)' })
+          .style('opacity', 1e-6)
+          .remove();
+
+/*
+      bullet.dispatch.on('elementMouseover', function(e) {
+          var offsetElement = document.getElementById("chart"),
+              left = e.pos[0] + offsetElement.offsetLeft + margin.left,
+              top = e.pos[1] + offsetElement.offsetTop + margin.top;
+
+          var content = '<h3>' + e.label + '</h3>' +
+                  '<p>' +
+                  e.value +
+                  '</p>';
+
+          nv.tooltip.show([left, top], content, e.value < 0 ? 'e' : 'w');
+      });
+
+
+      bullet.dispatch.on('elementMouseout', function(e) {
+          nv.tooltip.cleanup();
+      });
+*/
+
+      bullet.dispatch.on('elementMouseover.tooltip', function(e) {
+        //e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+        dispatch.tooltipShow(e);
+      });
+      if (tooltips) dispatch.on('tooltipShow', function(e) { showTooltip(e, that.parentNode) } ); // TODO: maybe merge with above?
+
+      bullet.dispatch.on('elementMouseout.tooltip', function(e) {
+        dispatch.tooltipHide(e);
+      });
+      if (tooltips) dispatch.on('tooltipHide', nv.tooltip.cleanup);
+
+
+
+    });
+    d3.timer.flush();
+  }
+
+
+  chart.dispatch = dispatch;
+  chart.bullet = bullet;
+
+  // left, right, top, bottom
+  chart.orient = function(x) {
+    if (!arguments.length) return orient;
+    orient = x;
+    reverse = orient == 'right' || orient == 'bottom';
+    return chart;
+  };
+
+  // ranges (bad, satisfactory, good)
+  chart.ranges = function(x) {
+    if (!arguments.length) return ranges;
+    ranges = x;
+    return chart;
+  };
+
+  // markers (previous, goal)
+  chart.markers = function(x) {
+    if (!arguments.length) return markers;
+    markers = x;
+    return chart;
+  };
+
+  // measures (actual, forecast)
+  chart.measures = function(x) {
+    if (!arguments.length) return measures;
+    measures = x;
+    return chart;
+  };
+
+  chart.width = function(x) {
+    if (!arguments.length) return width;
+    width = x;
+    return chart;
+  };
+
+  chart.height = function(x) {
+    if (!arguments.length) return height;
+    height = x;
+    return chart;
+  };
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.tickFormat = function(x) {
+    if (!arguments.length) return tickFormat;
+    tickFormat = x;
+    return chart;
+  };
+
+  chart.tooltips = function(_) {
+    if (!arguments.length) return tooltips;
+    tooltips = _;
+    return chart;
+  };
+
+  chart.tooltipContent = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.noData = function(_) {
+    if (!arguments.length) return noData;
+    noData = _;
+    return chart;
+  };
+
+
+  return chart;
+};
+
+
+
+nv.models.cumulativeLineChart = function() {
+
+  //============================================================
+  // Public Variables with Default Settings
+  //------------------------------------------------------------
+
+  var margin = {top: 30, right: 30, bottom: 50, left: 60},
+      color = nv.utils.getColor(),
+      width = null,
+      height = null,
+      showLegend = true,
+      tooltips = true,
+      showRescaleToggle = true, //TODO: get rescale y functionality back (need to calculate exten of y for ALL possible re-zero points
+      rescaleY = true,
+      tooltip = function(key, x, y, e, graph) {
+        return '<h3>' + key + '</h3>' +
+               '<p>' +  y + ' at ' + x + '</p>'
+      },
+      x, y, //can be accessed via chart.lines.[x/y]Scale()
+      noData = "No Data Available."
+      ;
+
+
+  //============================================================
+  // Private Variables
+  //------------------------------------------------------------
+
+  var lines = nv.models.line(),
+      dx = d3.scale.linear(),
+      id = lines.id(),
+      xAxis = nv.models.axis().orient('bottom').tickPadding(5),
+      yAxis = nv.models.axis().orient('left'),
+      legend = nv.models.legend().height(30),
+      controls = nv.models.legend().height(30),
+      dispatch = d3.dispatch('tooltipShow', 'tooltipHide'),
+      index = {i: 0, x: 0};
+
+  //TODO: let user select default
+  var controlsData = [
+    { key: 'Re-scale y-axis' }
+  ];
+
+  var showTooltip = function(e, offsetElement) {
+    var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
+        top = e.pos[1] + ( offsetElement.offsetTop || 0),
+        x = xAxis.tickFormat()(lines.x()(e.point, e.pointIndex)),
+        y = yAxis.tickFormat()(lines.y()(e.point, e.pointIndex)),
+        content = tooltip(e.series.key, x, y, e, chart);
+
+    nv.tooltip.show([left, top], content);
+  };
+
+
+  var indexDrag = d3.behavior.drag()
+                    .on('dragstart', dragStart)
+                    .on('drag', dragMove)
+                    .on('dragend', dragEnd);
+
+  function dragStart(d,i) {}
+
+  function dragMove(d,i) {
+    d.x += d3.event.dx;
+    d.i = Math.round(dx.invert(d.x));
+
+    //d3.transition(d3.select('.chart-' + id)).call(chart);
+    d3.select(this).attr('transform', 'translate(' + dx(d.i) + ',0)');
+  }
+
+  function dragEnd(d,i) {
+    //d3.transition(d3.select('.chart-' + id)).call(chart);
+    chart.update();
+  }
+
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var container = d3.select(this).classed('nv-chart-' + id, true),
+          that = this;
+
+      var availableWidth = (width  || parseInt(container.style('width')) || 960)
+                             - margin.left - margin.right,
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+
+
+      //------------------------------------------------------------
+      // Display No Data message if there's nothing to show.
+
+      if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
+        container.append('text')
+          .attr('class', 'nvd3 nv-noData')
+          .attr('x', availableWidth / 2)
+          .attr('y', availableHeight / 2)
+          .attr('dy', '-.7em')
+          .style('text-anchor', 'middle')
+          .text(noData);
+          return chart;
+      } else {
+        container.select('.nv-noData').remove();
+      }
+
+      //------------------------------------------------------------
+
+
+
+      x = lines.xScale();
+      y = lines.yScale();
+
+      if (!rescaleY) {
+        var seriesDomains = data
+          .filter(function(series) { return !series.disabled })
+          .map(function(series,i) {
+            var initialDomain = d3.extent(series.values, lines.y());
+
+            return [
+              (initialDomain[0] - initialDomain[1]) / (1 + initialDomain[1]),
+              (initialDomain[1] - initialDomain[0]) / (1 + initialDomain[0])
+            ];
+          });
+
+        var completeDomain = [
+          d3.min(seriesDomains, function(d) { return d[0] }),
+          d3.max(seriesDomains, function(d) { return d[1] })
+        ]
+
+        lines.yDomain(completeDomain);
+      } else {
+        lines.yDomain(null);
+      }
+
+
+      dx  .domain([0, data[0].values.length - 1]) //Assumes all series have same length
+          .range([0, availableWidth])
+          .clamp(true);
+
+
+      var data = indexify(index.i, data);
+
+
+      var wrap = container.selectAll('g.nv-wrap.nv-cumulativeLine').data([data]);
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-cumulativeLine').append('g');
+
+      gEnter.append('g').attr('class', 'nv-x nv-axis');
+      gEnter.append('g').attr('class', 'nv-y nv-axis');
+      gEnter.append('g').attr('class', 'nv-linesWrap');
+      gEnter.append('g').attr('class', 'nv-legendWrap');
+      gEnter.append('g').attr('class', 'nv-controlsWrap');
+
+
+      var g = wrap.select('g');
+
+
+      if (showLegend) {
+        legend.width(availableWidth);
+
+        g.select('.nv-legendWrap')
+            .datum(data)
+            .call(legend);
+
+        if ( margin.top != legend.height()) {
+          margin.top = legend.height();
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+        }
+
+        g.select('.nv-legendWrap')
+            .attr('transform', 'translate(0,' + (-margin.top) +')')
+      }
+
+
+      if (showRescaleToggle) {
+        controls.width(140).color(['#444', '#444', '#444']);
+        g.select('.nv-controlsWrap')
+            .datum(controlsData)
+            .attr('transform', 'translate(0,' + (-margin.top) +')')
+            .call(controls);
+      }
+
+
+
+      lines
+        //.x(function(d) { return d.x })
+        .y(function(d) { return d.display.y })
+        .width(availableWidth)
+        .height(availableHeight)
+        .color(data.map(function(d,i) {
+          return d.color || color(d, i);
+        }).filter(function(d,i) { return !data[i].disabled }));
+
+
+
+      g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      var linesWrap = g.select('.nv-linesWrap')
+          .datum(data.filter(function(d) { return !d.disabled }))
+
+      d3.transition(linesWrap).call(lines);
+
+
+      var indexLine = linesWrap.selectAll('.nv-indexLine')
+          .data([index]);
+      indexLine.enter().append('rect').attr('class', 'nv-indexLine')
+          .attr('width', 3)
+          .attr('x', -2)
+          .attr('fill', 'red')
+          .attr('fill-opacity', .5)
+          .call(indexDrag)
+
+      indexLine
+          .attr('transform', function(d) { return 'translate(' + dx(d.i) + ',0)' })
+          .attr('height', availableHeight)
+
+
+
+      xAxis
+        .scale(x)
+        .ticks( availableWidth / 100 )
+        .tickSize(-availableHeight, 0);
+
+      g.select('.nv-x.nv-axis')
+          .attr('transform', 'translate(0,' + y.range()[0] + ')');
+      d3.transition(g.select('.nv-x.nv-axis'))
+          .call(xAxis);
+
+
+      yAxis
+        .scale(y)
+        .ticks( availableHeight / 36 )
+        .tickSize( -availableWidth, 0);
+
+      d3.transition(g.select('.nv-y.nv-axis'))
+          .call(yAxis);
+
+
+
+      //============================================================
+      // Event Handling/Dispatching (in chart's scope)
+      //------------------------------------------------------------
+
+      controls.dispatch.on('legendClick', function(d,i) { 
+        d.disabled = !d.disabled;
+        rescaleY = !d.disabled;
+
+        //console.log(d,i,arguments);
+
+        selection.transition().call(chart);
+      });
+
+
+      legend.dispatch.on('legendClick', function(d,i) { 
+        d.disabled = !d.disabled;
+
+        if (!data.filter(function(d) { return !d.disabled }).length) {
+          data.map(function(d) {
+            d.disabled = false;
+            wrap.selectAll('.nv-series').classed('disabled', false);
+            return d;
+          });
+        }
+
+        selection.transition().call(chart);
+      });
+
+/*
+      //
+      legend.dispatch.on('legendMouseover', function(d, i) {
+        d.hover = true;
+        selection.transition().call(chart)
+      });
+
+      legend.dispatch.on('legendMouseout', function(d, i) {
+        d.hover = false;
+        selection.transition().call(chart)
+      });
+*/
+
+      dispatch.on('tooltipShow', function(e) {
+        if (tooltips) showTooltip(e, that.parentNode);
+      });
+
+
+    });
+
+
+    //TODO: decide if this is a good idea, and if it should be in all models
+    chart.update = function() { chart(selection) };
+    chart.container = this; // I need a reference to the container in order to have outside code check if the chart is visible or not
+
+
+    return chart;
+  }
+
+
+  //============================================================
+  // Event Handling/Dispatching (out of chart's scope)
+  //------------------------------------------------------------
+
+  lines.dispatch.on('elementMouseover.tooltip', function(e) {
+    e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+    dispatch.tooltipShow(e);
+  });
+
+  lines.dispatch.on('elementMouseout.tooltip', function(e) {
+    dispatch.tooltipHide(e);
+  });
+
+  dispatch.on('tooltipHide', function() {
+    if (tooltips) nv.tooltip.cleanup();
+  });
+
+
+  //============================================================
+  // Global getters and setters
+  //------------------------------------------------------------
+
+  chart.dispatch = dispatch;
+  chart.legend = legend;
+  chart.xAxis = xAxis;
+  chart.yAxis = yAxis;
+
+  d3.rebind(chart, lines, 'defined', 'isArea', 'x', 'y', 'size', 'xDomain', 'yDomain', 'forceX', 'forceY', 'interactive', 'clipEdge', 'clipVoronoi', 'id');
+
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    legend.color(color);
+    return chart;
+  };
+
+  chart.showLegend = function(_) {
+    if (!arguments.length) return showLegend;
+    showLegend = _;
+    return chart;
+  };
+
+  chart.tooltips = function(_) {
+    if (!arguments.length) return tooltips;
+    tooltips = _;
+    return chart;
+  };
+
+  chart.tooltipContent = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.noData = function(_) {
+    if (!arguments.length) return noData;
+    noData = _;
+    return chart;
+  };
+
+
+
+  //============================================================
+  // Functions
+  //------------------------------------------------------------
+
+  /* Normalize the data according to an index point. */
+  function indexify(idx, data) {
+    return data.map(function(line, i) {
+      var v = lines.y()(line.values[idx], idx);
+
+      line.values = line.values.map(function(point, pointIndex) {
+        point.display = {'y': (lines.y()(point, pointIndex) - v) / (1 + v) };
+        return point;
+      })
+      /*
+      if (v < -.9) {
+        //if a series loses more than 100%, calculations fail.. anything close can cause major distortion (but is mathematically currect till it hits 100)
+      }
+      */
+      return line;
+    })
+  }
+
+
+  return chart;
+}
+
+nv.models.discreteBar = function() {
+
+  //============================================================
+  // Public Variables with Default Settings
+  //------------------------------------------------------------
+
+  var margin = {top: 0, right: 0, bottom: 0, left: 0},
+      width = 960,
+      height = 500,
+      id = Math.floor(Math.random() * 10000), //Create semi-unique ID in case user doesn't select one
+      x = d3.scale.ordinal(),
+      y = d3.scale.linear(),
+      getX = function(d) { return d.x },
+      getY = function(d) { return d.y },
+      forceY = [0], // 0 is forced by default.. this makes sense for the majority of bar graphs... user can always do chart.forceY([]) to remove
+      color = nv.utils.defaultColor(),
+      showValues = false,
+      valueFormat = d3.format(',.2f'),
+      xDomain, yDomain;
+
+
+  //============================================================
+  // Private Variables
+  //------------------------------------------------------------
+
+  var dispatch = d3.dispatch('chartClick', 'elementClick', 'elementDblClick', 'elementMouseover', 'elementMouseout'),
+      x0, y0;
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableWidth = width - margin.left - margin.right,
+          availableHeight = height - margin.top - margin.bottom;
+
+
+      //add series index to each data point for reference
+      data = data.map(function(series, i) {
+        series.values = series.values.map(function(point) {
+          point.series = i;
+          return point;
+        });
+        return series;
+      });
+
+
+      var seriesData = (xDomain && yDomain) ? [] : // if we know xDomain and yDomain, no need to calculate
+            data.map(function(d) {
+              return d.values.map(function(d,i) {
+                return { x: getX(d,i), y: getY(d,i), y0: d.y0 }
+              })
+            });
+
+      x   .domain(xDomain || d3.merge(seriesData).map(function(d) { return d.x }))
+          .rangeBands([0, availableWidth], .1);
+
+      y   .domain(yDomain || d3.extent(d3.merge(seriesData).map(function(d) { return d.y }).concat(forceY)));
+
+
+      // If showValues, pad the Y axis range to account for label height
+      if (showValues) y.range([availableHeight - (y.domain()[0] < 0 ? 12 : 0), y.domain()[1] > 0 ? 12 : 0]);
+      else y.range([availableHeight, 0]);
+
+      //store old scales if they exist
+      x0 = x0 || x;
+      y0 = y0 || y.copy().range([y(0),y(0)]);
+
+
+      var wrap = d3.select(this).selectAll('g.nv-wrap.nv-discretebar').data([data]);
+      var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-discretebar');
+      var gEnter = wrapEnter.append('g');
+
+      gEnter.append('g').attr('class', 'nv-groups');
+
+      var g = wrap.select('g')
+      wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+
+      //TODO: by definition, the discrete bar should not have multiple groups, will modify/remove later
+      var groups = wrap.select('.nv-groups').selectAll('.nv-group')
+          .data(function(d) { return d }, function(d) { return d.key });
+      groups.enter().append('g')
+          .style('stroke-opacity', 1e-6)
+          .style('fill-opacity', 1e-6);
+      d3.transition(groups.exit())
+          .style('stroke-opacity', 1e-6)
+          .style('fill-opacity', 1e-6)
+          .remove();
+      groups
+          .attr('class', function(d,i) { return 'nv-group nv-series-' + i })
+          .classed('hover', function(d) { return d.hover });
+      d3.transition(groups)
+          .style('stroke-opacity', 1)
+          .style('fill-opacity', .75);
+
+
+      var bars = groups.selectAll('g.nv-bar')
+          .data(function(d) { return d.values });
+
+      bars.exit().remove();
+
+
+      var barsEnter = bars.enter().append('g')
+          .attr('transform', function(d,i,j) {
+              return 'translate(' + x(getX(d,i)) + ', ' + y(0) + ')' 
+          })
+          .on('mouseover', function(d,i) { //TODO: figure out why j works above, but not here
+            d3.select(this).classed('hover', true);
+            dispatch.elementMouseover({
+              value: getY(d,i),
+              point: d,
+              series: data[d.series],
+              pos: [x(getX(d,i)) + (x.rangeBand() * (d.series + .5) / data.length), y(getY(d,i))],  // TODO: Figure out why the value appears to be shifted
+              pointIndex: i,
+              seriesIndex: d.series,
+              e: d3.event
+            });
+          })
+          .on('mouseout', function(d,i) {
+            d3.select(this).classed('hover', false);
+            dispatch.elementMouseout({
+              value: getY(d,i),
+              point: d,
+              series: data[d.series],
+              pointIndex: i,
+              seriesIndex: d.series,
+              e: d3.event
+            });
+          })
+          .on('click', function(d,i) {
+            dispatch.elementClick({
+              value: getY(d,i),
+              point: d,
+              series: data[d.series],
+              pos: [x(getX(d,i)) + (x.rangeBand() * (d.series + .5) / data.length), y(getY(d,i))],  // TODO: Figure out why the value appears to be shifted
+              pointIndex: i,
+              seriesIndex: d.series,
+              e: d3.event
+            });
+            d3.event.stopPropagation();
+          })
+          .on('dblclick', function(d,i) {
+            dispatch.elementDblClick({
+              value: getY(d,i),
+              point: d,
+              series: data[d.series],
+              pos: [x(getX(d,i)) + (x.rangeBand() * (d.series + .5) / data.length), y(getY(d,i))],  // TODO: Figure out why the value appears to be shifted
+              pointIndex: i,
+              seriesIndex: d.series,
+              e: d3.event
+            });
+            d3.event.stopPropagation();
+          });
+
+      barsEnter.append('rect')
+          .attr('height', 0)
+          .attr('width', x.rangeBand() / data.length )
+          .style('fill', function(d,i){  return d.color || color(d, i) }) 
+          .style('stroke', function(d,i){ return d.color || color(d, i)});
+
+      if (showValues) {
+        barsEnter.append('text')
+          .attr('text-anchor', 'middle')
+        bars.selectAll('text')
+          .attr('x', x.rangeBand() / 2)
+          .attr('y', function(d,i) { return getY(d,i) < 0 ? y(getY(d,i)) - y(0) + 12 : -4 })
+          .text(function(d,i) { return valueFormat(getY(d,i)) });
+      } else {
+        bars.selectAll('text').remove();
+      }
+
+      bars
+          .attr('class', function(d,i) { return getY(d,i) < 0 ? 'nv-bar negative' : 'nv-bar positive'})
+          //.attr('transform', function(d,i) { return 'translate(' + x(getX(d,i)) + ',0)'; })
+          .attr('transform', function(d,i) {
+              return 'translate(' + x(getX(d,i)) + ', ' + (getY(d,i) < 0 ? y0(0) : y0(getY(d,i))) + ')' 
+          })
+        .selectAll('rect')
+          .attr('width', x.rangeBand() / data.length);
+      d3.transition(bars)
+        //.delay(function(d,i) { return i * 1200 / data[0].values.length })
+          .attr('transform', function(d,i) {
+              return 'translate(' + x(getX(d,i)) + ', ' + (getY(d,i) < 0 ? y(0) : y(getY(d,i))) + ')' 
+          })
+        .selectAll('rect')
+          .attr('height', function(d,i) {
+             return Math.abs(y(getY(d,i)) - y(0))
+           });
+
+
+
+      //TODO: decide if this makes sense to add into all the models for ease of updating (updating without needing the selection)
+      chart.update = function() { chart(selection) };
+
+      //store old scales for use in transitions on update, to animate from old to new positions, and sizes
+      x0 = x.copy();
+      y0 = y.copy();
+
+    });
+
+    return chart;
+  }
+
+
+  chart.dispatch = dispatch;
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = _;
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = _;
+    return chart;
+  };
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.xScale = function(_) {
+    if (!arguments.length) return x;
+    x = _;
+    return chart;
+  };
+
+  chart.yScale = function(_) {
+    if (!arguments.length) return y;
+    y = _;
+    return chart;
+  };
+
+  chart.xDomain = function(_) {
+    if (!arguments.length) return xDomain;
+    xDomain = _;
+    return chart;
+  };
+
+  chart.yDomain = function(_) {
+    if (!arguments.length) return yDomain;
+    yDomain = _;
+    return chart;
+  };
+
+  chart.forceY = function(_) {
+    if (!arguments.length) return forceY;
+    forceY = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    return chart;
+  };
+
+  chart.id = function(_) {
+    if (!arguments.length) return id;
+    id = _;
+    return chart;
+  };
+
+  chart.showValues = function(_) {
+    if (!arguments.length) return showValues;
+    showValues = _;
+    return chart;
+  };
+
+  chart.valueFormat= function(_) {
+    if (!arguments.length) return valueFormat;
+    valueFormat = _;
+    return chart;
+  };
+
+
+  return chart;
+}
+
+nv.models.discreteBarChart = function() {
+  var margin = {top: 10, right: 10, bottom: 50, left: 60},
+      width = null,
+      height = null,
+      color = nv.utils.getColor(), //a function that gets color for a datum
+      staggerLabels = false,
+      rotateLabels = 0,
+      tooltips = true,
+      tooltip = function(key, x, y, e, graph) { 
+        return '<h3>' + x + '</h3>' +
+               '<p>' +  y + '</p>'
+      },
+      noData = "No Data Available."
+      ;
+
+
+  var discretebar = nv.models.discreteBar(),
+      x = discretebar.xScale(),
+      y = discretebar.yScale(),
+      xAxis = nv.models.axis().scale(x).orient('bottom').highlightZero(false).showMaxMin(false),
+      yAxis = nv.models.axis().scale(y).orient('left'),
+      dispatch = d3.dispatch('tooltipShow', 'tooltipHide');
+
+  xAxis.tickFormat(function(d) { return d });
+  yAxis.tickFormat(d3.format(',.1f'));
+
+
+  var showTooltip = function(e, offsetElement) {
+    var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
+        top = e.pos[1] + ( offsetElement.offsetTop || 0),
+        x = xAxis.tickFormat()(discretebar.x()(e.point, e.pointIndex)),
+        y = yAxis.tickFormat()(discretebar.y()(e.point, e.pointIndex)),
+        content = tooltip(e.series.key, x, y, e, chart);
+
+    nv.tooltip.show([left, top], content, e.value < 0 ? 'n' : 's');
+  };
+
+
+  //TODO: let user select default
+  var controlsData = [
+    { key: 'Grouped' },
+    { key: 'Stacked', disabled: true }
+  ];
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var container = d3.select(this),
+          that = this;
+
+      var availableWidth = (width  || parseInt(container.style('width')) || 960)
+                             - margin.left - margin.right,
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+
+
+      //------------------------------------------------------------
+      // Display No Data message if there's nothing to show.
+
+      if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
+        container.append('text')
+          .attr('class', 'nvd3 nv-noData')
+          .attr('x', availableWidth / 2)
+          .attr('y', availableHeight / 2)
+          .attr('dy', '-.7em')
+          .style('text-anchor', 'middle')
+          .text(noData);
+          return chart;
+      } else {
+        container.select('.nv-noData').remove();
+      }
+
+      //------------------------------------------------------------
+
+
+      discretebar
+        .width(availableWidth)
+        .height(availableHeight);
+
+
+      var wrap = container.selectAll('g.nv-wrap.nv-discreteBarWithAxes').data([data]);
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-discreteBarWithAxes').append('g');
+      var defsEnter = gEnter.append('defs');
+
+      gEnter.append('g').attr('class', 'nv-x nv-axis');
+      gEnter.append('g').attr('class', 'nv-y nv-axis');
+      gEnter.append('g').attr('class', 'nv-barsWrap');
+
+
+
+      var g = wrap.select('g');
+
+
+      g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+      var barsWrap = g.select('.nv-barsWrap')
+          .datum(data.filter(function(d) { return !d.disabled }))
+
+
+      d3.transition(barsWrap).call(discretebar);
+
+
+      defsEnter.append('clipPath')
+          .attr('id', 'nv-x-label-clip-' + discretebar.id())
+        .append('rect')
+
+      g.select('#nv-x-label-clip-' + discretebar.id() + ' rect')
+          .attr('width', x.rangeBand() * (staggerLabels ? 2 : 1))
+          .attr('height', 16)
+          .attr('x', -x.rangeBand() / (staggerLabels ? 1 : 2 ));
+
+
+      xAxis
+        .ticks( availableWidth / 100 )
+        .tickSize(-availableHeight, 0);
+
+      g.select('.nv-x.nv-axis')
+          .attr('transform', 'translate(0,' + (y.range()[0] + ((discretebar.showValues() && y.domain()[0] < 0) ? 16 : 0)) + ')')
+      //d3.transition(g.select('.x.axis'))
+      g.select('.nv-x.nv-axis').transition().duration(0)
+          .call(xAxis);
+
+
+      var xTicks = g.select('.nv-x.nv-axis').selectAll('g');
+
+      if (staggerLabels)
+        xTicks
+            .selectAll('text')
+            .attr('transform', function(d,i,j) { return 'translate(0,' + (j % 2 == 0 ? '0' : '12') + ')' })
+
+      if (rotateLabels)
+        xTicks
+            .selectAll('text')
+            .attr('transform', function(d,i,j) { return 'rotate(' + rotateLabels + ' 0,0)' })
+            .attr('text-anchor', rotateLabels > 0 ? 'start' : 'end') 
+
+      xTicks
+          .selectAll('text')
+          .attr('clip-path', function(d,i,j) { return rotateLabels ? '' : 'url(#nv-x-label-clip-' + discretebar.id() + ')' });
+
+
+      yAxis
+        .ticks( availableHeight / 36 )
+        .tickSize( -availableWidth, 0);
+
+      d3.transition(g.select('.nv-y.nv-axis'))
+          .call(yAxis);
+
+
+      discretebar.dispatch.on('elementMouseover.tooltip', function(e) {
+        e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+        dispatch.tooltipShow(e);
+      });
+      if (tooltips) dispatch.on('tooltipShow', function(e) { showTooltip(e, that.parentNode) } ); // TODO: maybe merge with above?
+
+      discretebar.dispatch.on('elementMouseout.tooltip', function(e) {
+        dispatch.tooltipHide(e);
+      });
+      if (tooltips) dispatch.on('tooltipHide', nv.tooltip.cleanup);
+
+
+      //TODO: decide if this makes sense to add into all the models for ease of updating (updating without needing the selection)
+      chart.update = function() { selection.transition().call(chart); };
+      chart.container = this; // I need a reference to the container in order to have outside code check if the chart is visible or not
+
+    });
+
+    return chart;
+  }
+
+
+  chart.dispatch = dispatch;
+  chart.discretebar = discretebar; // really just makign the accessible for discretebar.dispatch, may rethink slightly
+  chart.xAxis = xAxis;
+  chart.yAxis = yAxis;
+
+  d3.rebind(chart, discretebar, 'x', 'y', 'xDomain', 'yDomain', 'forceX', 'forceY', 'id', 'showValues', 'valueFormat');
+
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    discretebar.color(color);
+    return chart;
+  };
+
+  chart.staggerLabels = function(_) {
+    if (!arguments.length) return staggerLabels;
+    staggerLabels = _;
+    return chart;
+  };
+
+  chart.rotateLabels = function(_) {
+    if (!arguments.length) return rotateLabels;
+    rotateLabels = _;
+    return chart;
+  };
+
+  chart.tooltips = function(_) {
+    if (!arguments.length) return tooltips;
+    tooltips = _;
+    return chart;
+  };
+
+  chart.tooltipContent = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.noData = function(_) {
+    if (!arguments.length) return noData;
+    noData = _;
+    return chart;
+  };
+
+
+  return chart;
+}
+
+nv.models.distribution = function() {
+  var margin = {top: 0, right: 0, bottom: 0, left: 0},
+      width = 400, //technically width or height depending on x or y....
+      size = 8,
+      axis = 'x', // 'x' or 'y'... horizontal or vertical
+      getData = function(d) { return d[axis] },  // defaults d.x or d.y
+      color = nv.utils.defaultColor(),
+      domain;
+
+  var scale = d3.scale.linear(),
+      scale0;
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableLength = width - (axis === 'x' ? margin.left + margin.right : margin.top + margin.bottom),
+          naxis = axis == 'x' ? 'y' : 'x';
+
+
+      //store old scales if they exist
+      scale0 = scale0 || scale;
+
+/*
+      scale
+          .domain(domain || d3.extent(data, getData))
+          .range(axis == 'x' ? [0, availableLength] : [availableLength,0]);
+*/
+
+
+      var wrap = d3.select(this).selectAll('g.nv-distribution').data([data]);
+      var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-distribution');
+      var gEnter = wrapEnter.append('g');
+      var g = wrap.select('g');
+
+      wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+
+      var distWrap = g.selectAll('g.nv-dist')
+          .data(function(d) { return d }, function(d) { return d.key });
+
+      distWrap.enter().append('g')
+      distWrap
+          .attr('class', function(d,i) { return 'nv-dist nv-series-' + i })
+          .style('stroke', function(d,i) { return color(d, i) });
+          //.style('stroke', function(d,i) { return color.filter(function(d,i) { return data[i] && !data[i].disabled })[i % color.length] });
+
+      var dist = distWrap.selectAll('line.nv-dist' + axis)
+          .data(function(d) { return d.values })
+      dist.enter().append('line')
+          .attr(axis + '1', function(d,i) { return scale0(getData(d,i)) })
+          .attr(axis + '2', function(d,i) { return scale0(getData(d,i)) })
+      d3.transition(distWrap.exit().selectAll('line.nv-dist' + axis))
+          .attr(axis + '1', function(d,i) { return scale(getData(d,i)) })
+          .attr(axis + '2', function(d,i) { return scale(getData(d,i)) })
+          .style('stroke-opacity', 0)
+          .remove();
+      dist
+      //distWrap.selectAll('line.dist' + axis)
+          .attr('class', function(d,i) { return 'nv-dist' + axis + ' nv-dist' + axis + '-' + i })
+          .attr(naxis + '1', 0)
+          .attr(naxis + '2', size);
+      d3.transition(dist)
+      //d3.transition(distWrap.selectAll('line.dist' + axis))
+          .attr(axis + '1', function(d,i) { return scale(getData(d,i)) })
+          .attr(axis + '2', function(d,i) { return scale(getData(d,i)) })
+
+
+      scale0 = scale.copy();
+
+    });
+
+    return chart;
+  }
+
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.axis = function(_) {
+    if (!arguments.length) return axis;
+    axis = _;
+    return chart;
+  };
+
+  chart.size = function(_) {
+    if (!arguments.length) return size;
+    size = _;
+    return chart;
+  };
+
+  chart.getData = function(_) {
+    if (!arguments.length) return getData;
+    getData = d3.functor(_);
+    return chart;
+  };
+
+  chart.scale = function(_) {
+    if (!arguments.length) return scale;
+    scale = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    return chart;
+  };
+
+  return chart;
+}
+
+//TODO: Finish merging this chart into the NVD3 style!
+nv.models.indentedTree = function() {
+  //Default Settings
+  var margin = {top: 0, right: 0, bottom: 0, left: 0}, //TODO: implement, maybe as margin on the containing div
+      width = 960,
+      height = 500,
+      color = nv.utils.defaultColor(),
+      id = Math.floor(Math.random() * 10000), 
+      header = true,
+      noResultsText = 'No Results found.'
+      childIndent = 20,
+      columns = [{key:'key', label: 'Name', type:'text'}], //TODO: consider functions like chart.addColumn, chart.removeColumn, instead of a block like this
+      tableClass = null,
+      iconOpen = 'images/grey-plus.png', //TODO: consider removing this and replacing with a '+' or '-' unless user defines images
+      iconClose = 'images/grey-minus.png';
+
+
+  var dispatch = d3.dispatch('elementClick', 'elementDblclick', 'elementMouseover', 'elementMouseout');
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableWidth = width - margin.left - margin.right,  //TODO: decide if there is any use for these
+          availableHeight = height - margin.top - margin.bottom;
+
+
+      chart.update = function() { selection.transition().call(chart) };
+
+      var i = 0,
+          depth = 1;
+
+      var tree = d3.layout.tree()
+          .children(function(d) { return d.values })
+          .size([height, childIndent]); //Not sure if this is needed now that the result is HTML
+
+
+      if (!data[0].key) data[0].key = noResultsText;
+
+      var nodes = tree.nodes(data[0]);
+
+
+      var wrap = d3.select(this).selectAll('div').data([[nodes]]);
+      var wrapEnter = wrap.enter().append('div').attr('class', 'nvd3 nv-wrap nv-indentedtree');
+      var tableEnter = wrapEnter.append('table');
+      var table = wrap.select('table').attr('width', '100%').attr('class', tableClass);
+
+
+
+      if (header) {
+        var thead = tableEnter.append('thead');
+
+        var theadRow1 = thead.append('tr');
+
+        columns.forEach(function(column) {
+          theadRow1
+            .append('th')
+              .attr('width', column.width ? column.width : '10%')
+              .style('text-align', column.type == 'numeric' ? 'right' : 'left')
+            .append('span')
+              .text(column.label);
+        });
+      }
+
+
+      var tbody = table.selectAll('tbody')
+                    .data(function(d) {return d });
+      tbody.enter().append('tbody');
+
+
+
+      //compute max generations
+      depth = d3.max(nodes, function(node) { return node.depth });
+      tree.size([height, depth * childIndent]); //TODO: see if this is necessary at all
+
+
+      // Update the nodes…
+      var node = tbody.selectAll('tr')
+          .data(function(d) { return d }, function(d) { return d.id || (d.id == ++i)});
+          //.style('display', 'table-row'); //TODO: see if this does anything
+
+      node.exit().remove();
+
+
+      node.select('img.nv-treeicon')
+          .attr('src', icon)
+          .classed('folded', folded);
+
+      var nodeEnter = node.enter().append('tr');
+
+
+      columns.forEach(function(column, index) {
+
+        var nodeName = nodeEnter.append('td')
+            .style('padding-left', function(d) { return (index ? 0 : d.depth * childIndent + 12 + (icon(d) ? 0 : 16)) + 'px' }, 'important') //TODO: check why I did the ternary here
+            .style('text-align', column.type == 'numeric' ? 'right' : 'left');
+
+
+        if (index == 0) {
+          nodeName.append('img')
+              .classed('nv-treeicon', true)
+              .classed('nv-folded', folded)
+              .attr('src', icon)
+              .style('width', '14px')
+              .style('height', '14px')
+              .style('padding', '0 1px')
+              .style('display', function(d) { return icon(d) ? 'inline-block' : 'none'; })
+              .on('click', click);
+        }
+
+
+        nodeName.append('span')
+            .attr('class', d3.functor(column.classes) )
+            .text(function(d) { return column.format ? column.format(d) :
+                                        (d[column.key] || '-') });
+
+        if  (column.showCount)
+          nodeName.append('span')
+              .attr('class', 'nv-childrenCount')
+              .text(function(d) {
+                return ((d.values && d.values.length) || (d._values && d._values.length)) ?
+                    '(' + ((d.values && d.values.length) || (d._values && d._values.length)) + ')'
+                  : ''
+              });
+
+
+        if (column.click)
+          nodeName.select('span').on('click', column.click);
+
+      });
+
+
+      node
+        .order()
+        .on('click', function(d) { 
+          dispatch.elementClick({
+            row: this, //TODO: decide whether or not this should be consistent with scatter/line events
+            data: d,
+            pos: [d.x, d.y]
+          });
+        })
+        .on('dblclick', function(d) { 
+          dispatch.elementDblclick({
+            row: this,
+            data: d,
+            pos: [d.x, d.y]
+          });
+        })
+        .on('mouseover', function(d) { 
+          dispatch.elementMouseover({
+            row: this,
+            data: d,
+            pos: [d.x, d.y]
+          });
+        })
+        .on('mouseout', function(d) { 
+          dispatch.elementMouseout({
+            row: this,
+            data: d,
+            pos: [d.x, d.y]
+          });
+        });
+
+
+
+
+      // Toggle children on click.
+      function click(d, _, unshift) {
+        d3.event.stopPropagation();
+
+        if(d3.event.shiftKey && !unshift) {
+          //If you shift-click, it'll toggle fold all the children, instead of itself
+          d3.event.shiftKey = false;
+          d.values && d.values.forEach(function(node){
+            if (node.values || node._values) {
+              click(node, 0, true);
+            }
+          });
+          return true;
+        }
+        if(!hasChildren(d)) {
+          //download file
+          //window.location.href = d.url;
+          return true;
+        }
+        if (d.values) {
+          d._values = d.values;
+          d.values = null;
+        } else {
+          d.values = d._values;
+          d._values = null;
+        }
+        chart.update();
+      }
+
+
+      function icon(d) {
+        return (d._values && d._values.length) ? iconOpen : (d.values && d.values.length) ? iconClose : '';
+      }
+
+      function folded(d) {
+        return (d._values && d._values.length);
+      }
+
+      function hasChildren(d) {
+        var values = d.values || d._values;
+
+        return (values && values.length);
+      }
+
+    });
+
+    return chart;
+  }
+
+
+
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    scatter.color(color);
+    return chart;
+  };
+
+  chart.id = function(_) {
+    if (!arguments.length) return id;
+    id = _;
+    return chart;
+  };
+
+  chart.header = function(_) {
+    if (!arguments.length) return header;
+    header = _;
+    return chart;
+  };
+
+  chart.noResultsText = function(_) {
+    if (!arguments.length) return noResultsText;
+    noResultsText = _;
+    return chart;
+  };
+
+  chart.columns = function(_) {
+    if (!arguments.length) return columns;
+    columns = _;
+    return chart;
+  };
+
+  chart.tableClass = function(_) {
+    if (!arguments.length) return tableClass;
+    tableClass = _;
+    return chart;
+  };
+
+  chart.iconOpen = function(_){
+     if (!arguments.length) return iconOpen;
+    iconOpen = _;
+    return chart;
+  }
+
+  chart.iconClose = function(_){
+     if (!arguments.length) return iconClose;
+    iconClose = _;
+    return chart;
+  }
+
+  return chart;
+}
+
+nv.models.legend = function() {
+  var margin = {top: 5, right: 0, bottom: 5, left: 0},
+      width = 400,
+      height = 20,
+      getKey = function(d) { return d.key },
+      color = nv.utils.defaultColor(),
+      align = true;
+
+  var dispatch = d3.dispatch('legendClick', 'legendDblclick', 'legendMouseover', 'legendMouseout'); //TODO: theres are really element or series events, there are currently no 'LEGEND' events (as in entire legend)... decide if they are needed
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableWidth = width - margin.left - margin.right;
+
+      var wrap = d3.select(this).selectAll('g.nv-legend').data([data]);
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-legend').append('g');
+
+
+      var g = wrap.select('g')
+          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      var series = g.selectAll('.nv-series')
+          .data(function(d) { return d });
+      var seriesEnter = series.enter().append('g').attr('class', 'nv-series')
+          .on('mouseover', function(d,i) {
+            dispatch.legendMouseover(d,i);  //TODO: Make consistent with other event objects
+          })
+          .on('mouseout', function(d,i) {
+            dispatch.legendMouseout(d,i);
+          })
+          .on('click', function(d,i) {
+            dispatch.legendClick(d,i);
+          })
+          .on('dblclick', function(d,i) {
+            dispatch.legendDblclick(d,i);
+          });
+      seriesEnter.append('circle')
+          .style('fill', function(d,i) { return d.color || color(d,i)})
+          .style('stroke', function(d,i) { return d.color || color(d, i) })
+          .style('stroke-width', 2)
+          .attr('r', 5);
+      seriesEnter.append('text')
+          .text(getKey)
+          .attr('text-anchor', 'start')
+          .attr('dy', '.32em')
+          .attr('dx', '8');
+      series.classed('disabled', function(d) { return d.disabled });
+      series.exit().remove();
+
+
+      //TODO: implement fixed-width and max-width options (max-width is especially useful with the align option)
+
+
+      // NEW ALIGNING CODE, TODO: drastically clean up ... this is just the ugly initial code to make sure the math is right
+      if (align) {
+        var seriesWidths = [];
+        series.each(function(d,i) {
+              seriesWidths.push(d3.select(this).select('text').node().getComputedTextLength() + 28); // 28 is ~ the width of the circle plus some padding
+            });
+
+        //console.log('Series Widths: ', JSON.stringify(seriesWidths));
+
+        var seriesPerRow = 0;
+        var legendWidth = 0;
+        var columnWidths = [];
+
+        while ( legendWidth < availableWidth && seriesPerRow < seriesWidths.length) {
+          columnWidths[seriesPerRow] = seriesWidths[seriesPerRow];
+          legendWidth += seriesWidths[seriesPerRow++];
+        }
+
+
+        while ( legendWidth > availableWidth && seriesPerRow > 1 ) {
+          columnWidths = [];
+          seriesPerRow--;
+
+          for (k = 0; k < seriesWidths.length; k++) {
+            if (seriesWidths[k] > (columnWidths[k % seriesPerRow] || 0) )
+              columnWidths[k % seriesPerRow] = seriesWidths[k];
+          }
+
+          legendWidth = columnWidths.reduce(function(prev, cur, index, array) {
+                          return prev + cur;
+                        });
+        }
+        //console.log(columnWidths, legendWidth, seriesPerRow);
+
+        var xPositions = [];
+        for (var i = 0, curX = 0; i < seriesPerRow; i++) {
+            xPositions[i] = curX;
+            curX += columnWidths[i];
+        }
+
+        series
+            .attr('transform', function(d, i) {
+              return 'translate(' + xPositions[i % seriesPerRow] + ',' + (5 + Math.floor(i / seriesPerRow) * 20) + ')';
+            });
+
+        //position legend as far right as possible within the total width
+        g.attr('transform', 'translate(' + (width - margin.right - legendWidth) + ',' + margin.top + ')');
+
+        height = margin.top + margin.bottom + (Math.ceil(seriesWidths.length / seriesPerRow) * 20);
+      } else {
+
+        var ypos = 5,
+            newxpos = 5,
+            maxwidth = 0,
+            xpos;
+        series
+            .attr('transform', function(d, i) {
+              var length = d3.select(this).select('text').node().getComputedTextLength() + 28;
+              xpos = newxpos;
+
+              if (width < margin.left + margin.right + xpos + length) {
+                newxpos = xpos = 5;
+                ypos += 20;
+              }
+
+              newxpos += length;
+              if (newxpos > maxwidth) maxwidth = newxpos;
+
+              return 'translate(' + xpos + ',' + ypos + ')';
+            });
+
+        //position legend as far right as possible within the total width
+        g.attr('transform', 'translate(' + (width - margin.right - maxwidth) + ',' + margin.top + ')');
+
+        height = margin.top + margin.bottom + ypos + 15;
+      }
+
+
+
+
+    });
+
+    return chart;
+  }
+
+
+  chart.dispatch = dispatch;
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.key = function(_) {
+    if (!arguments.length) return getKey;
+    getKey = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    return chart;
+  };
+
+  chart.align = function(_) {
+    if (!arguments.length) return align;
+    align = _;
+    return chart;
+  };
+
+  return chart;
+}
+
+nv.models.line = function() {
+
+  //============================================================
+  // Public Variables with Default Settings
+  //------------------------------------------------------------
+
+  var margin = {top: 0, right: 0, bottom: 0, left: 0},
+      width = 960,
+      height = 500,
+      color = nv.utils.defaultColor(), // a function that returns a color
+      id = Math.floor(Math.random() * 10000), //Create semi-unique ID incase user doesn't select one
+      getX = function(d) { return d.x }, // accessor to get the x value from a data point
+      getY = function(d) { return d.y }, // accessor to get the y value from a data point
+      defined = function(d,i) { return !isNaN(getY(d,i)) && getY(d,i) !== null }, // allows a line to be not continous when it is not defined
+      isArea = function(d) { return d.area }, // decides if a line is an area or just a line
+      clipEdge = false, // if true, masks lines within x and y scale
+      x, y, //can be accessed via chart.scatter.[x/y]Scale()
+      interpolate = "linear"; // controls the line interpolation
+
+
+  //============================================================
+  // Private Variables
+  //------------------------------------------------------------
+
+  var scatter = nv.models.scatter()
+                  .id(id)
+                  .size(16) // default size
+                  .sizeDomain([16,256]), //set to speed up calculation, needs to be unset if there is a cstom size accessor
+      x0, y0,
+      timeoutID;
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableWidth = width - margin.left - margin.right,
+          availableHeight = height - margin.top - margin.bottom,
+          container = d3.select(this);
+
+      x = scatter.xScale();
+      y = scatter.yScale();
+
+      x0 = x0 || x;
+      y0 = y0 || y;
+
+
+      var wrap = container.selectAll('g.nv-wrap.nv-line').data([data]);
+      var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-line');
+      var defsEnter = wrapEnter.append('defs');
+      var gEnter = wrapEnter.append('g');
+      var g = wrap.select('g')
+
+      gEnter.append('g').attr('class', 'nv-groups');
+      gEnter.append('g').attr('class', 'nv-scatterWrap');
+
+      var scatterWrap = wrap.select('.nv-scatterWrap');//.datum(data);
+
+
+      scatter
+        .width(availableWidth)
+        .height(availableHeight)
+
+      d3.transition(scatterWrap).call(scatter);
+
+
+
+      wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      defsEnter.append('clipPath')
+          .attr('id', 'nv-edge-clip-' + id)
+        .append('rect');
+
+      wrap.select('#nv-edge-clip-' + id + ' rect')
+          .attr('width', availableWidth)
+          .attr('height', availableHeight);
+
+      g   .attr('clip-path', clipEdge ? 'url(#nv-edge-clip-' + id + ')' : '');
+      scatterWrap
+          .attr('clip-path', clipEdge ? 'url(#nv-edge-clip-' + id + ')' : '');
+
+
+
+
+      var groups = wrap.select('.nv-groups').selectAll('.nv-group')
+          .data(function(d) { return d }, function(d) { return d.key });
+      groups.enter().append('g')
+          .style('stroke-opacity', 1e-6)
+          .style('fill-opacity', 1e-6);
+      d3.transition(groups.exit())
+          .style('stroke-opacity', 1e-6)
+          .style('fill-opacity', 1e-6)
+          .remove();
+      groups
+          .attr('class', function(d,i) { return 'nv-group nv-series-' + i })
+          .classed('hover', function(d) { return d.hover })
+          .style('fill', function(d,i){ return color(d, i) })
+          .style('stroke', function(d,i){ return color(d, i)});
+      d3.transition(groups)
+          .style('stroke-opacity', 1)
+          .style('fill-opacity', .5);
+
+
+
+      var areaPaths = groups.selectAll('path.nv-area')
+          .data(function(d) { return [d] }); // this is done differently than lines because I need to check if series is an area
+      areaPaths.enter().append('path')
+          .filter(isArea)
+          .attr('class', 'nv-area')
+          .attr('d', function(d) {
+            return d3.svg.area()
+                .interpolate(interpolate)
+                .defined(defined)
+                .x(function(d,i) { return x0(getX(d,i)) })
+                .y0(function(d,i) { return y0(getY(d,i)) })
+                .y1(function(d,i) { return y0( y.domain()[0] <= 0 ? y.domain()[1] >= 0 ? 0 : y.domain()[1] : y.domain()[0] ) })
+                //.y1(function(d,i) { return y0(0) }) //assuming 0 is within y domain.. may need to tweak this
+                .apply(this, [d.values])
+          });
+      d3.transition(groups.exit().selectAll('path.nv-area'))
+          .attr('d', function(d) {
+            return d3.svg.area()
+                .interpolate(interpolate)
+                .defined(defined)
+                .x(function(d,i) { return x0(getX(d,i)) })
+                .y0(function(d,i) { return y0(getY(d,i)) })
+                .y1(function(d,i) { return y0( y.domain()[0] <= 0 ? y.domain()[1] >= 0 ? 0 : y.domain()[1] : y.domain()[0] ) })
+                //.y1(function(d,i) { return y0(0) }) //assuming 0 is within y domain.. may need to tweak this
+                .apply(this, [d.values])
+          });
+      d3.transition(areaPaths.filter(isArea))
+          .attr('d', function(d) {
+            return d3.svg.area()
+                .interpolate(interpolate)
+                .defined(defined)
+                .x(function(d,i) { return x0(getX(d,i)) })
+                .y0(function(d,i) { return y0(getY(d,i)) })
+                .y1(function(d,i) { return y0( y.domain()[0] <= 0 ? y.domain()[1] >= 0 ? 0 : y.domain()[1] : y.domain()[0] ) })
+                //.y1(function(d,i) { return y0(0) }) //assuming 0 is within y domain.. may need to tweak this
+                .apply(this, [d.values])
+          });
+
+
+
+      var linePaths = groups.selectAll('path.nv-line')
+          .data(function(d) { return [d.values] });
+      linePaths.enter().append('path')
+          .attr('class', function(d) { return 'nv-line' })
+          .attr('d',
+            d3.svg.line()
+              .interpolate(interpolate)
+              .defined(defined)
+              .x(function(d,i) { return x0(getX(d,i)) })
+              .y(function(d,i) { return y0(getY(d,i)) })
+          );
+      d3.transition(groups.exit().selectAll('path.nv-line'))
+          .attr('d',
+            d3.svg.line()
+              .interpolate(interpolate)
+              .defined(defined)
+              .x(function(d,i) { return x(getX(d,i)) })
+              .y(function(d,i) { return y(getY(d,i)) })
+          );
+      d3.transition(linePaths)
+          .attr('d',
+            d3.svg.line()
+              .interpolate(interpolate)
+              .defined(defined)
+              .x(function(d,i) { return x(getX(d,i)) })
+              .y(function(d,i) { return y(getY(d,i)) })
+          );
+
+
+
+      //store old scales for use in transitions on update
+      x0 = x.copy();
+      y0 = y.copy();
+
+    });
+
+    return chart;
+  }
+
+
+  //============================================================
+  // Global getters and setters
+  //------------------------------------------------------------
+
+  chart.dispatch = scatter.dispatch;
+
+  d3.rebind(chart, scatter, 'interactive', 'size', 'xScale', 'yScale', 'zScale', 'xDomain', 'yDomain', 'sizeDomain', 'forceX', 'forceY', 'forceSize', 'clipVoronoi', 'clipRadius');
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = _;
+    scatter.x(_);
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = _;
+    scatter.y(_);
+    return chart;
+  };
+
+  chart.clipEdge = function(_) {
+    if (!arguments.length) return clipEdge;
+    clipEdge = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    scatter.color(color);
+    return chart;
+  };
+
+  chart.id = function(_) {
+    if (!arguments.length) return id;
+    id = _;
+    return chart;
+  };
+
+  chart.interpolate = function(_) {
+    if (!arguments.length) return interpolate;
+    interpolate = _;
+    return chart;
+  };
+
+  chart.defined = function(_) {
+    if (!arguments.length) return defined;
+    defined = _;
+    return chart;
+  };
+
+  chart.isArea = function(_) {
+    if (!arguments.length) return isArea;
+    isArea = d3.functor(_);
+    return chart;
+  };
+
+  return chart;
+}
+
+nv.models.lineChart = function() {
+
+  //============================================================
+  // Public Variables with Default Settings
+  //------------------------------------------------------------
+
+  var margin = {top: 30, right: 20, bottom: 50, left: 60},
+      color = nv.utils.defaultColor(),
+      width = null, 
+      height = null,
+      showLegend = true,
+      tooltips = true,
+      tooltip = function(key, x, y, e, graph) {
+        return '<h3>' + key + '</h3>' +
+               '<p>' +  y + ' at ' + x + '</p>'
+      },
+      x,//can be accessed via chart.lines.[x/y]Scale()
+      y,
+      noData = "No Data Available."
+      ;
+
+
+  //============================================================
+  // Private Variables
+  //------------------------------------------------------------
+
+  var lines = nv.models.line(),
+      xAxis = nv.models.axis().orient('bottom').tickPadding(5),
+      yAxis = nv.models.axis().orient('left'),
+      legend = nv.models.legend().height(30),
+      dispatch = d3.dispatch('tooltipShow', 'tooltipHide');
+
+  var showTooltip = function(e, offsetElement) {
+
+    // New addition to calculate position if SVG is scaled with viewBox, may move
+    if (offsetElement) {
+      var svg = d3.select(offsetElement).select('svg');
+      var viewBox = svg.attr('viewBox');
+      if (viewBox) {
+        viewBox = viewBox.split(' ');
+        var ratio = parseInt(svg.style('width')) / viewBox[2];
+        e.pos[0] = e.pos[0] * ratio;
+        e.pos[1] = e.pos[1] * ratio;
+      }
+    }
+
+    var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
+        top = e.pos[1] + ( offsetElement.offsetTop || 0),
+        x = xAxis.tickFormat()(lines.x()(e.point, e.pointIndex)),
+        y = yAxis.tickFormat()(lines.y()(e.point, e.pointIndex)),
+        content = tooltip(e.series.key, x, y, e, chart);
+
+    nv.tooltip.show([left, top], content);
+  };
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var container = d3.select(this),
+          that = this;
+
+      var availableWidth = (width  || parseInt(container.style('width')) || 960)
+                             - margin.left - margin.right,
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+
+
+      //------------------------------------------------------------
+      // Display No Data message if there's nothing to show.
+
+      if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
+        container.append('text')
+          .attr('class', 'nvd3 nv-noData')
+          .attr('x', availableWidth / 2)
+          .attr('y', availableHeight / 2)
+          .attr('dy', '-.7em')
+          .style('text-anchor', 'middle')
+          .text(noData);
+          return chart;
+      } else {
+        container.select('.nv-noData').remove();
+      }
+
+      //------------------------------------------------------------
+
+
+      x = lines.xScale();
+      y = lines.yScale();
+
+
+      var wrap = container.selectAll('g.nv-wrap.nv-lineChart').data([data]);
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-lineChart').append('g');
+
+      gEnter.append('g').attr('class', 'nv-x nv-axis');
+      gEnter.append('g').attr('class', 'nv-y nv-axis');
+      gEnter.append('g').attr('class', 'nv-linesWrap');
+      gEnter.append('g').attr('class', 'nv-legendWrap');
+
+
+      var g = wrap.select('g');
+
+
+
+
+      if (showLegend) {
+        legend.width(availableWidth);
+
+        g.select('.nv-legendWrap')
+            .datum(data)
+            .call(legend);
+
+        if ( margin.top != legend.height()) {
+          margin.top = legend.height();
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+        }
+
+        g.select('.nv-legendWrap')
+            .attr('transform', 'translate(0,' + (-margin.top) +')')
+      }
+
+
+      lines
+        .width(availableWidth)
+        .height(availableHeight)
+        .color(data.map(function(d,i) {
+          return d.color || color(d, i);
+        }).filter(function(d,i) { return !data[i].disabled }));
+
+
+
+      g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      var linesWrap = g.select('.nv-linesWrap')
+          .datum(data.filter(function(d) { return !d.disabled }))
+
+      d3.transition(linesWrap).call(lines);
+
+
+
+      xAxis
+        .scale(x)
+        .ticks( availableWidth / 100 )
+        .tickSize(-availableHeight, 0);
+
+      g.select('.nv-x.nv-axis')
+          .attr('transform', 'translate(0,' + y.range()[0] + ')');
+      d3.transition(g.select('.nv-x.nv-axis'))
+          .call(xAxis);
+
+
+      yAxis
+        .scale(y)
+        .ticks( availableHeight / 36 )
+        .tickSize( -availableWidth, 0);
+
+      d3.transition(g.select('.nv-y.nv-axis'))
+          .call(yAxis);
+
+
+
+      //============================================================
+      // Event Handling/Dispatching (in chart's scope)
+      //------------------------------------------------------------
+
+      legend.dispatch.on('legendClick', function(d,i) { 
+        d.disabled = !d.disabled;
+
+        if (!data.filter(function(d) { return !d.disabled }).length) {
+          data.map(function(d) {
+            d.disabled = false;
+            wrap.selectAll('.nv-series').classed('disabled', false);
+            return d;
+          });
+        }
+
+        selection.transition().call(chart);
+      });
+
+/*
+      legend.dispatch.on('legendMouseover', function(d, i) {
+        d.hover = true;
+        selection.transition().call(chart)
+      });
+
+      legend.dispatch.on('legendMouseout', function(d, i) {
+        d.hover = false;
+        selection.transition().call(chart)
+      });
+*/
+
+      dispatch.on('tooltipShow', function(e) {
+        if (tooltips) showTooltip(e, that.parentNode);
+      });
+
+    });
+
+
+    //TODO: decide if this is a good idea, and if it should be in all models
+    chart.update = function() { chart(selection) };
+    chart.container = this; // I need a reference to the container in order to have outside code check if the chart is visible or not
+
+    return chart;
+  }
+
+
+  //============================================================
+  // Event Handling/Dispatching (out of chart's scope)
+  //------------------------------------------------------------
+
+  lines.dispatch.on('elementMouseover.tooltip', function(e) {
+    e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+    dispatch.tooltipShow(e);
+  });
+
+  lines.dispatch.on('elementMouseout.tooltip', function(e) {
+    dispatch.tooltipHide(e);
+  });
+
+  dispatch.on('tooltipHide', function() {
+    if (tooltips) nv.tooltip.cleanup();
+  });
+
+
+  //============================================================
+  // Global getters and setters
+  //------------------------------------------------------------
+
+  chart.dispatch = dispatch;
+  chart.legend = legend;
+  chart.xAxis = xAxis;
+  chart.yAxis = yAxis;
+
+  d3.rebind(chart, lines, 'defined', 'isArea', 'x', 'y', 'size', 'xScale', 'yScale', 'xDomain', 'yDomain', 'forceX', 'forceY', 'interactive', 'clipEdge', 'clipVoronoi', 'id', 'interpolate');
+
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    legend.color(color);
+    return chart;
+  };
+
+  chart.showLegend = function(_) {
+    if (!arguments.length) return showLegend;
+    showLegend = _;
+    return chart;
+  };
+
+  chart.tooltips = function(_) {
+    if (!arguments.length) return tooltips;
+    tooltips = _;
+    return chart;
+  };
+
+  chart.tooltipContent = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.noData = function(_) {
+    if (!arguments.length) return noData;
+    noData = _;
+    return chart;
+  };
+
+
+  return chart;
+}
+
+nv.models.linePlusBarChart = function() {
+  var margin = {top: 30, right: 60, bottom: 50, left: 60},
+      width = null,
+      height = null,
+      getX = function(d) { return d.x },
+      getY = function(d) { return d.y },
+      color = nv.utils.defaultColor(),
+      showLegend = true,
+      tooltips = true,
+      tooltip = function(key, x, y, e, graph) { 
+        return '<h3>' + key + '</h3>' +
+               '<p>' +  y + ' at ' + x + '</p>'
+      },
+      noData = "No Data Available."
+      ;
+
+
+  var lines = nv.models.line(),
+      bars = nv.models.historicalBar(),
+      x = d3.scale.linear(), // needs to be both line and historicalBar x Axis
+      y1 = bars.yScale(),
+      y2 = lines.yScale(),
+      xAxis = nv.models.axis().scale(x).orient('bottom').tickPadding(5),
+      yAxis1 = nv.models.axis().scale(y1).orient('left'),
+      yAxis2 = nv.models.axis().scale(y2).orient('right'),
+      legend = nv.models.legend().height(30),
+      dispatch = d3.dispatch('tooltipShow', 'tooltipHide');
+
+  var showTooltip = function(e, offsetElement) {
+    var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
+        top = e.pos[1] + ( offsetElement.offsetTop || 0),
+        x = xAxis.tickFormat()(lines.x()(e.point, e.pointIndex)),
+        y = (e.series.bar ? yAxis1 : yAxis2).tickFormat()(lines.y()(e.point, e.pointIndex)),
+        content = tooltip(e.series.key, x, y, e, chart);
+
+    nv.tooltip.show([left, top], content, e.value < 0 ? 'n' : 's');
+  };
+
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var container = d3.select(this),
+          that = this;
+
+      var availableWidth = (width  || parseInt(container.style('width')) || 960)
+                             - margin.left - margin.right,
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+
+
+      //------------------------------------------------------------
+      // Display No Data message if there's nothing to show.
+
+      if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
+        container.append('text')
+          .attr('class', 'nvd3 nv-noData')
+          .attr('x', availableWidth / 2)
+          .attr('y', availableHeight / 2)
+          .attr('dy', '-.7em')
+          .style('text-anchor', 'middle')
+          .text(noData);
+          return chart;
+      } else {
+        container.select('.nv-noData').remove();
+      }
+
+      //------------------------------------------------------------
+
+
+
+
+      var dataBars = data.filter(function(d) { return !d.disabled && d.bar });
+
+      var dataLines = data.filter(function(d) { return !d.disabled && !d.bar });
+
+
+
+      //TODO: try to remove x scale computation from this layer
+
+      var series1 = data.filter(function(d) { return !d.disabled && d.bar })
+            .map(function(d) {
+              return d.values.map(function(d,i) {
+                return { x: getX(d,i), y: getY(d,i) }
+              })
+            });
+
+      var series2 = data.filter(function(d) { return !d.disabled && !d.bar })
+            .map(function(d) {
+              return d.values.map(function(d,i) {
+                return { x: getX(d,i), y: getY(d,i) }
+              })
+            });
+
+      x   .domain(d3.extent(d3.merge(series1.concat(series2)), function(d) { return d.x } ))
+          .range([0, availableWidth]);
+
+
+
+          /*
+      x   .domain(d3.extent(d3.merge(data.map(function(d) { return d.values })), getX ))
+          .range([0, availableWidth]);
+
+      y1  .domain(d3.extent(d3.merge(dataBars), function(d) { return d.y } ))
+          .range([availableHeight, 0]);
+
+      y2  .domain(d3.extent(d3.merge(dataLines), function(d) { return d.y } ))
+          .range([availableHeight, 0]);
+         */
+
+
+
+      var wrap = d3.select(this).selectAll('g.nv-wrap.nv-linePlusBar').data([data]);
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-linePlusBar').append('g');
+
+      gEnter.append('g').attr('class', 'nv-x nv-axis');
+      gEnter.append('g').attr('class', 'nv-y1 nv-axis');
+      gEnter.append('g').attr('class', 'nv-y2 nv-axis');
+      gEnter.append('g').attr('class', 'nv-barsWrap');
+      gEnter.append('g').attr('class', 'nv-linesWrap');
+      gEnter.append('g').attr('class', 'nv-legendWrap');
+
+
+
+      var g = wrap.select('g');
+
+
+      if (showLegend) {
+        legend.width( availableWidth / 2 );
+
+        g.select('.nv-legendWrap')
+            .datum(data.map(function(series) {
+              series.originalKey = series.originalKey === undefined ? series.key : series.originalKey;
+              series.key = series.originalKey + (series.bar ? ' (left axis)' : ' (right axis)');
+              return series;
+            }))
+          .call(legend);
+
+        if ( margin.top != legend.height()) {
+          margin.top = legend.height();
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+        }
+
+        g.select('.nv-legendWrap')
+            .attr('transform', 'translate(' + ( availableWidth / 2 ) + ',' + (-margin.top) +')');
+      }
+
+
+
+
+      lines
+        .width(availableWidth)
+        .height(availableHeight)
+        .color(data.map(function(d,i) {
+          return d.color || color(d, i);
+        }).filter(function(d,i) { return !data[i].disabled && !data[i].bar }))
+
+      bars
+        .width(availableWidth)
+        .height(availableHeight)
+        .color(data.map(function(d,i) {
+          return d.color || color(d, i);
+        }).filter(function(d,i) { return !data[i].disabled && data[i].bar }))
+
+
+
+      var barsWrap = g.select('.nv-barsWrap')
+          .datum(dataBars.length ? dataBars : [{values:[]}])
+
+      var linesWrap = g.select('.nv-linesWrap')
+          .datum(dataLines.length ? dataLines : [{values:[]}])
+
+
+      d3.transition(barsWrap).call(bars);
+      d3.transition(linesWrap).call(lines);
+
+
+      g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      xAxis
+        .ticks( availableWidth / 100 )
+        .tickSize(-availableHeight, 0);
+
+      g.select('.nv-x.nv-axis')
+          .attr('transform', 'translate(0,' + y1.range()[0] + ')');
+      d3.transition(g.select('.nv-x.nv-axis'))
+          .call(xAxis);
+
+
+      yAxis1
+        .ticks( availableHeight / 36 )
+        .tickSize(-availableWidth, 0);
+
+      d3.transition(g.select('.nv-y1.nv-axis'))
+          .style('opacity', dataBars.length ? 1 : 0)
+          .call(yAxis1);
+
+
+      yAxis2
+        .ticks( availableHeight / 36 )
+        .tickSize(dataBars.length ? 0 : -availableWidth, 0); // Show the y2 rules only if y1 has none
+
+      g.select('.nv-y2.nv-axis')
+          .style('opacity', dataLines.length ? 1 : 0)
+          .attr('transform', 'translate(' + x.range()[1] + ',0)');
+
+      d3.transition(g.select('.nv-y2.nv-axis'))
+          .call(yAxis2);
+
+
+
+      legend.dispatch.on('legendClick', function(d,i) { 
+        d.disabled = !d.disabled;
+
+        if (!data.filter(function(d) { return !d.disabled }).length) {
+          data.map(function(d) {
+            d.disabled = false;
+            wrap.selectAll('.nv-series').classed('disabled', false);
+            return d;
+          });
+        }
+
+        selection.transition().call(chart);
+      });
+
+
+      lines.dispatch.on('elementMouseover.tooltip', function(e) {
+        e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+        dispatch.tooltipShow(e);
+      });
+      if (tooltips) dispatch.on('tooltipShow', function(e) { showTooltip(e, that.parentNode) } ); // TODO: maybe merge with above?
+
+      lines.dispatch.on('elementMouseout.tooltip', function(e) {
+        dispatch.tooltipHide(e);
+      });
+      if (tooltips) dispatch.on('tooltipHide', nv.tooltip.cleanup);
+
+
+      bars.dispatch.on('elementMouseover.tooltip', function(e) {
+        e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+        dispatch.tooltipShow(e);
+      });
+      if (tooltips) dispatch.on('tooltipShow', function(e) { showTooltip(e, that.parentNode) } ); // TODO: maybe merge with above?
+
+      bars.dispatch.on('elementMouseout.tooltip', function(e) {
+        dispatch.tooltipHide(e);
+      });
+      if (tooltips) dispatch.on('tooltipHide', nv.tooltip.cleanup);
+
+
+      chart.update = function() { selection.transition().call(chart) };
+      chart.container = this; // I need a reference to the container in order to have outside code check if the chart is visible or not
+
+    });
+
+    return chart;
+  }
+
+  chart.dispatch = dispatch;
+  chart.legend = legend;
+  chart.lines = lines;
+  chart.bars = bars;
+  chart.xAxis = xAxis;
+  chart.yAxis1 = yAxis1;
+  chart.yAxis2 = yAxis2;
+
+  d3.rebind(chart, lines, 'defined', 'size', 'clipVoronoi', 'interpolate');
+  //TODO: consider rebinding x, y and some other stuff, and simply do soemthign lile bars.x(lines.x()), etc.
+  //d3.rebind(chart, lines, 'x', 'y', 'size', 'xDomain', 'yDomain', 'forceX', 'forceY', 'interactive', 'clipEdge', 'clipVoronoi', 'id');
+
+  //d3.rebind(chart, lines, 'interactive');
+  //consider rebinding x and y as well
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = _;
+    lines.x(_);
+    bars.x(_);
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = _;
+    lines.y(_);
+    bars.y(_);
+    return chart;
+  };
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    legend.color(color);
+    return chart;
+  };
+
+  chart.showLegend = function(_) {
+    if (!arguments.length) return showLegend;
+    showLegend = _;
+    return chart;
+  };
+
+  chart.tooltips = function(_) {
+    if (!arguments.length) return tooltips;
+    tooltips = _;
+    return chart;
+  };
+
+  chart.tooltipContent = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.noData = function(_) {
+    if (!arguments.length) return noData;
+    noData = _;
+    return chart;
+  };
+
+
+  return chart;
+}
+
+nv.models.lineWithFocusChart = function() {
+  var margin = {top: 30, right: 30, bottom: 30, left: 60},
+      margin2 = {top: 0, right: 30, bottom: 20, left: 60},
+      color = nv.utils.defaultColor(),
+      width = null,
+      height = null,
+      height2 = 100,
+      showLegend = true,
+      brushExtent = null,
+      tooltips = true,
+      tooltip = function(key, x, y, e, graph) {
+        return '<h3>' + key + '</h3>' +
+               '<p>' +  y + ' at ' + x + '</p>'
+      },
+      noData = "No Data Available."
+      ;
+
+  var lines = nv.models.line().clipEdge(true),
+      lines2 = nv.models.line().interactive(false),
+      x = lines.xScale(),
+      y = lines.yScale(),
+      x2 = lines2.xScale(),
+      y2 = lines2.yScale(),
+      xAxis = nv.models.axis().scale(x).orient('bottom').tickPadding(5),
+      yAxis = nv.models.axis().scale(y).orient('left'),
+      x2Axis = nv.models.axis().scale(x2).orient('bottom').tickPadding(5),
+      y2Axis = nv.models.axis().scale(y2).orient('left'),
+      legend = nv.models.legend().height(30),
+      dispatch = d3.dispatch('tooltipShow', 'tooltipHide'),
+      brush = d3.svg.brush().x(x2);
+
+
+  var showTooltip = function(e, offsetElement) {
+    var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
+        top = e.pos[1] + ( offsetElement.offsetTop || 0),
+        x = xAxis.tickFormat()(lines.x()(e.point, e.pointIndex)),
+        y = yAxis.tickFormat()(lines.y()(e.point, e.pointIndex)),
+        content = tooltip(e.series.key, x, y, e, chart);
+
+    nv.tooltip.show([left, top], content);
+  };
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var container = d3.select(this),
+          that = this;
+
+      var availableWidth = (width  || parseInt(container.style('width')) || 960)
+                             - margin.left - margin.right,
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom - height2,
+          availableHeight2 = height2 - margin2.top - margin2.bottom;
+
+
+      //------------------------------------------------------------
+      // Display No Data message if there's nothing to show.
+
+      if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
+        container.append('text')
+          .attr('class', 'nvd3 nv-noData')
+          .attr('x', availableWidth / 2)
+          .attr('y', availableHeight / 2)
+          .attr('dy', '-.7em')
+          .style('text-anchor', 'middle')
+          .text(noData);
+          return chart;
+      } else {
+        container.select('.nv-noData').remove();
+      }
+
+      //------------------------------------------------------------
+
+
+
+      brush.on('brush', onBrush);
+
+
+      var wrap = container.selectAll('g.nv-wrap.nv-lineWithFocusChart').data([data]);
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-lineWithFocusChart').append('g');
+
+      gEnter.append('g').attr('class', 'nv-legendWrap');
+
+      var focusEnter = gEnter.append('g').attr('class', 'nv-focus');
+      focusEnter.append('g').attr('class', 'nv-x nv-axis');
+      focusEnter.append('g').attr('class', 'nv-y nv-axis');
+      focusEnter.append('g').attr('class', 'nv-linesWrap');
+
+      var contextEnter = gEnter.append('g').attr('class', 'nv-context');
+      contextEnter.append('g').attr('class', 'nv-x nv-axis');
+      contextEnter.append('g').attr('class', 'nv-y nv-axis');
+      contextEnter.append('g').attr('class', 'nv-linesWrap');
+      contextEnter.append('g').attr('class', 'nv-brushBackground');
+      contextEnter.append('g').attr('class', 'nv-x nv-brush');
+
+
+
+      var g = wrap.select('g');
+
+
+
+
+      if (showLegend) {
+        legend.width(availableWidth);
+
+        g.select('.nv-legendWrap')
+            .datum(data)
+            .call(legend);
+
+        if ( margin.top != legend.height()) {
+          margin.top = legend.height();
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom - height2;
+        }
+
+        g.select('.nv-legendWrap')
+            .attr('transform', 'translate(0,' + (-margin.top) +')')
+      }
+
+
+      lines
+        .width(availableWidth)
+        .height(availableHeight)
+        .color(
+          data
+            .map(function(d,i) {
+              return d.color || color(d, i);
+            })
+            .filter(function(d,i) {
+              return !data[i].disabled;
+          })
+        );
+
+      lines2
+        .defined(lines.defined())
+        .width(availableWidth)
+        .height(availableHeight2)
+        .color(
+          data
+            .map(function(d,i) {
+              return d.color || color(d, i);
+            })
+            .filter(function(d,i) {
+              return !data[i].disabled;
+          })
+        );
+
+
+      g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      /*
+      var focusLinesWrap = g.select('.nv-focus .nv-linesWrap')
+          .datum(data.filter(function(d) { return !d.disabled }))
+
+      d3.transition(focusLinesWrap).call(lines);
+     */
+
+
+      xAxis
+        .ticks( availableWidth / 100 )
+        .tickSize(-availableHeight, 0);
+
+      yAxis
+        .ticks( availableHeight / 36 )
+        .tickSize( -availableWidth, 0);
+
+      g.select('.nv-focus .nv-x.nv-axis')
+          .attr('transform', 'translate(0,' + y.range()[0] + ')');
+
+
+/*
+      d3.transition(g.select('.nv-focus .nv-x.nv-axis'))
+          .call(xAxis);
+
+
+      d3.transition(g.select('.nv-focus .nv-y.nv-axis'))
+          .call(yAxis);
+         */
+
+
+
+      g.select('.nv-context')
+          .attr('transform', 'translate(0,' + ( availableHeight + margin.bottom + margin2.top) + ')')
+
+      var contextLinesWrap = g.select('.nv-context .nv-linesWrap')
+          .datum(data.filter(function(d) { return !d.disabled }))
+
+      d3.transition(contextLinesWrap).call(lines2);
+
+
+
+      if (brushExtent) brush.extent(brushExtent);
+
+      var brushBG = g.select('.nv-brushBackground').selectAll('g')
+          .data([brushExtent || brush.extent()])
+
+      var brushBGenter = brushBG.enter()
+          .append('g');
+
+      brushBGenter.append('rect')
+          .attr('class', 'left')
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('height', availableHeight2);
+
+      brushBGenter.append('rect')
+          .attr('class', 'right')
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('height', availableHeight2);
+
+
+      function updateBrushBG() {
+        //nv.log('test', brush.empty(), brush.extent());
+        if (!brush.empty()) brush.extent(brushExtent);
+        brushBG
+            .data([brush.empty() ? x2.domain() : brushExtent])
+            //.data([brush.empty() ? xi.domain() : brush.extent()])
+            .each(function(d,i) {
+              var leftWidth = x2(d[0]) - x.range()[0],
+                  rightWidth = x.range()[1] - x2(d[1]);
+              d3.select(this).select('.left')
+                .attr('width',  leftWidth < 0 ? 0 : leftWidth);
+
+              d3.select(this).select('.right')
+                .attr('x', x2(d[1]))
+                .attr('width', rightWidth < 0 ? 0 : rightWidth);
+            });
+      }
+
+
+
+      gBrush = g.select('.nv-x.nv-brush')
+          .call(brush);
+      gBrush.selectAll('rect')
+          //.attr('y', -5)
+          .attr('height', availableHeight2);
+      gBrush.selectAll('.resize').append('path').attr('d', resizePath);
+
+
+      //if (brushExtent) onBrush();
+      onBrush();
+
+
+
+      x2Axis
+        //.tickFormat(xAxis.tickFormat())  //exposing x2Axis so user can set differently
+        .ticks( availableWidth / 100 )
+        .tickSize(-availableHeight2, 0);
+
+      g.select('.nv-context .nv-x.nv-axis')
+          .attr('transform', 'translate(0,' + y2.range()[0] + ')');
+      d3.transition(g.select('.nv-context .nv-x.nv-axis'))
+          .call(x2Axis);
+
+
+      y2Axis
+        //.tickFormat(yAxis.tickFormat())  //exposing y2Axis so user can set differently
+        .ticks( availableHeight2 / 36 )
+        .tickSize( -availableWidth, 0);
+
+      d3.transition(g.select('.nv-context .nv-y.nv-axis'))
+          .call(y2Axis);
+
+
+
+      g.select('.nv-focus .nv-x.nv-axis')
+          .attr('transform', 'translate(0,' + y.range()[0] + ')');
+      g.select('.nv-context .nv-x.nv-axis')
+          .attr('transform', 'translate(0,' + y2.range()[0] + ')');
+
+
+      legend.dispatch.on('legendClick', function(d,i) {
+        d.disabled = !d.disabled;
+
+        if (!data.filter(function(d) { return !d.disabled }).length) {
+          data.map(function(d) {
+            d.disabled = false;
+            wrap.selectAll('.nv-series').classed('disabled', false);
+            return d;
+          });
+        }
+
+        selection.transition().call(chart);
+      });
+
+
+/*
+      //
+      legend.dispatch.on('legendMouseover', function(d, i) {
+        d.hover = true;
+        selection.transition().call(chart)
+      });
+
+      legend.dispatch.on('legendMouseout', function(d, i) {
+        d.hover = false;
+        selection.transition().call(chart)
+      });
+*/
+
+      lines.dispatch.on('elementMouseover.tooltip', function(e) {
+        e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+        dispatch.tooltipShow(e);
+      });
+      if (tooltips) dispatch.on('tooltipShow', function(e) { showTooltip(e, that.parentNode) } ); // TODO: maybe merge with above?
+
+      lines.dispatch.on('elementMouseout.tooltip', function(e) {
+        dispatch.tooltipHide(e);
+      });
+      if (tooltips) dispatch.on('tooltipHide', nv.tooltip.cleanup);
+
+
+
+      // Taken from crossfilter (http://square.github.com/crossfilter/)
+      function resizePath(d) {
+        var e = +(d == 'e'),
+            x = e ? 1 : -1,
+            y = availableHeight2 / 3;
+        return 'M' + (.5 * x) + ',' + y
+            + 'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6)
+            + 'V' + (2 * y - 6)
+            + 'A6,6 0 0 ' + e + ' ' + (.5 * x) + ',' + (2 * y)
+            + 'Z'
+            + 'M' + (2.5 * x) + ',' + (y + 8)
+            + 'V' + (2 * y - 8)
+            + 'M' + (4.5 * x) + ',' + (y + 8)
+            + 'V' + (2 * y - 8);
+      }
+
+
+
+      function onBrush() {
+        //nv.log(brush.empty(), brush.extent(), x2(brush.extent()[0]), x2(brush.extent()[1]));
+
+  /*
+        focusLinesWrap.call(lines)
+        //var focusLinesWrap = g.select('.focus .linesWrap')
+        g.select('.nv-focus .nv-x.nv-axis').call(xAxis);
+        g.select('.nv-focus .nv-y.nv-axis').call(yAxis);
+      }
+  */
+        brushExtent = brush.empty() ? null : brush.extent();
+        extent = brush.empty() ? x2.domain() : brush.extent();
+
+        updateBrushBG();
+
+
+
+        var focusLinesWrap = g.select('.nv-focus .nv-linesWrap')
+            .datum(
+              data
+                .filter(function(d) { return !d.disabled })
+                .map(function(d,i) {
+                  return {
+                    key: d.key,
+                    values: d.values.filter(function(d,i) {
+                      return lines.x()(d,i) >= extent[0] && lines.x()(d,i) <= extent[1];
+                    })
+                  }
+                })
+            )
+
+        d3.transition(focusLinesWrap).call(lines);
+
+
+        /*
+        var contextLinesWrap = g.select('.context .linesWrap')
+            .datum(data.filter(function(d) { return !d.disabled }))
+
+        d3.transition(contextLinesWrap).call(lines2);
+       */
+
+
+        d3.transition(g.select('.nv-focus .nv-x.nv-axis'))
+            .call(xAxis);
+
+        d3.transition(g.select('.nv-focus .nv-y.nv-axis'))
+            .call(yAxis);
+      }
+
+
+    });
+
+
+
+    //TODO: decide if this is a good idea, and if it should be in all models
+    chart.update = function() { chart(selection) };
+    chart.container = this; // I need a reference to the container in order to have outside code check if the chart is visible or not
+
+
+    return chart;
+  }
+
+
+  chart.dispatch = dispatch;
+  chart.legend = legend;
+  chart.xAxis = xAxis;
+  chart.yAxis = yAxis;
+  chart.x2Axis = x2Axis;
+  chart.y2Axis = y2Axis;
+
+  d3.rebind(chart, lines, 'defined', 'isArea', 'size', 'xDomain', 'yDomain', 'forceX', 'forceY', 'interactive', 'clipEdge', 'clipVoronoi', 'id');
+
+  chart.x = function(_) {
+    if (!arguments.length) return lines.x;
+    lines.x(_);
+    lines2.x(_);
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return lines.y;
+    lines.y(_);
+    lines2.y(_);
+    return chart;
+  };
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.margin2 = function(_) {
+    if (!arguments.length) return margin2;
+    margin2 = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color =nv.utils.getColor(_);
+    legend.color(color);
+    return chart;
+  };
+
+  chart.showLegend = function(_) {
+    if (!arguments.length) return showLegend;
+    showLegend = _;
+    return chart;
+  };
+
+  chart.tooltips = function(_) {
+    if (!arguments.length) return tooltips;
+    tooltips = _;
+    return chart;
+  };
+
+  chart.tooltipContent = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.interpolate = function(_) {
+    if (!arguments.length) return lines.interpolate();
+    lines.interpolate(_);
+    lines2.interpolate(_);
+    return chart;
+  };
+
+  chart.noData = function(_) {
+    if (!arguments.length) return noData;
+    noData = _;
+    return chart;
+  };
+
+
+
+  // Chart has multiple similar Axes, to prevent code duplication, probably need to link all axis functions manually like below
+  chart.xTickFormat = function(_) {
+    if (!arguments.length) return xAxis.tickFormat();
+    xAxis.tickFormat(_);
+    x2Axis.tickFormat(_);
+    return chart;
+  };
+
+  chart.yTickFormat = function(_) {
+    if (!arguments.length) return yAxis.tickFormat();
+    yAxis.tickFormat(_);
+    y2Axis.tickFormat(_);
+    return chart;
+  };
+
+
+  return chart;
+}
+
+nv.models.multiBar = function() {
+
+  //============================================================
+  // Public Variables with Default Settings
+  //------------------------------------------------------------
+
+  var margin = {top: 0, right: 0, bottom: 0, left: 0},
+      width = 960,
+      height = 500,
+      x = d3.scale.ordinal(),
+      y = d3.scale.linear(),
+      id = Math.floor(Math.random() * 10000), //Create semi-unique ID in case user doesn't select one
+      getX = function(d) { return d.x },
+      getY = function(d) { return d.y },
+      forceY = [0], // 0 is forced by default.. this makes sense for the majority of bar graphs... user can always do chart.forceY([]) to remove
+      clipEdge = true,
+      stacked = false,
+      color = nv.utils.defaultColor(),
+      delay = 1200,
+      xDomain, yDomain;
+
+
+  //============================================================
+  // Private Variables
+  //------------------------------------------------------------
+
+  //var x = d3.scale.linear(),
+  var dispatch = d3.dispatch('chartClick', 'elementClick', 'elementDblClick', 'elementMouseover', 'elementMouseout'),
+      x0, y0;
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableWidth = width - margin.left - margin.right,
+          availableHeight = height - margin.top - margin.bottom;
+
+      if (stacked) {
+      //var stackedData = d3.layout.stack()
+        data = d3.layout.stack()
+                     .offset('zero')
+                     .values(function(d){ return d.values })
+                     .y(getY)
+                     (data);
+      }
+
+
+
+      //add series index to each data point for reference
+      data = data.map(function(series, i) {
+        series.values = series.values.map(function(point) {
+          point.series = i;
+          return point;
+        });
+        return series;
+      });
+
+
+      var seriesData = (xDomain && yDomain) ? [] : // if we know xDomain and yDomain, no need to calculate
+            data.map(function(d) {
+              return d.values.map(function(d,i) {
+                return { x: getX(d,i), y: getY(d,i), y0: d.y0 }
+              })
+            });
+
+      x   .domain(d3.merge(seriesData).map(function(d) { return d.x }))
+          .rangeBands([0, availableWidth], .1);
+
+      y   .domain(yDomain || d3.extent(d3.merge(seriesData).map(function(d) { return d.y + (stacked ? d.y0 : 0) }).concat(forceY)))
+          .range([availableHeight, 0]);
+
+
+      // If scale's domain don't have a range, slightly adjust to make one... so a chart can show a single data point
+      if (x.domain()[0] === x.domain()[1] || y.domain()[0] === y.domain()[1]) singlePoint = true;
+      if (x.domain()[0] === x.domain()[1])
+        x.domain()[0] ?
+            x.domain([x.domain()[0] - x.domain()[0] * 0.01, x.domain()[1] + x.domain()[1] * 0.01])
+          : x.domain([-1,1]);
+
+      if (y.domain()[0] === y.domain()[1])
+        y.domain()[0] ?
+            y.domain([y.domain()[0] + y.domain()[0] * 0.01, y.domain()[1] - y.domain()[1] * 0.01])
+          : y.domain([-1,1]);
+
+
+      //store old scales if they exist
+      x0 = x0 || x;
+      y0 = y0 || y;
+
+
+
+
+
+
+      var wrap = d3.select(this).selectAll('g.nv-wrap.nv-multibar').data([data]);
+      var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-multibar');
+      var defsEnter = wrapEnter.append('defs');
+      var gEnter = wrapEnter.append('g');
+
+      gEnter.append('g').attr('class', 'nv-groups');
+
+      var g = wrap.select('g')
+      wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+
+      defsEnter.append('clipPath')
+          .attr('id', 'nv-edge-clip-' + id)
+        .append('rect');
+      wrap.select('#nv-edge-clip-' + id + ' rect')
+          .attr('width', availableWidth)
+          .attr('height', availableHeight);
+
+      g   .attr('clip-path', clipEdge ? 'url(#nv-edge-clip-' + id + ')' : '');
+
+
+
+      var groups = wrap.select('.nv-groups').selectAll('.nv-group')
+          .data(function(d) { return d }, function(d) { return d.key });
+      groups.enter().append('g')
+          .style('stroke-opacity', 1e-6)
+          .style('fill-opacity', 1e-6);
+      d3.transition(groups.exit())
+          //.style('stroke-opacity', 1e-6)
+          //.style('fill-opacity', 1e-6)
+        .selectAll('rect.nv-bar')
+        .delay(function(d,i) { return i * delay/ data[0].values.length })
+          .attr('y', function(d) { return stacked ? y0(d.y0) : y0(0) })
+          .attr('height', 0)
+          .remove();
+      groups
+          .attr('class', function(d,i) { return 'nv-group nv-series-' + i })
+          .classed('hover', function(d) { return d.hover })
+          .style('fill', function(d,i){ return color(d, i) })
+          .style('stroke', function(d,i){ return color(d, i) });
+      d3.transition(groups)
+          .style('stroke-opacity', 1)
+          .style('fill-opacity', .75);
+
+
+      var bars = groups.selectAll('rect.nv-bar')
+          .data(function(d) { return d.values });
+
+      bars.exit().remove();
+
+
+      var barsEnter = bars.enter().append('rect')
+          .attr('class', function(d,i) { return getY(d,i) < 0 ? 'nv-bar negative' : 'nv-bar positive'})
+          .attr('x', function(d,i,j) {
+              return stacked ? 0 : (j * x.rangeBand() / data.length )
+          })
+          .attr('y', function(d) { return y0(stacked ? d.y0 : 0) })
+          .attr('height', 0)
+          .attr('width', x.rangeBand() / (stacked ? 1 : data.length) );
+      bars
+          .on('mouseover', function(d,i) { //TODO: figure out why j works above, but not here
+            d3.select(this).classed('hover', true);
+            dispatch.elementMouseover({
+              value: getY(d,i),
+              point: d,
+              series: data[d.series],
+              pos: [x(getX(d,i)) + (x.rangeBand() * (stacked ? data.length / 2 : d.series + .5) / data.length), y(getY(d,i) + (stacked ? d.y0 : 0))],  // TODO: Figure out why the value appears to be shifted
+              pointIndex: i,
+              seriesIndex: d.series,
+              e: d3.event
+            });
+          })
+          .on('mouseout', function(d,i) {
+            d3.select(this).classed('hover', false);
+            dispatch.elementMouseout({
+              value: getY(d,i),
+              point: d,
+              series: data[d.series],
+              pointIndex: i,
+              seriesIndex: d.series,
+              e: d3.event
+            });
+          })
+          .on('click', function(d,i) {
+            dispatch.elementClick({
+              value: getY(d,i),
+              point: d,
+              series: data[d.series],
+              pos: [x(getX(d,i)) + (x.rangeBand() * (stacked ? data.length / 2 : d.series + .5) / data.length), y(getY(d,i) + (stacked ? d.y0 : 0))],  // TODO: Figure out why the value appears to be shifted
+              pointIndex: i,
+              seriesIndex: d.series,
+              e: d3.event
+            });
+            d3.event.stopPropagation();
+          })
+          .on('dblclick', function(d,i) {
+            dispatch.elementDblClick({
+              value: getY(d,i),
+              point: d,
+              series: data[d.series],
+              pos: [x(getX(d,i)) + (x.rangeBand() * (stacked ? data.length / 2 : d.series + .5) / data.length), y(getY(d,i) + (stacked ? d.y0 : 0))],  // TODO: Figure out why the value appears to be shifted
+              pointIndex: i,
+              seriesIndex: d.series,
+              e: d3.event
+            });
+            d3.event.stopPropagation();
+          });
+      bars
+          .attr('class', function(d,i) { return getY(d,i) < 0 ? 'nv-bar negative' : 'nv-bar positive'})
+          .attr('transform', function(d,i) { return 'translate(' + x(getX(d,i)) + ',0)'; })
+      if (stacked)
+        d3.transition(bars)
+            .delay(function(d,i) { return i * delay / data[0].values.length })
+            .attr('y', function(d,i) {
+              return y(getY(d,i) + (stacked ? d.y0 : 0));
+            })
+            .attr('height', function(d,i) {
+              return Math.abs(y(d.y + (stacked ? d.y0 : 0)) - y((stacked ? d.y0 : 0)))
+            })
+            .each('end', function() {
+              d3.transition(d3.select(this))
+                .attr('x', function(d,i) {
+                  return stacked ? 0 : (d.series * x.rangeBand() / data.length )
+                })
+                .attr('width', x.rangeBand() / (stacked ? 1 : data.length) );
+            })
+      else
+        d3.transition(bars)
+          .delay(function(d,i) { return i * delay/ data[0].values.length })
+            .attr('x', function(d,i) {
+              return d.series * x.rangeBand() / data.length
+            })
+            .attr('width', x.rangeBand() / data.length)
+            .each('end', function() {
+              d3.transition(d3.select(this))
+                .attr('y', function(d,i) {
+                  return getY(d,i) < 0 ?
+                    y(0) :
+                    y(getY(d,i))
+                })
+                .attr('height', function(d,i) {
+                  return Math.abs(y(getY(d,i)) - y(0))
+                });
+            })
+
+
+
+      //TODO: decide if this makes sense to add into all the models for ease of updating (updating without needing the selection)
+      chart.update = function() { chart(selection) };
+
+      //store old scales for use in transitions on update
+      x0 = x.copy();
+      y0 = y.copy();
+
+    });
+
+    return chart;
+  }
+
+
+  //============================================================
+  // Global getters and setters
+  //------------------------------------------------------------
+
+  chart.dispatch = dispatch;
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = _;
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = _;
+    return chart;
+  };
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.xScale = function(_) {
+    if (!arguments.length) return x;
+    x = _;
+    return chart;
+  };
+
+  chart.yScale = function(_) {
+    if (!arguments.length) return y;
+    y = _;
+    return chart;
+  };
+
+  chart.xDomain = function(_) {
+    if (!arguments.length) return xDomain;
+    xDomain = _;
+    return chart;
+  };
+
+  chart.yDomain = function(_) {
+    if (!arguments.length) return yDomain;
+    yDomain = _;
+    return chart;
+  };
+
+  chart.forceY = function(_) {
+    if (!arguments.length) return forceY;
+    forceY = _;
+    return chart;
+  };
+
+  chart.stacked = function(_) {
+    if (!arguments.length) return stacked;
+    stacked = _;
+    return chart;
+  };
+
+  chart.clipEdge = function(_) {
+    if (!arguments.length) return clipEdge;
+    clipEdge = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    return chart;
+  };
+
+  chart.id = function(_) {
+    if (!arguments.length) return id;
+    id = _;
+    return chart;
+  };
+
+  chart.delay = function(_) {
+    if (!arguments.length) return delay;
+    delay = _;
+    return chart;
+  };
+
+
+  return chart;
+}
+
+nv.models.multiBarChart = function() {
+
+  //============================================================
+  // Public Variables with Default Settings
+  //------------------------------------------------------------
+
+  var margin = {top: 30, right: 20, bottom: 50, left: 60},
+      width = null,
+      height = null,
+      color = nv.utils.defaultColor(),
+      showControls = true,
+      showLegend = true,
+      reduceXTicks = true, // if false a tick will show for every data point
+      rotateLabels = 0,
+      tooltips = true,
+      tooltip = function(key, x, y, e, graph) {
+        return '<h3>' + key + '</h3>' +
+               '<p>' +  y + ' on ' + x + '</p>'
+      },
+      x, y, //can be accessed via chart.multibar.[x/y]Scale()
+      noData = "No Data Available."
+      ;
+
+
+  //============================================================
+  // Private Variables
+  //------------------------------------------------------------
+
+  var multibar = nv.models.multiBar().stacked(false),
+      xAxis = nv.models.axis().orient('bottom').highlightZero(false).showMaxMin(false), //TODO: see why showMaxMin(false) causes no ticks to be shown on x axis
+      yAxis = nv.models.axis().orient('left'),
+      legend = nv.models.legend().height(30),
+      controls = nv.models.legend().height(30),
+      dispatch = d3.dispatch('tooltipShow', 'tooltipHide');
+
+  xAxis.tickFormat(function(d) { return d });
+  yAxis.tickFormat(d3.format(',.1f'));
+
+  var showTooltip = function(e, offsetElement) {
+    var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
+        top = e.pos[1] + ( offsetElement.offsetTop || 0),
+        x = xAxis.tickFormat()(multibar.x()(e.point, e.pointIndex)),
+        y = yAxis.tickFormat()(multibar.y()(e.point, e.pointIndex)),
+        content = tooltip(e.series.key, x, y, e, chart);
+
+    nv.tooltip.show([left, top], content, e.value < 0 ? 'n' : 's');
+  };
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var container = d3.select(this),
+          that = this;
+
+      var availableWidth = (width  || parseInt(container.style('width')) || 960)
+                             - margin.left - margin.right,
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+
+
+      //------------------------------------------------------------
+      // Display No Data message if there's nothing to show.
+
+      if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
+        container.append('text')
+          .attr('class', 'nvd3 nv-noData')
+          .attr('x', availableWidth / 2)
+          .attr('y', availableHeight / 2)
+          .attr('dy', '-.7em')
+          .style('text-anchor', 'middle')
+          .text(noData);
+          return chart;
+      } else {
+        container.select('.nv-noData').remove();
+      }
+
+      //------------------------------------------------------------
+
+
+
+      x = multibar.xScale();
+      y = multibar.yScale();
+
+
+      var wrap = container.selectAll('g.nv-wrap.nv-multiBarWithLegend').data([data]);
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-multiBarWithLegend').append('g');
+
+      gEnter.append('g').attr('class', 'nv-x nv-axis');
+      gEnter.append('g').attr('class', 'nv-y nv-axis');
+      gEnter.append('g').attr('class', 'nv-barsWrap');
+      gEnter.append('g').attr('class', 'nv-legendWrap');
+      gEnter.append('g').attr('class', 'nv-controlsWrap');
+
+
+
+      var g = wrap.select('g');
+
+
+      if (showLegend) {
+        legend.width(availableWidth / 2);
+
+        g.select('.nv-legendWrap')
+            .datum(data)
+            .call(legend);
+
+        if ( margin.top != legend.height()) {
+          margin.top = legend.height();
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+        }
+
+        g.select('.nv-legendWrap')
+            .attr('transform', 'translate(' + (availableWidth / 2) + ',' + (-margin.top) +')');
+      }
+
+
+      multibar
+        .width(availableWidth)
+        .height(availableHeight)
+        .color(data.map(function(d,i) {
+          return d.color || color(d, i);
+        }).filter(function(d,i) { return !data[i].disabled }))
+
+
+
+      if (showControls) {
+        var controlsData = [
+          { key: 'Grouped', disabled: multibar.stacked() },
+          { key: 'Stacked', disabled: !multibar.stacked() }
+        ];
+
+        controls.width(180).color(['#444', '#444', '#444']);
+        g.select('.nv-controlsWrap')
+            .datum(controlsData)
+            .attr('transform', 'translate(0,' + (-margin.top) +')')
+            .call(controls);
+      }
+
+
+      g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      var barsWrap = g.select('.nv-barsWrap')
+          .datum(data.filter(function(d) { return !d.disabled }))
+
+
+      d3.transition(barsWrap).call(multibar);
+
+
+      xAxis
+        .scale(x)
+        .ticks( availableWidth / 100 )
+        .tickSize(-availableHeight, 0);
+
+      g.select('.nv-x.nv-axis')
+          .attr('transform', 'translate(0,' + y.range()[0] + ')');
+      d3.transition(g.select('.nv-x.nv-axis'))
+          .call(xAxis);
+
+      var xTicks = g.select('.nv-x.nv-axis > g').selectAll('g');
+
+      xTicks
+          .selectAll('line, text')
+          .style('opacity', 1)
+
+      if (reduceXTicks)
+        xTicks
+          .filter(function(d,i) {
+              return i % Math.ceil(data[0].values.length / (availableWidth / 100)) !== 0;
+            })
+          .selectAll('text, line')
+          .style('opacity', 0);
+
+      if(rotateLabels)
+        xTicks
+            .selectAll('text')
+            .attr('transform', function(d,i,j) { return 'rotate('+rotateLabels+' 0,0)' })
+            .attr('text-transform', rotateLabels > 0 ? 'start' : 'end');
+
+      yAxis
+        .scale(y)
+        .ticks( availableHeight / 36 )
+        .tickSize( -availableWidth, 0);
+
+      d3.transition(g.select('.nv-y.nv-axis'))
+          .call(yAxis);
+
+
+
+      //============================================================
+      // Event Handling/Dispatching (in chart's scope)
+      //------------------------------------------------------------
+
+      legend.dispatch.on('legendClick', function(d,i) {
+        d.disabled = !d.disabled;
+
+        if (!data.filter(function(d) { return !d.disabled }).length) {
+          data.map(function(d) {
+            d.disabled = false;
+            wrap.selectAll('.nv-series').classed('disabled', false);
+            return d;
+          });
+        }
+
+        selection.transition().call(chart);
+      });
+
+      controls.dispatch.on('legendClick', function(d,i) {
+        if (!d.disabled) return;
+        controlsData = controlsData.map(function(s) {
+          s.disabled = true;
+          return s;
+        });
+        d.disabled = false;
+
+        switch (d.key) {
+          case 'Grouped':
+            multibar.stacked(false);
+            break;
+          case 'Stacked':
+            multibar.stacked(true);
+            break;
+        }
+
+        selection.transition().call(chart);
+      });
+
+      dispatch.on('tooltipShow', function(e) { 
+        if (tooltips) showTooltip(e, that.parentNode) 
+      });
+
+
+      chart.update = function() { selection.transition().call(chart) };
+      chart.container = this; // I need a reference to the container in order to have outside code check if the chart is visible or not
+
+    });
+
+    return chart;
+  }
+
+
+  //============================================================
+  // Event Handling/Dispatching (out of chart's scope)
+  //------------------------------------------------------------
+
+  multibar.dispatch.on('elementMouseover.tooltip2', function(e) {
+    e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+    dispatch.tooltipShow(e);
+  });
+
+  multibar.dispatch.on('elementMouseout.tooltip', function(e) {
+    dispatch.tooltipHide(e);
+  });
+  dispatch.on('tooltipHide', function() {
+    if (tooltips) nv.tooltip.cleanup();
+  });
+
+
+  //============================================================
+  // Global getters and setters
+  //------------------------------------------------------------
+
+  chart.dispatch = dispatch;
+  chart.legend = legend;
+  chart.xAxis = xAxis;
+  chart.yAxis = yAxis;
+
+  d3.rebind(chart, multibar, 'x', 'y', 'xDomain', 'yDomain', 'forceX', 'forceY', 'clipEdge', 'id', 'stacked', 'delay');
+
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    legend.color(color);
+    return chart;
+  };
+
+  chart.showControls = function(_) {
+    if (!arguments.length) return showControls;
+    showControls = _;
+    return chart;
+  };
+
+  chart.showLegend = function(_) {
+    if (!arguments.length) return showLegend;
+    showLegend = _;
+    return chart;
+  };
+
+  chart.reduceXTicks= function(_) {
+    if (!arguments.length) return reduceXTicks;
+    reduceXTicks = _;
+    return chart;
+  };
+
+  chart.rotateLabels = function(_) {
+    if (!arguments.length) return rotateLabels;
+    rotateLabels = _;
+    return chart;
+  }
+
+  chart.tooltip = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.tooltips = function(_) {
+    if (!arguments.length) return tooltips;
+    tooltips = _;
+    return chart;
+  };
+
+  chart.tooltipContent = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.noData = function(_) {
+    if (!arguments.length) return noData;
+    noData = _;
+    return chart;
+  };
+
+
+  return chart;
+}
+
+nv.models.multiBarHorizontal = function() {
+  var margin = {top: 0, right: 0, bottom: 0, left: 0},
+      width = 960,
+      height = 500,
+      id = Math.floor(Math.random() * 10000), //Create semi-unique ID in case user doesn't select one
+      x = d3.scale.ordinal(),
+      y = d3.scale.linear(),
+      getX = function(d) { return d.x },
+      getY = function(d) { return d.y },
+      forceY = [0], // 0 is forced by default.. this makes sense for the majority of bar graphs... user can always do chart.forceY([]) to remove
+      color = nv.utils.defaultColor(),
+      stacked = false,
+      showValues = false,
+      valuePadding = 60,
+      valueFormat = d3.format(',.2f'),
+      delay = 1200,
+      xDomain, yDomain,
+      x0, y0;
+
+  var dispatch = d3.dispatch('chartClick', 'elementClick', 'elementDblClick', 'elementMouseover', 'elementMouseout');
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableWidth = width - margin.left - margin.right,
+          availableHeight = height - margin.top - margin.bottom;
+
+
+      if (stacked)
+        data = d3.layout.stack()
+                     .offset('zero')
+                     .values(function(d){ return d.values })
+                     .y(getY)
+                     (data);
+
+
+      //add series index to each data point for reference
+      data = data.map(function(series, i) {
+        series.values = series.values.map(function(point) {
+          point.series = i;
+          return point;
+        });
+        return series;
+      });
+
+
+      var seriesData = (xDomain && yDomain) ? [] : // if we know xDomain and yDomain, no need to calculate
+            data.map(function(d) {
+              return d.values.map(function(d,i) {
+                return { x: getX(d,i), y: getY(d,i), y0: d.y0 }
+              })
+            });
+
+      x   .domain(xDomain || d3.merge(seriesData).map(function(d) { return d.x }))
+          .rangeBands([0, availableHeight], .1);
+
+      y   .domain(yDomain || d3.extent(d3.merge(seriesData).map(function(d) { return d.y + (stacked ? d.y0 : 0) }).concat(forceY)))
+          //.range([0, availableWidth]);
+
+      if (showValues && !stacked) y.range([(y.domain()[0] < 0 ? valuePadding : 0), availableWidth - (y.domain()[1] > 0 ? valuePadding : 0) ]);
+      else y.range([0, availableWidth]);
+
+      //store old scales if they exist
+      x0 = x0 || x;
+      y0 = y0 || d3.scale.linear().domain(y.domain()).range([y(0),y(0)]);
+
+      var wrap = d3.select(this).selectAll('g.nv-wrap.nv-multibarHorizontal').data([data]);
+      var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-multibarHorizontal');
+      var defsEnter = wrapEnter.append('defs');
+      var gEnter = wrapEnter.append('g');
+
+      gEnter.append('g').attr('class', 'nv-groups');
+
+      var g = wrap.select('g')
+      wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+
+      var groups = wrap.select('.nv-groups').selectAll('.nv-group')
+          .data(function(d) { return d }, function(d) { return d.key });
+      groups.enter().append('g')
+          .style('stroke-opacity', 1e-6)
+          .style('fill-opacity', 1e-6);
+      d3.transition(groups.exit())
+          .style('stroke-opacity', 1e-6)
+          .style('fill-opacity', 1e-6)
+          .remove();
+      groups
+          .attr('class', function(d,i) { return 'nv-group nv-series-' + i })
+          .classed('hover', function(d) { return d.hover })
+          .style('fill', function(d,i){ return color(d, i) })
+          .style('stroke', function(d,i){ return color(d, i) });
+      d3.transition(groups)
+          .style('stroke-opacity', 1)
+          .style('fill-opacity', .75);
+
+
+      var bars = groups.selectAll('g.nv-bar')
+          .data(function(d) { return d.values });
+
+      bars.exit().remove();
+
+
+      var barsEnter = bars.enter().append('g')
+          .attr('transform', function(d,i,j) {
+              return 'translate(' + y0(stacked ? d.y0 : 0) + ',' + (stacked ? 0 : (j * x.rangeBand() / data.length ) + x(getX(d,i))) + ')'
+          });
+
+      barsEnter.append('rect')
+          .attr('width', 0)
+          .attr('height', x.rangeBand() / (stacked ? 1 : data.length) )
+
+      bars
+          .on('mouseover', function(d,i) { //TODO: figure out why j works above, but not here
+            d3.select(this).classed('hover', true);
+            dispatch.elementMouseover({
+              value: getY(d,i),
+              point: d,
+              series: data[d.series],
+              pos: [ y(getY(d,i) + (stacked ? d.y0 : 0)), x(getX(d,i)) + (x.rangeBand() * (stacked ? data.length / 2 : d.series + .5) / data.length) ],
+              pointIndex: i,
+              seriesIndex: d.series,
+              e: d3.event
+            });
+          })
+          .on('mouseout', function(d,i) {
+            d3.select(this).classed('hover', false);
+            dispatch.elementMouseout({
+              value: getY(d,i),
+              point: d,
+              series: data[d.series],
+              pointIndex: i,
+              seriesIndex: d.series,
+              e: d3.event
+            });
+          })
+          .on('click', function(d,i) {
+            dispatch.elementClick({
+              value: getY(d,i),
+              point: d,
+              series: data[d.series],
+              pos: [x(getX(d,i)) + (x.rangeBand() * (stacked ? data.length / 2 : d.series + .5) / data.length), y(getY(d,i) + (stacked ? d.y0 : 0))],  // TODO: Figure out why the value appears to be shifted
+              pointIndex: i,
+              seriesIndex: d.series,
+              e: d3.event
+            });
+            d3.event.stopPropagation();
+          })
+          .on('dblclick', function(d,i) {
+            dispatch.elementDblClick({
+              value: getY(d,i),
+              point: d,
+              series: data[d.series],
+              pos: [x(getX(d,i)) + (x.rangeBand() * (stacked ? data.length / 2 : d.series + .5) / data.length), y(getY(d,i) + (stacked ? d.y0 : 0))],  // TODO: Figure out why the value appears to be shifted
+              pointIndex: i,
+              seriesIndex: d.series,
+              e: d3.event
+            });
+            d3.event.stopPropagation();
+          });
+
+      if (showValues && !stacked) {
+        barsEnter.append('text')
+            .attr('text-anchor', function(d,i) { return getY(d,i) < 0 ? 'end' : 'start' })
+        bars.select('text')
+            .attr('y', x.rangeBand() / 2)
+            .attr('dy', '-.32em')
+            .text(function(d,i) { return valueFormat(getY(d,i)) })
+        d3.transition(bars)
+            //.delay(function(d,i) { return i * delay / data[0].values.length })
+          .select('text')
+            .attr('x', function(d,i) { return getY(d,i) < 0 ? -4 : y(getY(d,i)) - y(0) + 4 })
+      } else {
+        bars.selectAll('text').remove();
+      }
+
+      bars
+          .attr('class', function(d,i) { return getY(d,i) < 0 ? 'nv-bar negative' : 'nv-bar positive'})
+          //.attr('transform', function(d,i,j) {
+              //return 'translate(' + y0(stacked ? d.y0 : 0) + ',' + x(getX(d,i)) + ')'
+          //})
+      if (stacked)
+        d3.transition(bars)
+            //.delay(function(d,i) { return i * delay / data[0].values.length })
+            .attr('transform', function(d,i) {
+              //return 'translate(' + y(d.y0) + ',0)'
+              return 'translate(' + y(d.y0) + ',' + x(getX(d,i)) + ')'
+            })
+          .select('rect')
+            .attr('width', function(d,i) {
+              return Math.abs(y(getY(d,i) + d.y0) - y(d.y0))
+            })
+            .attr('height', x.rangeBand() );
+      else
+        d3.transition(bars)
+          //.delay(function(d,i) { return i * delay / data[0].values.length })
+            .attr('transform', function(d,i) {
+              //TODO: stacked must be all positive or all negative, not both?
+              return 'translate(' + 
+              (getY(d,i) < 0 ? y(getY(d,i)) : y(0))
+              + ',' +
+              (d.series * x.rangeBand() / data.length
+              +
+              x(getX(d,i)) )
+              + ')'
+            })
+          .select('rect')
+            .attr('height', x.rangeBand() / data.length )
+            .attr('width', function(d,i) {
+              return Math.abs(y(getY(d,i)) - y(0))
+            });
+          /*
+      if (stacked)
+        d3.transition(bars)
+            .delay(function(d,i) { return i * 1000 / data[0].values.length })
+            .attr('x', function(d,i) {
+              return y(d.y0);
+            })
+            .attr('width', function(d,i) {
+              return Math.abs(y(getY(d,i) + d.y0) - y(d.y0))
+            })
+            .each('end', function() {
+              d3.transition(d3.select(this))
+                .attr('y', function(d,i) {
+                  return 0
+                })
+                .attr('height', x.rangeBand() );
+            })
+      else
+        d3.transition(bars)
+          .delay(function(d,i) { return i * 1200 / data[0].values.length })
+            .attr('y', function(d,i) {
+              return d.series * x.rangeBand() / data.length
+            })
+            .attr('height', x.rangeBand() / data.length )
+            .each('end', function() {
+              d3.transition(d3.select(this))
+                .attr('x', function(d,i) {
+                  return getY(d,i) < 0 ? //TODO: stacked must be all positive or all negative, not both?
+                      y(getY(d,i)) :
+                      y(0)
+                })
+                .attr('width', function(d,i) {
+                  return Math.abs(y(getY(d,i)) - y(0))
+                });
+            })
+            */
+
+
+
+
+      //TODO: decide if this makes sense to add into all the models for ease of updating (updating without needing the selection)
+      chart.update = function() {
+        selection.transition().call(chart);
+      }
+
+      //store old scales for use in transitions on update, to animate from old to new positions, and sizes
+      x0 = x.copy();
+      y0 = y.copy();
+
+    });
+
+    return chart;
+  }
+
+
+  chart.dispatch = dispatch;
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = _;
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = _;
+    return chart;
+  };
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.xScale = function(_) {
+    if (!arguments.length) return x;
+    x = _;
+    return chart;
+  };
+
+  chart.yScale = function(_) {
+    if (!arguments.length) return y;
+    y = _;
+    return chart;
+  };
+
+  chart.xDomain = function(_) {
+    if (!arguments.length) return xDomain;
+    xDomain = _;
+    return chart;
+  };
+
+  chart.yDomain = function(_) {
+    if (!arguments.length) return yDomain;
+    yDomain = _;
+    return chart;
+  };
+
+  chart.forceY = function(_) {
+    if (!arguments.length) return forceY;
+    forceY = _;
+    return chart;
+  };
+
+  chart.stacked = function(_) {
+    if (!arguments.length) return stacked;
+    stacked = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    return chart;
+  };
+
+  chart.id = function(_) {
+    if (!arguments.length) return id;
+    id = _;
+    return chart;
+  };
+
+  chart.delay = function(_) {
+    if (!arguments.length) return delay;
+    delay = _;
+    return chart;
+  };
+
+  chart.showValues = function(_) {
+    if (!arguments.length) return showValues;
+    showValues = _;
+    return chart;
+  };
+
+  chart.valueFormat= function(_) {
+    if (!arguments.length) return valueFormat;
+    valueFormat = _;
+    return chart;
+  };
+
+  chart.valuePadding = function(_) {
+    if (!arguments.length) return valuePadding;
+    valuePadding = _;
+    return chart;
+  };
+
+
+  return chart;
+}
+
+nv.models.multiBarHorizontalChart = function() {
+  var margin = {top: 30, right: 20, bottom: 50, left: 60},
+      width = null,
+      height = null,
+      color = nv.utils.defaultColor(),
+      showControls = true,
+      showLegend = true,
+      tooltips = true,
+      tooltip = function(key, x, y, e, graph) { 
+        return '<h3>' + key + " - " + x + '</h3>' +
+               '<p>' +  y + '</p>'
+      },
+      noData = "No Data Available."
+      ;
+
+
+  var multibar = nv.models.multiBarHorizontal().stacked(false),
+      x = multibar.xScale(),
+      y = multibar.yScale(),
+      xAxis = nv.models.axis().scale(x).orient('left').highlightZero(false).showMaxMin(false),
+      yAxis = nv.models.axis().scale(y).orient('bottom'),
+      legend = nv.models.legend().height(30),
+      controls = nv.models.legend().height(30),
+      dispatch = d3.dispatch('tooltipShow', 'tooltipHide');
+
+  xAxis.tickFormat(function(d) { return d });
+  yAxis.tickFormat(d3.format(',.1f'));
+
+  var showTooltip = function(e, offsetElement) {
+    var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
+        top = e.pos[1] + ( offsetElement.offsetTop || 0),
+        x = xAxis.tickFormat()(multibar.x()(e.point, e.pointIndex)),
+        y = yAxis.tickFormat()(multibar.y()(e.point, e.pointIndex)),
+        content = tooltip(e.series.key, x, y, e, chart);
+
+    nv.tooltip.show([left, top], content, e.value < 0 ? 'e' : 'w');
+  };
+
+  //TODO: let user select default
+  var controlsData = [
+    { key: 'Grouped' },
+    { key: 'Stacked', disabled: true },
+  ];
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var container = d3.select(this),
+          that = this;
+
+      var availableWidth = (width  || parseInt(container.style('width')) || 960)
+                             - margin.left - margin.right,
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+
+
+      //------------------------------------------------------------
+      // Display No Data message if there's nothing to show.
+
+      if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
+        container.append('text')
+          .attr('class', 'nvd3 nv-noData')
+          .attr('x', availableWidth / 2)
+          .attr('y', availableHeight / 2)
+          .attr('dy', '-.7em')
+          .style('text-anchor', 'middle')
+          .text(noData);
+          return chart;
+      } else {
+        container.select('.nv-noData').remove();
+      }
+
+      //------------------------------------------------------------
+
+
+
+      var wrap = container.selectAll('g.nv-wrap.nv-multiBarHorizontalChart').data([data]);
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-multiBarHorizontalChart').append('g');
+
+      gEnter.append('g').attr('class', 'nv-x nv-axis');
+      gEnter.append('g').attr('class', 'nv-y nv-axis');
+      gEnter.append('g').attr('class', 'nv-barsWrap');
+      gEnter.append('g').attr('class', 'nv-legendWrap');
+      gEnter.append('g').attr('class', 'nv-controlsWrap');
+
+
+
+      //TODO: margins should be adjusted based on what components are used: axes, axis labels, legend
+      margin.top = legend.height();
+
+      var g = wrap.select('g');
+
+
+      if (showLegend) {
+        legend.width(availableWidth / 2);
+
+        g.select('.nv-legendWrap')
+            .datum(data)
+            .call(legend);
+
+        if ( margin.top != legend.height()) {
+          margin.top = legend.height();
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+        }
+
+        g.select('.nv-legendWrap')
+            .attr('transform', 'translate(' + (availableWidth / 2) + ',' + (-margin.top) +')')
+      }
+
+
+      multibar
+        .width(availableWidth)
+        .height(availableHeight)
+        .color(data.map(function(d,i) {
+          return d.color || color(d, i);
+        }).filter(function(d,i) { return !data[i].disabled }))
+
+
+
+      if (showControls) {
+        controls.width(180).color(['#444', '#444', '#444']);
+        g.select('.nv-controlsWrap')
+            .datum(controlsData)
+            .attr('transform', 'translate(0,' + (-margin.top) +')')
+            .call(controls);
+      }
+
+
+      g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      var barsWrap = g.select('.nv-barsWrap')
+          .datum(data.filter(function(d) { return !d.disabled }))
+
+
+      d3.transition(barsWrap).call(multibar);
+
+
+      xAxis
+        .ticks( availableHeight / 24 )
+        .tickSize(-availableWidth, 0);
+
+      //d3.transition(g.select('.x.axis'))
+      g.select('.nv-x.nv-axis').transition().duration(0)
+          .call(xAxis);
+
+      var xTicks = g.select('.nv-x.nv-axis').selectAll('g');
+
+      xTicks
+          .selectAll('line, text')
+          .style('opacity', 1)
+
+          /*
+      //I think this was just leaft over from the multiBar chart this was built from.. commented to maek sure
+      xTicks.filter(function(d,i) {
+            return i % Math.ceil(data[0].values.length / (availableWidth / 100)) !== 0;
+          })
+          .selectAll('line, text')
+          .style('opacity', 0)
+          */
+
+      yAxis
+        .ticks( availableWidth / 100 )
+        .tickSize( -availableHeight, 0);
+
+      g.select('.nv-y.nv-axis')
+          .attr('transform', 'translate(0,' + availableHeight + ')');
+      d3.transition(g.select('.nv-y.nv-axis'))
+      //g.select('.y.axis').transition().duration(0)
+          .call(yAxis);
+
+
+
+
+      legend.dispatch.on('legendClick', function(d,i) {
+        d.disabled = !d.disabled;
+
+        if (!data.filter(function(d) { return !d.disabled }).length) {
+          data.map(function(d) {
+            d.disabled = false;
+            wrap.selectAll('.nv-series').classed('disabled', false);
+            return d;
+          });
+        }
+
+        selection.transition().call(chart);
+      });
+
+      controls.dispatch.on('legendClick', function(d,i) { 
+        if (!d.disabled) return;
+        controlsData = controlsData.map(function(s) {
+          s.disabled = true;
+          return s;
+        });
+        d.disabled = false;
+
+        switch (d.key) {
+          case 'Grouped':
+            multibar.stacked(false);
+            break;
+          case 'Stacked':
+            multibar.stacked(true);
+            break;
+        }
+
+        selection.transition().call(chart);
+      });
+
+
+      multibar.dispatch.on('elementMouseover.tooltip', function(e) {
+        e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+        dispatch.tooltipShow(e);
+      });
+      if (tooltips) dispatch.on('tooltipShow', function(e) { showTooltip(e, that.parentNode) } ); // TODO: maybe merge with above?
+
+      multibar.dispatch.on('elementMouseout.tooltip', function(e) {
+        dispatch.tooltipHide(e);
+      });
+      if (tooltips) dispatch.on('tooltipHide', nv.tooltip.cleanup);
+
+
+      //TODO: decide if this makes sense to add into all the models for ease of updating (updating without needing the selection)
+      chart.update = function() { selection.transition().call(chart) };
+      chart.container = this; // I need a reference to the container in order to have outside code check if the chart is visible or not
+
+    });
+
+    return chart;
+  }
+
+
+  chart.dispatch = dispatch;
+  chart.multibar = multibar; // really just makign the accessible for multibar.dispatch, may rethink slightly
+  chart.legend = legend;
+  chart.xAxis = xAxis;
+  chart.yAxis = yAxis;
+
+  d3.rebind(chart, multibar, 'x', 'y', 'xDomain', 'yDomain', 'forceX', 'forceY', 'clipEdge', 'id', 'delay', 'showValues', 'valueFormat');
+
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    legend.color(color);
+    return chart;
+  };
+
+  chart.showControls = function(_) {
+    if (!arguments.length) return showControls;
+    showControls = _;
+    return chart;
+  };
+
+  chart.showLegend = function(_) {
+    if (!arguments.length) return showLegend;
+    showLegend = _;
+    return chart;
+  };
+
+  chart.tooltip = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.tooltips = function(_) {
+    if (!arguments.length) return tooltips;
+    tooltips = _;
+    return chart;
+  };
+
+  chart.tooltipContent = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.noData = function(_) {
+    if (!arguments.length) return noData;
+    noData = _;
+    return chart;
+  };
+
+
+  return chart;
+}
+nv.models.multiChart = function() {
+
+  //============================================================
+  // Public Variables with Default Settings
+  //------------------------------------------------------------
+
+  var margin = {top: 30, right: 20, bottom: 50, left: 60},
+      color = d3.scale.category20().range(),
+      width = null, 
+      height = null,
+      showLegend = true,
+      tooltips = true,
+      tooltip = function(key, x, y, e, graph) {
+        return '<h3>' + key + '</h3>' +
+               '<p>' +  y + ' at ' + x + '</p>'
+      },
+      x, y; //can be accessed via chart.lines.[x/y]Scale()
+
+  //============================================================
+  // Private Variables
+  //------------------------------------------------------------
+
+  var x = d3.scale.linear(),
+      yScale1 = d3.scale.linear(),
+      yScale2 = d3.scale.linear(),
+
+      lines1 = nv.models.line().yScale(yScale1),
+      lines2 = nv.models.line().yScale(yScale2),
+
+      bars1 = nv.models.multiBar().stacked(false).yScale(yScale1),
+      bars2 = nv.models.multiBar().stacked(false).yScale(yScale2),
+
+      stack1 = nv.models.stackedArea().yScale(yScale1),
+      stack2 = nv.models.stackedArea().yScale(yScale2),
+
+      xAxis = nv.models.axis().scale(x).orient('bottom').tickPadding(5),
+      yAxis1 = nv.models.axis().scale(yScale1).orient('left'),
+      yAxis2 = nv.models.axis().scale(yScale2).orient('right'),
+
+      legend = nv.models.legend().height(30),
+      dispatch = d3.dispatch('tooltipShow', 'tooltipHide');
+
+  var showTooltip = function(e, offsetElement) {
+    var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
+        top = e.pos[1] + ( offsetElement.offsetTop || 0),
+        x = xAxis.tickFormat()(lines1.x()(e.point, e.pointIndex)),
+        y = (e.series.bar ? yAxis1 : yAxis2).tickFormat()(lines1.y()(e.point, e.pointIndex)),
+        content = tooltip(e.series.key, x, y, e, chart);
+
+    nv.tooltip.show([left, top], content, undefined, undefined, offsetElement.offsetParent);
+  };
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var container = d3.select(this),
+          that = this;
+
+      var availableWidth = (width  || parseInt(container.style('width')) || 960)
+                             - margin.left - margin.right,
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+
+      var dataLines1 = data.filter(function(d) {return !d.disabled && d.type == 'line' && d.yAxis == 1})
+      var dataLines2 = data.filter(function(d) {return !d.disabled && d.type == 'line' && d.yAxis == 2})
+      var dataBars1 = data.filter(function(d) {return !d.disabled && d.type == 'bar' && d.yAxis == 1})
+      var dataBars2 = data.filter(function(d) {return !d.disabled && d.type == 'bar' && d.yAxis == 2})
+      var dataStack1 = data.filter(function(d) {return !d.disabled && d.type == 'area' && d.yAxis == 1})
+      var dataStack2 = data.filter(function(d) {return !d.disabled && d.type == 'area' && d.yAxis == 2})
+
+      var series1 = data.filter(function(d) {return !d.disabled && d.yAxis == 1})
+            .map(function(d) {
+              return d.values.map(function(d,i) {
+                return { x: d.x, y: d.y }
+              })
+            })
+
+      var series2 = data.filter(function(d) {return !d.disabled && d.yAxis == 2})
+            .map(function(d) {
+              return d.values.map(function(d,i) {
+                return { x: d.x, y: d.y }
+              })
+            })
+
+      x   .domain(d3.extent(d3.merge(series1.concat(series2)), function(d) { return d.x } ))
+          .range([0, availableWidth]);
+
+      var wrap = container.selectAll('g.wrap.multiChart').data([data]);
+      var gEnter = wrap.enter().append('g').attr('class', 'wrap nvd3 multiChart').append('g');
+
+      gEnter.append('g').attr('class', 'x axis');
+      gEnter.append('g').attr('class', 'y1 axis');
+      gEnter.append('g').attr('class', 'y2 axis');
+      gEnter.append('g').attr('class', 'lines1Wrap');
+      gEnter.append('g').attr('class', 'lines2Wrap');
+      gEnter.append('g').attr('class', 'bars1Wrap');
+      gEnter.append('g').attr('class', 'bars2Wrap');
+      gEnter.append('g').attr('class', 'stack1Wrap');
+      gEnter.append('g').attr('class', 'stack2Wrap');
+      gEnter.append('g').attr('class', 'legendWrap');
+
+      var g = wrap.select('g');
+
+      if (showLegend) {
+        legend.width( availableWidth / 2 );
+
+        g.select('.legendWrap')
+            .datum(data.map(function(series) { 
+              series.originalKey = series.originalKey === undefined ? series.key : series.originalKey;
+              series.key = series.originalKey + (series.yAxis == 1 ? '' : ' (right axis)');
+              return series;
+            }))
+          .call(legend);
+
+        if ( margin.top != legend.height()) {
+          margin.top = legend.height();
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+        }
+
+        g.select('.legendWrap')
+            .attr('transform', 'translate(' + ( availableWidth / 2 ) + ',' + (-margin.top) +')');
+      }
+
+
+      lines1
+        .width(availableWidth)
+        .height(availableHeight)
+        .interpolate("monotone")
+        .color(data.map(function(d,i) {
+          return d.color || color[i % color.length];
+        }).filter(function(d,i) { return !data[i].disabled && data[i].yAxis == 1 && data[i].type == 'line'}));
+
+      lines2
+        .width(availableWidth)
+        .height(availableHeight)
+        .interpolate("monotone")
+        .color(data.map(function(d,i) {
+          return d.color || color[i % color.length];
+        }).filter(function(d,i) { return !data[i].disabled && data[i].yAxis == 2 && data[i].type == 'line'}));
+
+      bars1
+        .width(availableWidth)
+        .height(availableHeight)
+        .color(data.map(function(d,i) {
+          return d.color || color[i % color.length];
+        }).filter(function(d,i) { return !data[i].disabled && data[i].yAxis == 1 && data[i].type == 'bar'}));
+
+      bars2
+        .width(availableWidth)
+        .height(availableHeight)
+        .color(data.map(function(d,i) {
+          return d.color || color[i % color.length];
+        }).filter(function(d,i) { return !data[i].disabled && data[i].yAxis == 2 && data[i].type == 'bar'}));
+
+      stack1
+        .width(availableWidth)
+        .height(availableHeight)
+        .color(data.map(function(d,i) {
+          return d.color || color[i % color.length];
+        }).filter(function(d,i) { return !data[i].disabled && data[i].yAxis == 1 && data[i].type == 'area'}));
+
+      stack2
+        .width(availableWidth)
+        .height(availableHeight)
+        .color(data.map(function(d,i) {
+          return d.color || color[i % color.length];
+        }).filter(function(d,i) { return !data[i].disabled && data[i].yAxis == 2 && data[i].type == 'area'}));
+
+      g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      var lines1Wrap = g.select('.lines1Wrap')
+          .datum(dataLines1)
+      var bars1Wrap = g.select('.bars1Wrap')
+          .datum(dataBars1)
+      var stack1Wrap = g.select('.stack1Wrap')
+          .datum(dataStack1)
+
+      var lines2Wrap = g.select('.lines2Wrap')
+          .datum(dataLines2)
+      var bars2Wrap = g.select('.bars2Wrap')
+          .datum(dataBars2)
+      var stack2Wrap = g.select('.stack2Wrap')
+          .datum(dataStack2)
+
+      var extraValue1 = dataStack1.length ? dataStack1.map(function(a){return a.values}).reduce(function(a,b){
+        return a.map(function(aVal,i){return {x: aVal.x, y: aVal.y + b[i].y}})
+      }).concat([{x:0, y:0}]) : []
+      var extraValue2 = dataStack2.length ? dataStack2.map(function(a){return a.values}).reduce(function(a,b){
+        return a.map(function(aVal,i){return {x: aVal.x, y: aVal.y + b[i].y}})
+      }).concat([{x:0, y:0}]) : []
+
+      yScale1 .domain(d3.extent(d3.merge(series1).concat(extraValue1), function(d) { return d.y } ))
+              .range([0, availableHeight])
+
+      yScale2 .domain(d3.extent(d3.merge(series2).concat(extraValue2), function(d) { return d.y } ))
+              .range([0, availableHeight])
+
+      lines1.yDomain(yScale1.domain())
+      bars1.yDomain(yScale1.domain())
+      stack1.yDomain(yScale1.domain())
+
+      lines2.yDomain(yScale2.domain())
+      bars2.yDomain(yScale2.domain())
+      stack2.yDomain(yScale2.domain())
+
+      if(dataStack1.length){d3.transition(stack1Wrap).call(stack1);}
+      if(dataStack2.length){d3.transition(stack2Wrap).call(stack2);}
+
+      if(dataBars1.length){d3.transition(bars1Wrap).call(bars1);}
+      if(dataBars2.length){d3.transition(bars2Wrap).call(bars2);}
+
+      if(dataLines1.length){d3.transition(lines1Wrap).call(lines1);}
+      if(dataLines2.length){d3.transition(lines2Wrap).call(lines2);}
+      
+
+
+      xAxis
+        .ticks( availableWidth / 100 )
+        .tickSize(-availableHeight, 0);
+
+      g.select('.x.axis')
+          .attr('transform', 'translate(0,' + availableHeight + ')');
+      d3.transition(g.select('.x.axis'))
+          .call(xAxis);
+
+      yAxis1
+        .ticks( availableHeight / 36 )
+        .tickSize( -availableWidth, 0);
+
+
+      d3.transition(g.select('.y1.axis'))
+          .call(yAxis1);
+
+      yAxis2
+        .ticks( availableHeight / 36 )
+        .tickSize( -availableWidth, 0);
+
+      d3.transition(g.select('.y2.axis'))
+          .call(yAxis2);
+
+      g.select('.y2.axis')
+          .style('opacity', series2.length ? 1 : 0)
+          .attr('transform', 'translate(' + x.range()[1] + ',0)');
+
+      legend.dispatch.on('legendClick', function(d,i) { 
+        d.disabled = !d.disabled;
+
+        if (!data.filter(function(d) { return !d.disabled }).length) {
+          data.map(function(d) {
+            d.disabled = false;
+            wrap.selectAll('.series').classed('disabled', false);
+            return d;
+          });
+        }
+        selection.transition().call(chart);
+      });
+
+      dispatch.on('tooltipShow', function(e) {
+        if (tooltips) showTooltip(e, that.parentNode);
+      });
+
+    });
+
+    chart.update = function() { chart(selection) };
+    chart.container = this;
+
+    return chart;
+  }
+
+
+  //============================================================
+  // Event Handling/Dispatching (out of chart's scope)
+  //------------------------------------------------------------
+
+  lines1.dispatch.on('elementMouseover.tooltip', function(e) {
+    e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+    dispatch.tooltipShow(e);
+  });
+
+  lines1.dispatch.on('elementMouseout.tooltip', function(e) {
+    dispatch.tooltipHide(e);
+  });
+
+  lines2.dispatch.on('elementMouseover.tooltip', function(e) {
+    e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+    dispatch.tooltipShow(e);
+  });
+
+  lines2.dispatch.on('elementMouseout.tooltip', function(e) {
+    dispatch.tooltipHide(e);
+  });
+
+  bars1.dispatch.on('elementMouseover.tooltip', function(e) {
+    e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+    dispatch.tooltipShow(e);
+  });
+
+  bars1.dispatch.on('elementMouseout.tooltip', function(e) {
+    dispatch.tooltipHide(e);
+  });
+
+  bars2.dispatch.on('elementMouseover.tooltip', function(e) {
+    e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+    dispatch.tooltipShow(e);
+  });
+
+  bars2.dispatch.on('elementMouseout.tooltip', function(e) {
+    dispatch.tooltipHide(e);
+  });
+
+  stack1.dispatch.on('tooltipShow', function(e) {
+    //disable tooltips when value ~= 0
+    //// TODO: consider removing points from voronoi that have 0 value instead of this hack
+    if (!Math.round(stack1.y()(e.point) * 100)) {  // 100 will not be good for very small numbers... will have to think about making this valu dynamic, based on data range
+      setTimeout(function() { d3.selectAll('.point.hover').classed('hover', false) }, 0);
+      return false;
+    }
+
+    e.pos = [e.pos[0] + margin.left, e.pos[1] + margin.top],
+    dispatch.tooltipShow(e);
+  });
+
+  stack1.dispatch.on('tooltipHide', function(e) {
+    dispatch.tooltipHide(e);
+  });
+
+  stack2.dispatch.on('tooltipShow', function(e) {
+    //disable tooltips when value ~= 0
+    //// TODO: consider removing points from voronoi that have 0 value instead of this hack
+    if (!Math.round(stack2.y()(e.point) * 100)) {  // 100 will not be good for very small numbers... will have to think about making this valu dynamic, based on data range
+      setTimeout(function() { d3.selectAll('.point.hover').classed('hover', false) }, 0);
+      return false;
+    }
+
+    e.pos = [e.pos[0] + margin.left, e.pos[1] + margin.top],
+    dispatch.tooltipShow(e);
+  });
+
+  stack2.dispatch.on('tooltipHide', function(e) {
+    dispatch.tooltipHide(e);
+  });
+
+    lines1.dispatch.on('elementMouseover.tooltip', function(e) {
+    e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+    dispatch.tooltipShow(e);
+  });
+
+  lines1.dispatch.on('elementMouseout.tooltip', function(e) {
+    dispatch.tooltipHide(e);
+  });
+
+  lines2.dispatch.on('elementMouseover.tooltip', function(e) {
+    e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+    dispatch.tooltipShow(e);
+  });
+
+  lines2.dispatch.on('elementMouseout.tooltip', function(e) {
+    dispatch.tooltipHide(e);
+  });
+
+  dispatch.on('tooltipHide', function() {
+    if (tooltips) nv.tooltip.cleanup();
+  });
+
+
+
+  //============================================================
+  // Global getters and setters
+  //------------------------------------------------------------
+
+  chart.dispatch = dispatch;
+  chart.lines1 = lines1;
+  chart.lines2 = lines2;
+  chart.bars1 = bars1;
+  chart.bars2 = bars2;
+  chart.stack1 = stack1;
+  chart.stack2 = stack2;
+  chart.xAxis = xAxis;
+  chart.yAxis1 = yAxis1;
+  chart.yAxis2 = yAxis2;
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = _;
+    lines1.x(_);
+    bars1.x(_);
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = _;
+    lines1.y(_);
+    bars1.y(_);
+    return chart;
+  };
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = _;
+    legend.color(_);
+    return chart;
+  };
+
+  chart.showLegend = function(_) {
+    if (!arguments.length) return showLegend;
+    showLegend = _;
+    return chart;
+  };
+
+  chart.tooltips = function(_) {
+    if (!arguments.length) return tooltips;
+    tooltips = _;
+    return chart;
+  };
+
+  chart.tooltipContent = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  return chart;
+}
+
+//TODO: eitehr drastically clean up or deprecate this model
+nv.models.ohlcBar = function() {
+  var margin = {top: 0, right: 0, bottom: 0, left: 0},
+      width = 960,
+      height = 500,
+      id = Math.floor(Math.random() * 10000), //Create semi-unique ID in case user doesn't select one
+      getX = function(d) { return d.x },
+      getY = function(d) { return d.y },
+      getOpen = function(d) { return d.open },
+      getClose = function(d) { return d.close },
+      getHigh = function(d) { return d.high },
+      getLow = function(d) { return d.low },
+      forceX = [],
+      forceY = [],
+      clipEdge = true,
+      color = nv.utils.defaultColor(),
+      xDomain, yDomain;
+
+  var x = d3.scale.linear(),
+      y = d3.scale.linear(),
+      xAxis = d3.svg.axis().scale(x).orient('bottom'),
+      yAxis = d3.svg.axis().scale(y).orient('left'),
+      dispatch = d3.dispatch('chartClick', 'elementClick', 'elementDblClick', 'elementMouseover', 'elementMouseout');
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableWidth = width - margin.left - margin.right,
+          availableHeight = height - margin.top - margin.bottom;
+
+
+      x   .domain(xDomain || d3.extent(data[0].values.map(getX).concat(forceX) ))
+          .range([0, availableWidth]);
+
+      //y   .domain(yDomain || d3.extent(data[0].values.map(getY).concat(forceY) ))
+      y   .domain(yDomain || [
+            d3.min(data[0].values.map(getLow).concat(forceY)),
+            d3.max(data[0].values.map(getHigh).concat(forceY))
+          ])
+          .range([availableHeight, 0]);
+
+      // If scale's domain don't have a range, slightly adjust to make one... so a chart can show a single data point
+      if (x.domain()[0] === x.domain()[1] || y.domain()[0] === y.domain()[1]) singlePoint = true;
+      if (x.domain()[0] === x.domain()[1])
+        x.domain()[0] ?
+            x.domain([x.domain()[0] - x.domain()[0] * 0.01, x.domain()[1] + x.domain()[1] * 0.01])
+          : x.domain([-1,1]);
+
+      if (y.domain()[0] === y.domain()[1])
+        y.domain()[0] ?
+            y.domain([y.domain()[0] + y.domain()[0] * 0.01, y.domain()[1] - y.domain()[1] * 0.01])
+          : y.domain([-1,1]);
+
+
+      var parent = d3.select(this)
+          .on('click', function(d,i) {
+            dispatch.chartClick({
+                data: d,
+                index: i,
+                pos: d3.event,
+                id: id
+            });
+          });
+
+
+      var wrap = d3.select(this).selectAll('g.nv-wrap.nv-ohlcBar').data([data[0].values]);
+      var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-ohlcBar');
+      var gEnter = wrapEnter.append('g');
+
+      gEnter.append('g').attr('class', 'nv-ticks');
+
+
+      wrap.attr('width', width)
+          .attr('height', height);
+
+      var g = wrap.select('g')
+          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      wrapEnter.append('defs').append('clipPath')
+          .attr('id', 'nv-chart-clip-path-' + id)
+        .append('rect');
+      wrap.select('#nv-chart-clip-path-' + id + ' rect')
+          .attr('width', availableWidth)
+          .attr('height', availableHeight);
+
+      gEnter
+          .attr('clip-path', clipEdge ? 'url(#nv-chart-clip-path-' + id + ')' : '');
+
+      var shiftWrap = gEnter.append('g').attr('class', 'nv-shiftWrap');
+
+
+
+      var ticks = wrap.select('.nv-ticks').selectAll('.nv-tick')
+          .data(function(d) { return d });
+
+      ticks.exit().remove();
+
+
+      var ticksEnter = ticks.enter().append('path')
+          .attr('class', function(d,i,j) { return (getOpen(d,i) > getClose(d,i) ? 'nv-tick negative' : 'nv-tick positive') + ' nv-tick-' + j + '-' + i })
+          .attr('d', function(d,i) {
+            var w = (availableWidth / data[0].values.length) * .9;
+            return 'm0,0l0,' 
+                 + (y(getOpen(d,i))
+                 - y(getHigh(d,i)))
+                 + 'l'
+                 + (-w/2)
+                 + ',0l'
+                 + (w/2)
+                 + ',0l0,'
+                 + (y(getLow(d,i)) - y(getOpen(d,i)))
+                 + 'l0,'
+                 + (y(getClose(d,i))
+                 - y(getLow(d,i)))
+                 + 'l'
+                 + (w/2)
+                 + ',0l'
+                 + (-w/2)
+                 + ',0z';
+          })
+          .attr('transform', function(d,i) { return 'translate(' + x(getX(d,i)) + ',' + y(getHigh(d,i)) + ')'; })
+          //.attr('fill', function(d,i) { return color[0]; })
+          //.attr('stroke', function(d,i) { return color[0]; })
+          //.attr('x', 0 )
+          //.attr('y', function(d,i) {  return y(Math.max(0, getY(d,i))) })
+          //.attr('height', function(d,i) { return Math.abs(y(getY(d,i)) - y(0)) })
+          .on('mouseover', function(d,i) {
+            d3.select(this).classed('hover', true);
+            dispatch.elementMouseover({
+                point: d,
+                series: data[0],
+                pos: [x(getX(d,i)), y(getY(d,i))],  // TODO: Figure out why the value appears to be shifted
+                pointIndex: i,
+                seriesIndex: 0,
+                e: d3.event
+            });
+
+          })
+          .on('mouseout', function(d,i) {
+                d3.select(this).classed('hover', false);
+                dispatch.elementMouseout({
+                    point: d,
+                    series: data[0],
+                    pointIndex: i,
+                    seriesIndex: 0,
+                    e: d3.event
+                });
+          })
+          .on('click', function(d,i) {
+                dispatch.elementClick({
+                    //label: d[label],
+                    value: getY(d,i),
+                    data: d,
+                    index: i,
+                    pos: [x(getX(d,i)), y(getY(d,i))],
+                    e: d3.event,
+                    id: id
+                });
+              d3.event.stopPropagation();
+          })
+          .on('dblclick', function(d,i) {
+              dispatch.elementDblClick({
+                  //label: d[label],
+                  value: getY(d,i),
+                  data: d,
+                  index: i,
+                  pos: [x(getX(d,i)), y(getY(d,i))],
+                  e: d3.event,
+                  id: id
+              });
+              d3.event.stopPropagation();
+          });
+
+      ticks
+          .attr('class', function(d,i,j) { return (getOpen(d,i) > getClose(d,i) ? 'nv-tick negative' : 'nv-tick positive') + ' nv-tick-' + j + '-' + i })
+      d3.transition(ticks)
+          .attr('transform', function(d,i) { return 'translate(' + x(getX(d,i)) + ',' + y(getHigh(d,i)) + ')'; })
+          .attr('d', function(d,i) {
+            var w = (availableWidth / data[0].values.length) * .9;
+            return 'm0,0l0,'
+                 + (y(getOpen(d,i))
+                 - y(getHigh(d,i)))
+                 + 'l'
+                 + (-w/2)
+                 + ',0l'
+                 + (w/2)
+                 + ',0l0,'
+                 + (y(getLow(d,i))
+                 - y(getOpen(d,i)))
+                 + 'l0,'
+                 + (y(getClose(d,i))
+                 - y(getLow(d,i)))
+                 + 'l'
+                 + (w/2)
+                 + ',0l'
+                 + (-w/2)
+                 + ',0z';
+          })
+          //.attr('width', (availableWidth / data[0].values.length) * .9 )
+
+
+      //d3.transition(ticks)
+          //.attr('y', function(d,i) {  return y(Math.max(0, getY(d,i))) })
+          //.attr('height', function(d,i) { return Math.abs(y(getY(d,i)) - y(0)) });
+          //.order();  // not sure if this makes any sense for this model
+
+    });
+
+    return chart;
+  }
+
+
+  chart.dispatch = dispatch;
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = _;
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = _;
+    return chart;
+  };
+
+  chart.open = function(_) {
+    if (!arguments.length) return getOpen;
+    getOpen = _;
+    return chart;
+  };
+
+  chart.close = function(_) {
+    if (!arguments.length) return getClose;
+    getClose = _;
+    return chart;
+  };
+
+  chart.high = function(_) {
+    if (!arguments.length) return getHigh;
+    getHigh = _;
+    return chart;
+  };
+
+  chart.low = function(_) {
+    if (!arguments.length) return getLow;
+    getLow = _;
+    return chart;
+  };
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.xScale = function(_) {
+    if (!arguments.length) return x;
+    x = _;
+    return chart;
+  };
+
+  chart.yScale = function(_) {
+    if (!arguments.length) return y;
+    y = _;
+    return chart;
+  };
+
+  chart.xDomain = function(_) {
+    if (!arguments.length) return xDomain;
+    xDomain = _;
+    return chart;
+  };
+
+  chart.yDomain = function(_) {
+    if (!arguments.length) return yDomain;
+    yDomain = _;
+    return chart;
+  };
+
+  chart.forceX = function(_) {
+    if (!arguments.length) return forceX;
+    forceX = _;
+    return chart;
+  };
+
+  chart.forceY = function(_) {
+    if (!arguments.length) return forceY;
+    forceY = _;
+    return chart;
+  };
+
+  chart.clipEdge = function(_) {
+    if (!arguments.length) return clipEdge;
+    clipEdge = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    return chart;
+  };
+
+  chart.id = function(_) {
+    if (!arguments.length) return id;
+    id = _;
+    return chart;
+  };
+
+
+
+  return chart;
+}
+
+nv.models.pie = function() {
+  var margin = {top: 0, right: 0, bottom: 0, left: 0},
+      width = 500,
+      height = 500,
+      getValues = function(d) { return d.values },
+      getX = function(d) { return d.x },
+      getY = function(d) { return d.y },
+      id = Math.floor(Math.random() * 10000), //Create semi-unique ID in case user doesn't select one
+      color = nv.utils.defaultColor(),
+      valueFormat = d3.format(',.2f'),
+      showLabels = true,
+      labelThreshold = .02, //if slice percentage is under this, don't show label
+      donut = false;
+
+  var  dispatch = d3.dispatch('chartClick', 'elementClick', 'elementDblClick', 'elementMouseover', 'elementMouseout');
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableWidth = width - margin.left - margin.right,
+          availableHeight = height - margin.top - margin.bottom,
+          radius = Math.min(availableWidth, availableHeight) / 2;
+
+      var container = d3.select(this)
+          .on('click', function(d,i) {
+              dispatch.chartClick({
+                  data: d,
+                  index: i,
+                  pos: d3.event,
+                  id: id
+              });
+          });
+
+
+      var wrap = container.selectAll('.nv-wrap.nv-pie').data([getValues(data[0])]);
+      var wrapEnter = wrap.enter().append('g').attr('class','nvd3 nv-wrap nv-pie nv-chart-' + id);
+      var gEnter = wrapEnter.append('g');
+      var g = wrap.select('g')
+
+      gEnter.append('g').attr('class', 'nv-pie');
+
+      wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+      g.select('.nv-pie').attr('transform', 'translate(' + availableWidth / 2 + ',' + availableHeight / 2 + ')');
+
+
+
+      var arc = d3.svg.arc()
+                  .outerRadius((radius-(radius / 5)));
+
+      if (donut) arc.innerRadius(radius / 2);
+
+
+      // Setup the Pie chart and choose the data element
+      var pie = d3.layout.pie()
+          .sort(null)
+          .value(function(d) { return d.disabled ? 0 : getY(d) });
+
+      var slices = wrap.select('.nv-pie').selectAll('.nv-slice')
+          .data(pie);
+
+      slices.exit().remove();
+
+      var ae = slices.enter().append('g')
+              .attr('class', 'nv-slice')
+              .on('mouseover', function(d,i){
+                d3.select(this).classed('hover', true);
+                dispatch.elementMouseover({
+                    label: getX(d.data),
+                    value: getY(d.data),
+                    point: d.data,
+                    pointIndex: i,
+                    pos: [d3.event.pageX, d3.event.pageY],
+                    id: id
+                });
+              })
+              .on('mouseout', function(d,i){
+                d3.select(this).classed('hover', false);
+                dispatch.elementMouseout({
+                    label: getX(d.data),
+                    value: getY(d.data),
+                    point: d.data,
+                    index: i,
+                    id: id
+                });
+              })
+              .on('click', function(d,i) {
+                dispatch.elementClick({
+                    label: getX(d.data),
+                    value: getY(d.data),
+                    point: d.data,
+                    index: i,
+                    pos: d3.event,
+                    id: id
+                });
+                d3.event.stopPropagation();
+              })
+              .on('dblclick', function(d,i) {
+                dispatch.elementDblClick({
+                    label: getX(d.data),
+                    value: getY(d.data),
+                    point: d.data,
+                    index: i,
+                    pos: d3.event,
+                    id: id
+                });
+                d3.event.stopPropagation();
+              });
+
+        slices
+            .attr('fill', function(d,i) { return color(d, i); })
+            .attr('stroke', function(d,i) { return color(d, i); });
+
+        var paths = ae.append('path')
+            .each(function(d) { this._current = d; });
+            //.attr('d', arc);
+
+        d3.transition(slices.select('path'))
+            .attr('d', arc)
+            //.ease('bounce')
+            .attrTween('d', arcTween);
+            //.attrTween('d', tweenPie);
+
+        if (showLabels) {
+          // This does the normal label
+          ae.append('text')
+            .attr('transform', function(d) {
+               d.outerRadius = radius + 10; // Set Outer Coordinate
+               d.innerRadius = radius + 15; // Set Inner Coordinate
+               return 'translate(' + arc.centroid(d) + ')';
+            })
+            .style('text-anchor', 'middle') //center the text on it's origin
+            .style('fill', '#000');
+
+          d3.transition(slices.select('text'))
+              //.ease('bounce')
+              .attr('transform', function(d) {
+                 d.outerRadius = radius + 10; // Set Outer Coordinate
+                 d.innerRadius = radius + 15; // Set Inner Coordinate
+                 return 'translate(' + arc.centroid(d) + ')';
+              })
+              //.style('font', 'bold 12px Arial') // font style's should be set in css!
+              .text(function(d, i) { 
+                var percent = (d.endAngle - d.startAngle) / (2 * Math.PI);
+                return (d.value && percent > labelThreshold) ? getX(d.data) : ''; 
+              });
+        }
+
+
+        // Computes the angle of an arc, converting from radians to degrees.
+        function angle(d) {
+          var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+          return a > 90 ? a - 180 : a;
+        }
+
+        function arcTween(a) {
+          if (!donut) a.innerRadius = 0;
+          var i = d3.interpolate(this._current, a);
+          this._current = i(0);
+          return function(t) {
+            return arc(i(t));
+          };
+        }
+
+        function tweenPie(b) {
+          b.innerRadius = 0;
+          var i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+          return function(t) {
+              return arc(i(t));
+          };
+        }
+
+    });
+
+    return chart;
+  }
+
+
+  chart.dispatch = dispatch;
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.values = function(_) {
+    if (!arguments.length) return getValues;
+    getValues = _;
+    return chart;
+  };
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = _;
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = d3.functor(_);
+    return chart;
+  };
+
+  chart.showLabels = function(_) {
+    if (!arguments.length) return showLabels;
+    showLabels = _;
+    return chart;
+  };
+
+  chart.donut = function(_) {
+    if (!arguments.length) return donut;
+    donut = _;
+    return chart;
+  };
+
+  chart.id = function(_) {
+    if (!arguments.length) return id;
+    id = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    return chart;
+  };
+
+  chart.valueFormat = function(_) {
+    if (!arguments.length) return valueFormat;
+    valueFormat = _;
+    return chart;
+  };
+
+  chart.labelThreshold = function(_) {
+    if (!arguments.length) return labelThreshold;
+    labelThreshold = _;
+    return chart;
+  };
+
+
+  return chart;
+}
+
+nv.models.pieChart = function() {
+  var margin = {top: 30, right: 20, bottom: 20, left: 20},
+      width = null,
+      height = null,
+      showLegend = true,
+      color = nv.utils.defaultColor(),
+      tooltips = true,
+      tooltip = function(key, y, e, graph) {
+        return '<h3>' + key + '</h3>' +
+               '<p>' +  y + '</p>'
+      },
+      noData = "No Data Available."
+      ;
+
+
+  var pie = nv.models.pie(),
+      legend = nv.models.legend().height(30),
+      dispatch = d3.dispatch('tooltipShow', 'tooltipHide');
+
+
+  var showTooltip = function(e, offsetElement) {
+    var left = e.pos[0] + ( (offsetElement && offsetElement.offsetLeft) || 0 ),
+        top = e.pos[1] + ( (offsetElement && offsetElement.offsetTop) || 0),
+        y = pie.valueFormat()(pie.y()(e.point)),
+        content = tooltip(pie.x()(e.point), y, e, chart);
+
+    nv.tooltip.show([left, top], content, e.value < 0 ? 'n' : 's');
+  };
+
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var container = d3.select(this),
+          that = this;
+
+      var availableWidth = (width  || parseInt(container.style('width')) || 960)
+                             - margin.left - margin.right,
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+
+
+      //------------------------------------------------------------
+      // Display No Data message if there's nothing to show.
+
+      if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
+        container.append('text')
+          .attr('class', 'nvd3 nv-noData')
+          .attr('x', availableWidth / 2)
+          .attr('y', availableHeight / 2)
+          .attr('dy', '-.7em')
+          .style('text-anchor', 'middle')
+          .text(noData);
+          return chart;
+      } else {
+        container.select('.nv-noData').remove();
+      }
+
+      //------------------------------------------------------------
+
+
+
+      var wrap = container.selectAll('g.nv-wrap.nv-pieChart').data([data]);
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-pieChart').append('g');
+
+      gEnter.append('g').attr('class', 'nv-pieWrap');
+      gEnter.append('g').attr('class', 'nv-legendWrap');
+
+      var g = wrap.select('g');
+
+
+      if (showLegend) {
+        legend
+          .width( availableWidth )
+          .key(pie.x());
+
+        wrap.select('.nv-legendWrap')
+            .datum(pie.values()(data[0]))
+            .call(legend);
+
+        if ( margin.top != legend.height()) {
+          margin.top = legend.height();
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+        }
+
+        wrap.select('.nv-legendWrap')
+            .attr('transform', 'translate(0,' + (-margin.top) +')');
+      }
+
+
+      pie
+        .width(availableWidth)
+        .height(availableHeight)
+        //.color(data.map(function(d,i) {
+          //return d.color || color[i % color.length];
+        //}).filter(function(d,i) { return !data[i].disabled }))
+
+
+
+      g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+      var pieWrap = g.select('.nv-pieWrap')
+          .datum(data)
+          //.datum(data.filter(function(d) { return !d.disabled }))
+
+
+      d3.transition(pieWrap).call(pie);
+
+
+      legend.dispatch.on('legendClick', function(d,i, that) {
+        d.disabled = !d.disabled;
+
+        if (!pie.values()(data[0]).filter(function(d) { return !d.disabled }).length) {
+          pie.values()(data[0]).map(function(d) {
+            d.disabled = false;
+            wrap.selectAll('.nv-series').classed('disabled', false);
+            return d;
+          });
+        }
+
+        selection.transition().call(chart)
+      });
+
+      pie.dispatch.on('elementMouseover.tooltip', function(e) {
+        e.pos = [e.pos[0] +  margin.left, e.pos[1] + margin.top];
+        dispatch.tooltipShow(e);
+      });
+      if (tooltips) dispatch.on('tooltipShow', function(e) { showTooltip(e) } ); // TODO: maybe merge with above?
+
+      pie.dispatch.on('elementMouseout.tooltip', function(e) {
+        dispatch.tooltipHide(e);
+      });
+      if (tooltips) dispatch.on('tooltipHide', nv.tooltip.cleanup);
+
+
+      //TODO: decide if this makes sense to add into all the models for ease of updating (updating without needing the selection)
+      chart.update = function() { selection.transition().call(chart); };
+      chart.container = this; // I need a reference to the container in order to have outside code check if the chart is visible or not
+
+    });
+
+    return chart;
+  }
+
+
+  chart.dispatch = dispatch;
+  chart.pie = pie; // really just makign the accessible for discretebar.dispatch, may rethink slightly
+
+  d3.rebind(chart, pie, 'valueFormat', 'values', 'x', 'y', 'id', 'showLabels', 'donut', 'labelThreshold');
+
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    legend.color(color);
+    pie.color(color);
+    return chart;
+  };
+
+  chart.showLegend = function(_) {
+    if (!arguments.length) return showLegend;
+    showLegend = _;
+    return chart;
+  };
+
+  chart.tooltips = function(_) {
+    if (!arguments.length) return tooltips;
+    tooltips = _;
+    return chart;
+  };
+
+  chart.tooltipContent = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.noData = function(_) {
+    if (!arguments.length) return noData;
+    noData = _;
+    return chart;
+  };
+
+
+  return chart;
+}
+
+nv.models.scatter = function() {
+
+  //============================================================
+  // Public Variables with Default Settings
+  //------------------------------------------------------------
+
+  var margin      = {top: 0, right: 0, bottom: 0, left: 0}
+   ,  width       = 960
+   ,  height      = 500
+   ,  color       = nv.utils.defaultColor() // chooses color 
+   ,  id          = Math.floor(Math.random() * 100000) //Create semi-unique ID incase user doesn't selet one
+   ,  x           = d3.scale.linear()
+   ,  y           = d3.scale.linear()
+   ,  z           = d3.scale.linear() //linear because d3.svg.shape.size is treated as area
+   ,  getX        = function(d) { return d.x } // accessor to get the x value
+   ,  getY        = function(d) { return d.y } // accessor to get the y value
+   ,  getSize     = function(d) { return d.size } // accessor to get the point size
+   ,  getShape    = function(d) { return d.shape || 'circle' } // accessor to get point shape
+   ,  forceX      = [] // List of numbers to Force into the X scale (ie. 0, or a max / min, etc.)
+   ,  forceY      = [] // List of numbers to Force into the Y scale
+   ,  forceSize   = [] // List of numbers to Force into the Size scale
+   ,  interactive = true // If true, plots a voronoi overlay for advanced point interection
+   ,  pointActive = function(d) { return !d.notActive } // any points that return false will be filtered out
+   ,  clipEdge    = false // if true, masks points within x and y scale
+   ,  clipVoronoi = true // if true, masks each point with a circle... can turn off to slightly increase performance
+   ,  clipRadius  = function() { return 25 } // function to get the radius for voronoi point clips
+   ,  xDomain     = null // Override x domain (skips the calculation from data)
+   ,  yDomain     = null // Override y domain
+   ,  sizeDomain  = null // Override point size domain
+   ,  singlePoint = false
+   ,  dispatch    = d3.dispatch('elementClick', 'elementMouseover', 'elementMouseout')
+   ;
+
+  //============================================================
+
+
+  //============================================================
+  // Private Variables
+  //------------------------------------------------------------
+
+  var x0, y0, z0 // used to store previous scales
+    , timeoutID
+    ;
+
+  //============================================================
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableWidth = width - margin.left - margin.right,
+          availableHeight = height - margin.top - margin.bottom,
+          container = d3.select(this);
+
+      //add series index to each data point for reference
+      data = data.map(function(series, i) {
+        series.values = series.values.map(function(point) {
+          point.series = i;
+          return point;
+        });
+        return series;
+      });
+
+
+
+      //------------------------------------------------------------
+      // Setup Scales
+
+      // remap and flatten the data for use in calculating the scales' domains
+      var seriesData = (xDomain && yDomain && sizeDomain) ? [] : // if we know xDomain and yDomain and sizeDomain, no need to calculate.... if Size is constant remember to set sizeDomain to speed up performance
+            d3.merge(
+              data.map(function(d) {
+                return d.values.map(function(d,i) {
+                  return { x: getX(d,i), y: getY(d,i), size: getSize(d,i) }
+                })
+              })
+            );
+
+      x   .domain(xDomain || d3.extent(seriesData.map(function(d) { return d.x }).concat(forceX)))
+          .range([0, availableWidth]);
+
+      y   .domain(yDomain || d3.extent(seriesData.map(function(d) { return d.y }).concat(forceY)))
+          .range([availableHeight, 0]);
+
+      z   .domain(sizeDomain || d3.extent(seriesData.map(function(d) { return d.size }).concat(forceSize)))
+          .range([16, 256]);
+
+      // If scale's domain don't have a range, slightly adjust to make one... so a chart can show a single data point
+      if (x.domain()[0] === x.domain()[1] || y.domain()[0] === y.domain()[1]) singlePoint = true;
+      if (x.domain()[0] === x.domain()[1])
+        x.domain()[0] ?
+            x.domain([x.domain()[0] - x.domain()[0] * 0.01, x.domain()[1] + x.domain()[1] * 0.01])
+          : x.domain([-1,1]);
+
+      if (y.domain()[0] === y.domain()[1])
+        y.domain()[0] ?
+            y.domain([y.domain()[0] + y.domain()[0] * 0.01, y.domain()[1] - y.domain()[1] * 0.01])
+          : y.domain([-1,1]);
+
+
+      x0 = x0 || x;
+      y0 = y0 || y;
+      z0 = z0 || z;
+
+      //------------------------------------------------------------
+
+
+      //------------------------------------------------------------
+      // Setup containers and skeleton of chart
+
+      var wrap = container.selectAll('g.nv-wrap.nv-scatter').data([data]);
+      var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-scatter nv-chart-' + id + (singlePoint ? ' nv-single-point' : ''));
+      var defsEnter = wrapEnter.append('defs');
+      var gEnter = wrapEnter.append('g');
+      var g = wrap.select('g');
+
+      gEnter.append('g').attr('class', 'nv-groups');
+      gEnter.append('g').attr('class', 'nv-point-paths');
+
+      wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+      //------------------------------------------------------------
+
+
+      defsEnter.append('clipPath')
+          .attr('id', 'nv-edge-clip-' + id)
+        .append('rect');
+
+      wrap.select('#nv-edge-clip-' + id + ' rect')
+          .attr('width', availableWidth)
+          .attr('height', availableHeight);
+
+      g   .attr('clip-path', clipEdge ? 'url(#nv-edge-clip-' + id + ')' : '');
+
+
+
+      function updateInteractiveLayer() {
+
+        if (!interactive) return false;
+
+
+        var vertices = d3.merge(data.map(function(group, groupIndex) {
+            return group.values
+              .filter(pointActive) // remove non-interactive points
+              .map(function(point, pointIndex) {
+                // *Adding noise to make duplicates very unlikely
+                // **Injecting series and point index for reference
+                return [x(getX(point,pointIndex)) * (Math.random() / 1e12 + 1)  , y(getY(point,pointIndex)) * (Math.random() / 1e12 + 1), groupIndex, pointIndex]; //temp hack to add noise untill I think of a better way so there are no duplicates
+              })
+          })
+        );
+
+
+        if (clipVoronoi) {
+          defsEnter.append('clipPath').attr('id', 'nv-points-clip-' + id);
+
+          var pointClips = wrap.select('#nv-points-clip-' + id).selectAll('circle')
+              .data(vertices);
+          pointClips.enter().append('circle')
+              .attr('r', clipRadius);
+          pointClips.exit().remove();
+          pointClips
+              .attr('cx', function(d) { return d[0] })
+              .attr('cy', function(d) { return d[1] });
+
+          wrap.select('.nv-point-paths')
+              .attr('clip-path', 'url(#nv-points-clip-' + id + ')');
+        }
+
+
+        //inject series and point index for reference into voronoi
+        var voronoi = d3.geom.voronoi(vertices).map(function(d, i) {
+            return {
+              'data': d,
+              'series': vertices[i][2],
+              'point': vertices[i][3]
+            }
+          });
+
+
+        var pointPaths = wrap.select('.nv-point-paths').selectAll('path')
+            .data(voronoi);
+        pointPaths.enter().append('path')
+            .attr('class', function(d,i) { return 'nv-path-'+i; });
+        pointPaths.exit().remove();
+        pointPaths
+            .attr('d', function(d) { return 'M' + d.data.join(',') + 'Z'; })
+            .on('click', function(d) {
+              var series = data[d.series],
+                  point  = series.values[d.point];
+
+              dispatch.elementClick({
+                point: point,
+                series: series,
+                pos: [x(getX(point, d.point)) + margin.left, y(getY(point, d.point)) + margin.top],
+                seriesIndex: d.series,
+                pointIndex: d.point
+              });
+            })
+            .on('mouseover', function(d) {
+              var series = data[d.series],
+                  point  = series.values[d.point];
+
+              dispatch.elementMouseover({
+                point: point,
+                series: series,
+                pos: [x(getX(point, d.point)) + margin.left, y(getY(point, d.point)) + margin.top],
+                seriesIndex: d.series,
+                pointIndex: d.point
+              });
+            })
+            .on('mouseout', function(d, i) {
+              var series = data[d.series],
+                  point  = series.values[d.point];
+
+              dispatch.elementMouseout({
+                point: point,
+                series: series,
+                seriesIndex: d.series,
+                pointIndex: d.point
+              });
+            });
+
+      }
+
+
+
+      var groups = wrap.select('.nv-groups').selectAll('.nv-group')
+          .data(function(d) { return d }, function(d) { return d.key });
+      groups.enter().append('g')
+          .style('stroke-opacity', 1e-6)
+          .style('fill-opacity', 1e-6);
+      d3.transition(groups.exit())
+          .style('stroke-opacity', 1e-6)
+          .style('fill-opacity', 1e-6)
+          .remove();
+      groups
+          .attr('class', function(d,i) { return 'nv-group nv-series-' + i })
+          .classed('hover', function(d) { return d.hover });
+      d3.transition(groups)
+          .style('fill', function(d,i) { return color(d, i) })
+          .style('stroke', function(d,i) { return color(d, i) })
+          .style('stroke-opacity', 1)
+          .style('fill-opacity', .5);
+
+
+      var points = groups.selectAll('path.nv-point')
+          .data(function(d) { return d.values });
+      points.enter().append('path')
+          .attr('transform', function(d,i) {
+            return 'translate(' + x0(getX(d,i)) + ',' + y0(getY(d,i)) + ')'
+          })
+          .attr('d',
+            d3.svg.symbol()
+              .type(getShape)
+              .size(function(d,i) { return z(getSize(d,i)) })
+          );
+      d3.transition(groups.exit().selectAll('path.nv-point'))
+          .attr('transform', function(d,i) {
+            return 'translate(' + x(getX(d,i)) + ',' + y(getY(d,i)) + ')'
+          })
+          .remove();
+      points.attr('class', function(d,i) { return 'nv-point nv-point-' + i });
+      d3.transition(points)
+          .attr('transform', function(d,i) {
+            return 'translate(' + x(getX(d,i)) + ',' + y(getY(d,i)) + ')'
+          })
+          .attr('d',
+            d3.svg.symbol()
+              .type(getShape)
+              .size(function(d,i) { return z(getSize(d,i)) })
+          );
+
+
+      // Delay updating the invisible interactive layer for smoother animation
+      clearTimeout(timeoutID); // stop repeat calls to updateInteractiveLayer
+      timeoutID = setTimeout(updateInteractiveLayer, 1000);
+
+      //store old scales for use in transitions on update
+      x0 = x.copy();
+      y0 = y.copy();
+      z0 = z.copy();
+
+    });
+
+    return chart;
+  }
+
+
+  //============================================================
+  // Event Handling/Dispatching (out of chart's scope)
+  //------------------------------------------------------------
+
+  dispatch.on('elementMouseover.point', function(d) {
+    if (interactive)
+      d3.select('.nv-chart-' + id + ' .nv-series-' + d.seriesIndex + ' .nv-point-' + d.pointIndex)
+          .classed('hover', true);
+  });
+
+  dispatch.on('elementMouseout.point', function(d) {
+    if (interactive)
+      d3.select('.nv-chart-' + id + ' .nv-series-' + d.seriesIndex + ' .nv-point-' + d.pointIndex)
+          .classed('hover', false);
+  });
+
+  //============================================================
+
+
+  //============================================================
+  // Expose Public Variables
+  //------------------------------------------------------------
+
+  chart.dispatch = dispatch;
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = d3.functor(_);
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = d3.functor(_);
+    return chart;
+  };
+
+  chart.size = function(_) {
+    if (!arguments.length) return getSize;
+    getSize = d3.functor(_);
+    return chart;
+  };
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.xScale = function(_) {
+    if (!arguments.length) return x;
+    x = _;
+    return chart;
+  };
+
+  chart.yScale = function(_) {
+    if (!arguments.length) return y;
+    y = _;
+    return chart;
+  };
+
+  chart.zScale = function(_) {
+    if (!arguments.length) return z;
+    z = _;
+    return chart;
+  };
+
+  chart.xDomain = function(_) {
+    if (!arguments.length) return xDomain;
+    xDomain = _;
+    return chart;
+  };
+
+  chart.yDomain = function(_) {
+    if (!arguments.length) return yDomain;
+    yDomain = _;
+    return chart;
+  };
+
+  chart.sizeDomain = function(_) {
+    if (!arguments.length) return sizeDomain;
+    sizeDomain = _;
+    return chart;
+  };
+
+  chart.forceX = function(_) {
+    if (!arguments.length) return forceX;
+    forceX = _;
+    return chart;
+  };
+
+  chart.forceY = function(_) {
+    if (!arguments.length) return forceY;
+    forceY = _;
+    return chart;
+  };
+
+  chart.forceSize = function(_) {
+    if (!arguments.length) return forceSize;
+    forceSize = _;
+    return chart;
+  };
+
+  chart.interactive = function(_) {
+    if (!arguments.length) return interactive;
+    interactive = _;
+    return chart;
+  };
+
+  chart.pointActive = function(_) {
+    if (!arguments.length) return pointActive;
+    pointActive = _;
+    return chart;
+  };
+
+  chart.clipEdge = function(_) {
+    if (!arguments.length) return clipEdge;
+    clipEdge = _;
+    return chart;
+  };
+
+  chart.clipVoronoi= function(_) {
+    if (!arguments.length) return clipVoronoi;
+    clipVoronoi = _;
+    return chart;
+  };
+
+  chart.clipRadius = function(_) {
+    if (!arguments.length) return clipRadius;
+    clipRadius = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    return chart;
+  };
+
+  chart.shape = function(_) {
+    if (!arguments.length) return getShape;
+    getShape = _;
+    return chart;
+  };
+
+  chart.id = function(_) {
+    if (!arguments.length) return id;
+    id = _;
+    return chart;
+  };
+
+  chart.singlePoint = function(_) {
+    if (!arguments.length) return singlePoint;
+    singlePoint = _;
+    return chart;
+  };
+
+  //============================================================
+
+
+  return chart;
+}
+
+nv.models.scatterChart = function() {
+
+  //============================================================
+  // Public Variables with Default Settings
+  //------------------------------------------------------------
+
+  var margin       = {top: 30, right: 20, bottom: 50, left: 60}
+    , width        = null
+    , height       = null
+    , color        = nv.utils.defaultColor()
+    //x            = scatter.xScale(),
+    , x            = d3.fisheye.scale(d3.scale.linear).distortion(0)
+    //y            = scatter.yScale(),
+    , y            = d3.fisheye.scale(d3.scale.linear).distortion(0)
+    , showDistX    = false
+    , showDistY    = false
+    , showLegend   = true
+    , showControls = true
+    , fisheye      = 0
+    , pauseFisheye = false
+    , tooltips     = true
+    , tooltipX     = function(key, x, y) { return '<strong>' + x + '</strong>' }
+    , tooltipY     = function(key, x, y) { return '<strong>' + y + '</strong>' }
+    //, tooltip      = function(key, x, y) { return '<h3>' + key + '</h3>' }
+    , tooltip      = null
+    , scatter      = nv.models.scatter().xScale(x).yScale(y)
+    , xAxis        = nv.models.axis().orient('bottom').tickPadding(10)
+    , yAxis        = nv.models.axis().orient('left').tickPadding(10)
+    , legend       = nv.models.legend().height(30)
+    , controls     = nv.models.legend().height(30)
+    , distX        = nv.models.distribution().axis('x')
+    , distY        = nv.models.distribution().axis('y')
+    , dispatch     = d3.dispatch('tooltipShow', 'tooltipHide')
+    , noData       = "No Data Available."
+    ;
+
+  //============================================================
+
+
+  //============================================================
+  // Private Variables
+  //------------------------------------------------------------
+
+  var x0, y0;
+
+  var showTooltip = function(e, offsetElement) {
+    //TODO: make tooltip style an option between single or dual on axes (maybe on all charts with axes?)
+
+    var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
+        top = e.pos[1] + ( offsetElement.offsetTop || 0),
+        leftX = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
+        topX = y.range()[0] + margin.top + ( offsetElement.offsetTop || 0),
+        leftY = x.range()[0] + margin.left + ( offsetElement.offsetLeft || 0 ),
+        topY = e.pos[1] + ( offsetElement.offsetTop || 0),
+        xVal = xAxis.tickFormat()(scatter.x()(e.point, e.pointIndex)),
+        yVal = yAxis.tickFormat()(scatter.y()(e.point, e.pointIndex));
+
+      if( tooltipX != null )
+          nv.tooltip.show([leftX, topX], tooltipX(e.series.key, xVal, yVal, e, chart), 'n', 1, null, 'x-nvtooltip');
+      if( tooltipY != null )
+          nv.tooltip.show([leftY, topY], tooltipY(e.series.key, xVal, yVal, e, chart), 'e', 1, null, 'y-nvtooltip');
+      if( tooltip != null )
+          nv.tooltip.show([left, top], tooltip(e.series.key, xVal, yVal, e, chart), e.value < 0 ? 'n' : 's');
+  };
+
+  var controlsData = [
+    { key: 'Magnify', disabled: true }
+  ];
+
+  //============================================================
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var container = d3.select(this),
+          that = this;
+
+      var availableWidth = (width  || parseInt(container.style('width')) || 960)
+                             - margin.left - margin.right,
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+
+
+      if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
+        container.append('text')
+          .attr('class', 'nvd3 nv-noData')
+          .attr('x', availableWidth / 2)
+          .attr('y', availableHeight / 2)
+          .attr('dy', '-.7em')
+          .style('text-anchor', 'middle')
+          .text(noData);
+          return chart;
+      } else {
+        container.select('.nv-noData').remove();
+      }
+
+      //------------------------------------------------------------
+      // Setup Scales
+
+      x = scatter.xScale();
+      y = scatter.yScale();
+
+      x0 = x0 || x;
+      y0 = y0 || y;
+
+      //------------------------------------------------------------
+
+
+      //------------------------------------------------------------
+      // Setup containers and skeleton of chart
+
+      var wrap = container.selectAll('g.nv-wrap.nv-scatterChart').data([data]);
+      var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-scatterChart nv-chart-' + scatter.id());
+      var gEnter = wrapEnter.append('g');
+      var g = wrap.select('g')
+
+      // background for pointer events
+      gEnter.append('rect').attr('class', 'nvd3 nv-background')
+
+      gEnter.append('g').attr('class', 'nv-x nv-axis');
+      gEnter.append('g').attr('class', 'nv-y nv-axis');
+      gEnter.append('g').attr('class', 'nv-scatterWrap');
+      gEnter.append('g').attr('class', 'nv-distWrap');
+      gEnter.append('g').attr('class', 'nv-legendWrap');
+      gEnter.append('g').attr('class', 'nv-controlsWrap');
+
+      wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+      //------------------------------------------------------------
+
+
+      if (showLegend) {
+        legend.width( availableWidth / 2 );
+
+        wrap.select('.nv-legendWrap')
+            .datum(data)
+            .call(legend);
+
+        if ( margin.top != legend.height()) {
+          margin.top = legend.height();
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+        }
+
+        wrap.select('.nv-legendWrap')
+            .attr('transform', 'translate(' + (availableWidth / 2) + ',' + (-margin.top) +')');
+      }
+
+
+      if (showControls) {
+        controls.width(180).color(['#444']);
+        g.select('.nv-controlsWrap')
+            .datum(controlsData)
+            .attr('transform', 'translate(0,' + (-margin.top) +')')
+            .call(controls);
+      }
+
+
+      g.select('.nv-background')
+          .attr('width', availableWidth)
+          .attr('height', availableHeight);
+
+
+      scatter
+          .width(availableWidth)
+          .height(availableHeight)
+          .color(data.map(function(d,i) {
+            return d.color || color(d, i);
+          }).filter(function(d,i) { return !data[i].disabled }))
+
+      wrap.select('.nv-scatterWrap')
+          .datum(data.filter(function(d) { return !d.disabled }))
+          .call(scatter);
+
+
+      xAxis
+          .scale(x)
+          .ticks( availableWidth / 100 )
+          .tickSize( -availableHeight , 0);
+
+      g.select('.nv-x.nv-axis')
+          .attr('transform', 'translate(0,' + y.range()[0] + ')')
+          .call(xAxis);
+
+
+      yAxis
+          .scale(y)
+          .ticks( availableHeight / 36 )
+          .tickSize( -availableWidth, 0);
+
+      g.select('.nv-y.nv-axis')
+          .call(yAxis);
+
+
+      distX
+          .scale(x)
+          .width(availableWidth)
+          .color(data.map(function(d,i) {
+            return d.color || color(d, i);
+          }).filter(function(d,i) { return !data[i].disabled }));
+      gEnter.select('.nv-distWrap').append('g')
+          .attr('class', 'nv-distributionX')
+          .attr('transform', 'translate(0,' + y.range()[0] + ')');
+      g.select('.nv-distributionX')
+          .datum(data.filter(function(d) { return !d.disabled }))
+          .call(distX);
+
+
+      distY
+          .scale(y)
+          .width(availableHeight)
+          .color(data.map(function(d,i) {
+            return d.color || color(d, i);
+          }).filter(function(d,i) { return !data[i].disabled }));
+      gEnter.select('.nv-distWrap').append('g')
+          .attr('class', 'nv-distributionY')
+          .attr('transform', 'translate(-' + distY.size() + ',0)');
+      g.select('.nv-distributionY')
+          .datum(data.filter(function(d) { return !d.disabled }))
+          .call(distY);
+
+
+      g.select('.nv-background').on('mousemove', updateFisheye);
+      g.select('.nv-background').on('click', function() { pauseFisheye = !pauseFisheye;});
+      scatter.dispatch.on('elementClick.freezeFisheye', function() {
+        pauseFisheye = !pauseFisheye;
+      });
+
+
+      function updateFisheye() {
+        if (pauseFisheye) {
+          g.select('.nv-point-paths').style('pointer-events', 'all');
+          return false;
+        }
+
+        g.select('.nv-point-paths').style('pointer-events', 'none' );
+
+        var mouse = d3.mouse(this);
+        x.distortion(fisheye).focus(mouse[0]);
+        y.distortion(fisheye).focus(mouse[1]);
+
+        g.select('.nv-scatterWrap')
+            .datum(data.filter(function(d) { return !d.disabled }))
+            .call(scatter);
+        g.select('.nv-x.nv-axis').call(xAxis);
+        g.select('.nv-y.nv-axis').call(yAxis);
+        g.select('.nv-distributionX')
+            .datum(data.filter(function(d) { return !d.disabled }))
+            .call(distX);
+        g.select('.nv-distributionY')
+            .datum(data.filter(function(d) { return !d.disabled }))
+            .call(distY);
+      }
+
+
+
+      //============================================================
+      // Event Handling/Dispatching (in chart's scope)
+      //------------------------------------------------------------
+
+      controls.dispatch.on('legendClick', function(d,i) {
+        d.disabled = !d.disabled;
+
+        fisheye = d.disabled ? 0 : 2.5;
+        g.select('.nv-background') .style('pointer-events', d.disabled ? 'none' : 'all');
+        g.select('.nv-point-paths').style('pointer-events', d.disabled ? 'all' : 'none' );
+
+        if (d.disabled) {
+          x.distortion(fisheye).focus(0);
+          y.distortion(fisheye).focus(0);
+
+          g.select('.nv-scatterWrap').call(scatter);
+          g.select('.nv-x.nv-axis').call(xAxis);
+          g.select('.nv-y.nv-axis').call(yAxis);
+        } else {
+          pauseFisheye = false;
+        }
+
+        chart(selection);
+      });
+
+      legend.dispatch.on('legendClick', function(d,i, that) {
+        d.disabled = !d.disabled;
+
+        if (!data.filter(function(d) { return !d.disabled }).length) {
+          data.map(function(d) {
+            d.disabled = false;
+            wrap.selectAll('.nv-series').classed('disabled', false);
+            return d;
+          });
+        }
+
+        chart(selection);
+      });
+
+      /*
+      legend.dispatch.on('legendMouseover', function(d, i) {
+        d.hover = true;
+        chart(selection);
+      });
+
+      legend.dispatch.on('legendMouseout', function(d, i) {
+        d.hover = false;
+        chart(selection);
+      });
+      */
+
+      scatter.dispatch.on('elementMouseover.tooltip', function(e) {
+        d3.select('.nv-chart-' + scatter.id() + ' .nv-series-' + e.seriesIndex + ' .nv-distx-' + e.pointIndex)
+            .attr('y1', e.pos[1] - availableHeight);
+        d3.select('.nv-chart-' + scatter.id() + ' .nv-series-' + e.seriesIndex + ' .nv-disty-' + e.pointIndex)
+            .attr('x2', e.pos[0] + distX.size());
+
+        e.pos = [e.pos[0] + margin.left, e.pos[1] + margin.top];
+        dispatch.tooltipShow(e);
+      });
+
+      dispatch.on('tooltipShow', function(e) {
+        if (tooltips) showTooltip(e, that.parentNode);
+      });
+
+
+      //store old scales for use in transitions on update
+      x0 = x.copy();
+      y0 = y.copy();
+
+
+      chart.update = function() { chart(selection) };
+      chart.container = this;
+
+    });
+
+    return chart;
+  }
+
+
+  //============================================================
+  // Event Handling/Dispatching (out of chart's scope)
+  //------------------------------------------------------------
+
+  scatter.dispatch.on('elementMouseout.tooltip', function(e) {
+    dispatch.tooltipHide(e);
+
+    d3.select('.nv-chart-' + scatter.id() + ' .nv-series-' + e.seriesIndex + ' .nv-distx-' + e.pointIndex)
+        .attr('y1', 0);
+    d3.select('.nv-chart-' + scatter.id() + ' .nv-series-' + e.seriesIndex + ' .nv-disty-' + e.pointIndex)
+        .attr('x2', distY.size());
+  });
+  dispatch.on('tooltipHide', function() {
+    if (tooltips) nv.tooltip.cleanup();
+  });
+
+
+  //============================================================
+  // Expose Public Variables
+  //------------------------------------------------------------
+
+  chart.dispatch = dispatch;
+  chart.legend = legend;
+  chart.controls = legend;
+  chart.xAxis = xAxis;
+  chart.yAxis = yAxis;
+  chart.distX = distX;
+  chart.distY = distY;
+
+  d3.rebind(chart, scatter, 'id', 'interactive', 'pointActive', 'shape', 'size', 'xScale', 'yScale', 'zScale', 'xDomain', 'yDomain', 'sizeDomain', 'forceX', 'forceY', 'forceSize', 'clipVoronoi', 'clipRadius');
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    legend.color(color);
+    distX.color(color);
+    distY.color(color);
+    return chart;
+  };
+
+  chart.showDistX = function(_) {
+    if (!arguments.length) return showDistX;
+    showDistX = _;
+    return chart;
+  };
+
+  chart.showDistY = function(_) {
+    if (!arguments.length) return showDistY;
+    showDistY = _;
+    return chart;
+  };
+
+  chart.showControls = function(_) {
+    if (!arguments.length) return showControls;
+    showControls = _;
+    return chart;
+  };
+
+  chart.showLegend = function(_) {
+    if (!arguments.length) return showLegend;
+    showLegend = _;
+    return chart;
+  };
+
+  chart.fisheye = function(_) {
+    if (!arguments.length) return fisheye;
+    fisheye = _;
+    return chart;
+  };
+
+  chart.tooltips = function(_) {
+    if (!arguments.length) return tooltips;
+    tooltips = _;
+    return chart;
+  };
+
+  chart.tooltipContent = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.tooltipXContent = function(_) {
+    if (!arguments.length) return tooltipX;
+    tooltipX = _;
+    return chart;
+  };
+
+  chart.tooltipYContent = function(_) {
+    if (!arguments.length) return tooltipY;
+    tooltipY = _;
+    return chart;
+  };
+
+  chart.noData = function(_) {
+    if (!arguments.length) return noData;
+    noData = _;
+    return chart;
+  };
+
+  //============================================================
+
+
+  return chart;
+}
+
+nv.models.sparkline = function() {
+  var margin = {top: 0, right: 0, bottom: 0, left: 0},
+      width = 400,
+      height = 32,
+      animate = true,
+      getX = function(d) { return d.x },
+      getY = function(d) { return d.y },
+      color = nv.utils.defaultColor(),
+      xDomain, yDomain;
+
+  var x = d3.scale.linear(),
+      y = d3.scale.linear();
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableWidth = width - margin.left - margin.right,
+          availableHeight = height - margin.top - margin.bottom;
+
+
+      x   .domain(xDomain || d3.extent(data, getX ))
+          .range([0, availableWidth]);
+
+      y   .domain(yDomain || d3.extent(data,getY ))
+          .range([availableHeight, 0]);
+
+
+      var wrap = d3.select(this).selectAll('g.nv-wrap.nv-sparkline').data([data]);
+
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-sparkline');
+      //var gEnter = svg.enter().append('svg').append('g');
+      //gEnter.append('g').attr('class', 'sparkline')
+      gEnter
+          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+          .style('stroke', function(d,i) { return d.color || color(d, i) });
+
+/*
+      d3.select(this)
+          .attr('width', width)
+          .attr('height', height);
+         */
+
+
+      //var paths = gEnter.select('.sparkline').selectAll('path')
+      var paths = gEnter.selectAll('path')
+          .data(function(d) { return [d] });
+      paths.enter().append('path');
+      paths.exit().remove();
+      paths
+          .attr('d', d3.svg.line()
+            .x(function(d,i) { return x(getX(d,i)) })
+            .y(function(d,i) { return y(getY(d,i)) })
+          );
+
+
+      // TODO: Add CURRENT data point (Need Min, Mac, Current / Most recent)
+      var points = gEnter.selectAll('circle.nv-point')
+          .data(function(d) { return d.filter(function(p,i) { return y.domain().indexOf(getY(p,i)) != -1 || getX(p,i) == x.domain()[1]  }) });
+      points.enter().append('circle').attr('class', 'nv-point');
+      points.exit().remove();
+      points
+          .attr('cx', function(d,i) { return x(getX(d,i)) })
+          .attr('cy', function(d,i) { return y(getY(d,i)) })
+          .attr('r', 2)
+          .style('stroke', function(d,i) { return d.x == x.domain()[1] ? '#444' : d.y == y.domain()[0] ? '#d62728' : '#2ca02c' })
+          .style('fill', function(d,i) { return d.x == x.domain()[1] ? '#444' : d.y == y.domain()[0] ? '#d62728' : '#2ca02c' });
+    });
+
+    return chart;
+  }
+
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = d3.functor(_);
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = d3.functor(_);
+    return chart;
+  };
+
+  chart.xDomain = function(_) {
+    if (!arguments.length) return xDomain;
+    xDomain = _;
+    return chart;
+  };
+
+  chart.yDomain = function(_) {
+    if (!arguments.length) return yDomain;
+    yDomain = _;
+    return chart;
+  };
+
+  chart.animate = function(_) {
+    if (!arguments.length) return animate;
+    animate = _;
+    return chart;
+  };
+
+  return chart;
+}
+
+nv.models.sparklinePlus = function() {
+  var margin = {top: 15, right: 40, bottom: 3, left: 40},
+      width = 400,
+      height = 50,
+      animate = true,
+      getX = function(d) { return d.x },
+      getY = function(d) { return d.y },
+      color = nv.utils.defaultColor(),
+      id = Math.floor(Math.random() * 100000), //Create semi-unique ID incase user doesn't selet one
+      xTickFormat = d3.format(',r'),
+      yTickFormat = d3.format(',.2f'),
+      noData = "No Data Available."
+      ;
+
+  var x = d3.scale.linear(),
+      y = d3.scale.linear(),
+      sparkline = nv.models.sparkline();
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var availableWidth = width - margin.left - margin.right,
+          availableHeight = height - margin.top - margin.bottom;
+
+
+      //------------------------------------------------------------
+      // Display No Data message if there's nothing to show.
+
+      if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
+        container.append('text')
+          .attr('class', 'nvd3 nv-noData')
+          .attr('x', availableWidth / 2)
+          .attr('y', availableHeight / 2)
+          .attr('dy', '-.7em')
+          .style('text-anchor', 'middle')
+          .text(noData);
+          return chart;
+      } else {
+        container.select('.nv-noData').remove();
+      }
+
+      //------------------------------------------------------------
+
+
+
+      x   .domain(d3.extent(data, getX ))
+          .range([0, availableWidth]);
+
+      y   .domain(d3.extent(data, getY ))
+          .range([availableHeight, 0]);
+
+
+      var wrap = d3.select(this).selectAll('g.nv-wrap.nv-sparklineplus').data([data]);
+
+
+      var gEnter = wrap.enter().append('g')
+      //var gEnter = svg.enter().append('svg').append('g');
+      var sparklineWrap = gEnter.append('g').attr('class', 'nvd3 nv-wrap nv-sparklineplus')
+          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+          .style('stroke', function(d, i){ return d.color || color(d, i) });
+
+      sparkline
+        .xDomain(x.domain())
+        .yDomain(y.domain());
+
+
+      sparklineWrap
+          //.attr('width', width)
+          //.attr('height', height)
+          .call(sparkline);
+
+      var hoverValue = sparklineWrap.append('g').attr('class', 'nv-hoverValue');
+      var hoverArea = sparklineWrap.append('g').attr('class', 'nv-hoverArea');
+
+
+      hoverValue.attr('transform', function(d) { return 'translate(' + x(d) + ',0)' });
+
+      var hoverLine = hoverValue.append('line')
+          .attr('x1', x.range()[1])
+          .attr('y1', -margin.top)
+          .attr('x2', x.range()[1])
+          .attr('y2', height)
+
+     var hoverX = hoverValue.append('text').attr('class', 'nv-xValue')
+          .attr('text-anchor', 'end')
+          .attr('dy', '.9em')
+
+     var hoverY = hoverValue.append('text').attr('class', 'nv-yValue')
+          //.attr('transform', function(d) { return 'translate(' + x(d) + ',0)' })
+          .attr('text-anchor', 'start')
+          .attr('dy', '.9em')
+
+
+      hoverArea.append('rect')
+          .attr('width', availableWidth)
+          .attr('height', availableHeight)
+          .on('mousemove', sparklineHover);
+
+
+
+      function sparklineHover() {
+        var pos = d3.event.offsetX - margin.left;
+
+        hoverLine
+            .attr('x1', pos)
+            .attr('x2', pos);
+
+        hoverX
+            .attr('transform', function(d) { return 'translate(' + (pos - 6) + ',' + (-margin.top) + ')' })
+            //.text(xTickFormat(pos));
+            .text(xTickFormat(Math.round(x.invert(pos)))); //TODO: refactor this line
+        var f = function(data, x){
+            var distance = Math.abs(getX(data[0]) - x) ;
+            var closestIndex = 0;
+            for (var i = 0; i < data.length; i++){
+                if (Math.abs(getX(data[i]) - x) < distance) {
+                    distance = Math.abs(getX(data[i]) -x);
+                    closestIndex = i;
+                }
+            }
+            return closestIndex;
+        }
+
+        hoverY
+            .attr('transform', function(d) { return 'translate(' + (pos + 6) + ',' + (-margin.top) + ')' })
+            //.text(data[pos] && yTickFormat(data[pos].y));
+            .text(yTickFormat(getY(data[f(data, Math.round(x.invert(pos)))]))); //TODO: refactor this line
+      }
+
+    });
+
+    return chart;
+  }
+
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    sparkline.width(_ - margin.left - margin.right);
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    sparkline.height(_ - margin.top - margin.bottom);
+    return chart;
+  };
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = d3.functor(_);
+    sparkline.x(_);
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = d3.functor(_);
+    sparkline.y(_);
+    return chart;
+  };
+
+  chart.id = function(_) {
+    if (!arguments.length) return id;
+    id = _;
+    return chart;
+  };
+
+  chart.animate = function(_) {
+    if (!arguments.length) return animate;
+    animate = _;
+    return chart;
+  };
+
+  chart.noData = function(_) {
+    if (!arguments.length) return noData;
+    noData = _;
+    return chart;
+  };
+
+
+  return chart;
+}
+
+nv.models.stackedArea = function() {
+
+  //============================================================
+  // Public Variables with Default Settings
+  //------------------------------------------------------------
+
+  var margin = {top: 0, right: 0, bottom: 0, left: 0},
+      width = 960,
+      height = 500,
+      color = nv.utils.defaultColor(), // a function that computes the color 
+      id = Math.floor(Math.random() * 100000), //Create semi-unique ID incase user doesn't selet one
+      getX = function(d) { return d.x }, // accessor to get the x value from a data point
+      getY = function(d) { return d.y }, // accessor to get the y value from a data point
+      style = 'stack',
+      offset = 'zero',
+      order = 'default',
+      clipEdge = false, // if true, masks lines within x and y scale
+      x, y; //can be accessed via chart.scatter.[x/y]Scale()
+
+/************************************
+ * offset:
+ *   'wiggle' (stream)
+ *   'zero' (stacked)
+ *   'expand' (normalize to 100%)
+ *   'silhouette' (simple centered)
+ *
+ * order:
+ *   'inside-out' (stream)
+ *   'default' (input order)
+ ************************************/
+
+
+  //============================================================
+  // Private Variables
+  //------------------------------------------------------------
+
+  var stacked = d3.layout.stack()
+                 //.offset('zero')
+                 .values(function(d) { return d.values })  //TODO: make values customizeable in EVERY model in this fashion
+                 .x(getX)
+                 .y(function(d) { return d.stackedY })
+                 .out(function(d, y0, y) {
+                    d.display = {
+                      y: y,
+                     y0: y0
+                    };
+                  }),
+      scatter = nv.models.scatter()
+                  .size(2.2) // default size
+                  .sizeDomain([2.5]), 
+      dispatch =  d3.dispatch('tooltipShow', 'tooltipHide', 'areaClick', 'areaMouseover', 'areaMouseout');
+
+  function chart(selection) {
+    selection.each(function(data) {
+        var availableWidth = width - margin.left - margin.right,
+            availableHeight = height - margin.top - margin.bottom;
+
+        x = scatter.xScale();
+        y = scatter.yScale();
+
+        // Injecting point index into each point because d3.layout.stack().out does not give index
+        // ***Also storing getY(d,i) as yStacked so that it can be set to 0 if series is disabled
+        // TODO: see if theres a way to deal with disabled series more consistent with the other models
+        data = data.map(function(aseries, i) {
+                 aseries.values = aseries.values.map(function(d, j) {
+                   d.index = j;
+                   d.stackedY = aseries.disabled ? 0 : getY(d,j);
+                   return d;
+                 })
+                 return aseries;
+               });
+
+/*
+        //TODO: Figure out why stream mode is broken with this
+        data = stacked
+                .order(order)
+                .offset(offset)
+                (data);
+*/
+
+        data = d3.layout.stack()
+                 .order(order)
+                 .offset(offset)
+                 .values(function(d) { return d.values })  //TODO: make values customizeable in EVERY model in this fashion
+                 .x(getX)
+                 .y(function(d) { return d.stackedY })
+                 .out(function(d, y0, y) {
+                    d.display = {
+                      y: y,
+                     y0: y0
+                    };
+                  })
+                (data);
+
+
+        var wrap = d3.select(this).selectAll('g.nv-wrap.nv-stackedarea').data([data]);
+        var wrapEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-stackedarea');
+        var defsEnter = wrapEnter.append('defs');
+        var gEnter = wrapEnter.append('g');
+        var g = wrap.select('g');
+
+        gEnter.append('g').attr('class', 'nv-areaWrap');
+
+
+        scatter
+          .width(availableWidth)
+          .height(availableHeight)
+          .x(getX)
+          .y(function(d) { return d.display.y + d.display.y0 })
+          .forceY([0])
+          .color(data.map(function(d,i) {
+            return d.color || color(d, i);
+          }).filter(function(d,i) { return !data[i].disabled }));
+
+
+        gEnter.append('g').attr('class', 'nv-scatterWrap');
+        var scatterWrap = g.select('.nv-scatterWrap')
+            .datum(data.filter(function(d) { return !d.disabled }))
+
+        d3.transition(scatterWrap).call(scatter);
+
+
+
+        wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+        defsEnter.append('clipPath')
+            .attr('id', 'nv-edge-clip-' + id)
+          .append('rect');
+
+        wrap.select('#nv-edge-clip-' + id + ' rect')
+            .attr('width', availableWidth)
+            .attr('height', availableHeight);
+
+        g   .attr('clip-path', clipEdge ? 'url(#nv-edge-clip-' + id + ')' : '');
+
+
+
+
+        var area = d3.svg.area()
+            .x(function(d,i)  { return x(getX(d,i)) })
+            .y0(function(d) { return y(d.display.y0) })
+            .y1(function(d) { return y(d.display.y + d.display.y0) });
+
+        var zeroArea = d3.svg.area()
+            .x(function(d,i)  { return x(getX(d,i)) })
+            .y0(function(d) { return y(d.display.y0) })
+            .y1(function(d) { return y(d.display.y0) });
+
+
+        var path = g.select('.nv-areaWrap').selectAll('path.nv-area')
+            .data(function(d) { return d });
+            //.data(function(d) { return d }, function(d) { return d.key });
+        path.enter().append('path').attr('class', function(d,i) { return 'nv-area nv-area-' + i })
+            .on('mouseover', function(d,i) {
+              d3.select(this).classed('hover', true);
+              dispatch.areaMouseover({
+                point: d,
+                series: d.key,
+                pos: [d3.event.pageX, d3.event.pageY],
+                seriesIndex: i
+              });
+            })
+            .on('mouseout', function(d,i) {
+              d3.select(this).classed('hover', false);
+              dispatch.areaMouseout({
+                point: d,
+                series: d.key,
+                pos: [d3.event.pageX, d3.event.pageY],
+                seriesIndex: i
+              });
+            })
+            .on('click', function(d,i) {
+              d3.select(this).classed('hover', false);
+              dispatch.areaClick({
+                point: d,
+                series: d.key,
+                pos: [d3.event.pageX, d3.event.pageY],
+                seriesIndex: i
+              });
+            })
+        d3.transition(path.exit())
+            .attr('d', function(d,i) { return zeroArea(d.values,i) })
+            .remove();
+        path
+            .style('fill', function(d,i){ return d.color || color(d, i) })
+            .style('stroke', function(d,i){ return d.color || color(d, i) });
+        d3.transition(path)
+            .attr('d', function(d,i) { return area(d.values,i) })
+
+
+        //============================================================
+        // Event Handling/Dispatching (in chart's scope)
+        //------------------------------------------------------------
+
+        scatter.dispatch.on('elementMouseover.area', function(e) {
+          g.select('.nv-chart-' + id + ' .nv-area-' + e.seriesIndex).classed('hover', true);
+        });
+        scatter.dispatch.on('elementMouseout.area', function(e) {
+          g.select('.nv-chart-' + id + ' .nv-area-' + e.seriesIndex).classed('hover', false);
+        });
+
+    });
+
+
+    return chart;
+  }
+
+
+  //============================================================
+  // Event Handling/Dispatching (out of chart's scope)
+  //------------------------------------------------------------
+
+  scatter.dispatch.on('elementClick.area', function(e) {
+    dispatch.areaClick(e);
+  })
+  scatter.dispatch.on('elementMouseover.tooltip', function(e) {
+        e.pos = [e.pos[0] + margin.left, e.pos[1] + margin.top],
+        dispatch.tooltipShow(e);
+  });
+  scatter.dispatch.on('elementMouseout.tooltip', function(e) {
+        dispatch.tooltipHide(e);
+  });
+
+
+
+  //============================================================
+  // Global getters and setters
+  //------------------------------------------------------------
+
+  chart.dispatch = dispatch;
+  chart.scatter = scatter;
+
+  d3.rebind(chart, scatter, 'interactive', 'size', 'xScale', 'yScale', 'zScale', 'xDomain', 'yDomain', 'sizeDomain', 'forceX', 'forceY', 'forceSize', 'clipVoronoi', 'clipRadius');
+
+  chart.x = function(_) {
+    if (!arguments.length) return getX;
+    getX = d3.functor(_);
+    return chart;
+  };
+
+  chart.y = function(_) {
+    if (!arguments.length) return getY;
+    getY = d3.functor(_);
+    return chart;
+  }
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return width;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return height;
+    height = _;
+    return chart;
+  };
+
+  chart.clipEdge = function(_) {
+    if (!arguments.length) return clipEdge;
+    clipEdge = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    return chart;
+  };
+
+  chart.offset = function(_) {
+    if (!arguments.length) return offset;
+    offset = _;
+    return chart;
+  };
+
+  chart.order = function(_) {
+    if (!arguments.length) return order;
+    order = _;
+    return chart;
+  };
+
+  //shortcut for offset + order
+  chart.style = function(_) {
+    if (!arguments.length) return style;
+    style = _;
+
+    switch (style) {
+      case 'stack':
+        chart.offset('zero');
+        chart.order('default');
+        break;
+      case 'stream':
+        chart.offset('wiggle');
+        chart.order('inside-out');
+        break;
+      case 'expand':
+        chart.offset('expand');
+        chart.order('default');
+        break;
+    }
+
+    return chart;
+  };
+
+
+  return chart;
+}
+
+nv.models.stackedAreaChart = function() {
+
+  //============================================================
+  // Public Variables with Default Settings
+  //------------------------------------------------------------
+
+  var margin = {top: 30, right: 25, bottom: 50, left: 60},
+      width = null,
+      height = null,
+      color = nv.utils.defaultColor(), // a function that takes in d, i and
+      //returns color
+      showControls = true,
+      showLegend = true,
+      tooltips = true,
+      tooltip = function(key, x, y, e, graph) {
+        return '<h3>' + key + '</h3>' +
+               '<p>' +  y + ' on ' + x + '</p>'
+      },
+      x, y, //can be accessed via chart.stacked.[x/y]Scale()
+      noData = "No Data Available."
+      ;
+
+
+  //============================================================
+  // Private Variables
+  //------------------------------------------------------------
+
+  var stacked = nv.models.stackedArea(),
+      xAxis = nv.models.axis().orient('bottom').tickPadding(5),
+      yAxis = nv.models.axis().orient('left'),
+      yAxisTickFormat = d3.format(",.2f"),
+      legend = nv.models.legend().height(30),
+      controls = nv.models.legend().height(30),
+      dispatch = d3.dispatch('tooltipShow', 'tooltipHide');
+
+  //TODO: let user select default
+  var controlsData = [
+    { key: 'Stacked' },
+    { key: 'Stream', disabled: true },
+    { key: 'Expanded', disabled: true }
+  ];
+
+  var showTooltip = function(e, offsetElement) {
+    var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
+        top = e.pos[1] + ( offsetElement.offsetTop || 0),
+        x = xAxis.tickFormat()(stacked.x()(e.point, e.pointIndex)),
+        y = yAxis.tickFormat()(stacked.y()(e.point, e.pointIndex)),
+        content = tooltip(e.series.key, x, y, e, chart);
+
+    nv.tooltip.show([left, top], content, e.value < 0 ? 'n' : 's');
+  };
+
+
+  function chart(selection) {
+    selection.each(function(data) {
+      var container = d3.select(this),
+          that = this;
+
+      var availableWidth = (width  || parseInt(container.style('width')) || 960)
+                             - margin.left - margin.right,
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+
+
+      //------------------------------------------------------------
+      // Display No Data message if there's nothing to show.
+
+      if (!data || !data.length || !data.filter(function(d) { return d.values.length }).length) {
+        container.append('text')
+          .attr('class', 'nvd3 nv-noData')
+          .attr('x', availableWidth / 2)
+          .attr('y', availableHeight / 2)
+          .attr('dy', '-.7em')
+          .style('text-anchor', 'middle')
+          .text(noData);
+          return chart;
+      } else {
+        container.select('.nv-noData').remove();
+      }
+
+      //------------------------------------------------------------
+
+
+
+      x = stacked.xScale();
+      y = stacked.yScale();
+
+      var wrap = container.selectAll('g.nv-wrap.nv-stackedAreaChart').data([data]);
+      var gEnter = wrap.enter().append('g').attr('class', 'nvd3 nv-wrap nv-stackedAreaChart').append('g');
+
+      gEnter.append('g').attr('class', 'nv-x nv-axis');
+      gEnter.append('g').attr('class', 'nv-y nv-axis');
+      gEnter.append('g').attr('class', 'nv-stackedWrap');
+      gEnter.append('g').attr('class', 'nv-legendWrap');
+      gEnter.append('g').attr('class', 'nv-controlsWrap');
+
+
+      var g = wrap.select('g');
+
+
+      if (showLegend) {
+        legend
+          .width( availableWidth / 2 );
+
+        g.select('.nv-legendWrap')
+            .datum(data)
+            .call(legend);
+
+        if ( margin.top != legend.height()) {
+          margin.top = legend.height();
+          availableHeight = (height || parseInt(container.style('height')) || 400)
+                             - margin.top - margin.bottom;
+        }
+
+        g.select('.nv-legendWrap')
+            .attr('transform', 'translate(' + ( availableWidth / 2 ) + ',' + (-margin.top) +')');
+      }
+
+
+      stacked
+        .width(availableWidth)
+        .height(availableHeight)
+
+
+
+      if (showControls) {
+        controls.width(280).color(['#444', '#444', '#444']);
+        g.select('.nv-controlsWrap')
+            .datum(controlsData)
+            .attr('transform', 'translate(0,' + (-margin.top) +')')
+            .call(controls);
+      }
+
+
+      g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+      var stackedWrap = g.select('.nv-stackedWrap')
+          .datum(data);
+      d3.transition(stackedWrap).call(stacked);
+
+
+      xAxis
+        .scale(x)
+        .ticks( availableWidth / 100 )
+        .tickSize( -availableHeight, 0);
+
+      g.select('.nv-x.nv-axis')
+          .attr('transform', 'translate(0,' + availableHeight + ')');
+      d3.transition(g.select('.nv-x.nv-axis'))
+          .call(xAxis);
+
+      yAxis
+        .scale(y)
+        .ticks(stacked.offset() == 'wiggle' ? 0 : availableHeight / 36)
+        .tickSize(-availableWidth, 0)
+        .setTickFormat(stacked.offset() == 'expand' ? d3.format('%') : yAxisTickFormat);
+
+      d3.transition(g.select('.nv-y.nv-axis'))
+          .call(yAxis);
+
+
+      //============================================================
+      // Event Handling/Dispatching (in chart's scope)
+      //------------------------------------------------------------
+
+      stacked.dispatch.on('areaClick.toggle', function(e) {
+        if (data.filter(function(d) { return !d.disabled }).length === 1)
+          data = data.map(function(d) {
+            d.disabled = false;
+            return d
+          });
+        else
+          data = data.map(function(d,i) {
+            d.disabled = (i != e.seriesIndex);
+            return d
+          });
+
+        selection.transition().call(chart);
+      });
+
+      legend.dispatch.on('legendClick', function(d,i) {
+        d.disabled = !d.disabled;
+
+        if (!data.filter(function(d) { return !d.disabled }).length) {
+          data.map(function(d) {
+            d.disabled = false;
+            return d;
+          });
+        }
+
+        selection.transition().call(chart);
+      });
+
+      controls.dispatch.on('legendClick', function(d,i) {
+        if (!d.disabled) return;
+
+        controlsData = controlsData.map(function(s) {
+          s.disabled = true;
+          return s;
+        });
+        d.disabled = false;
+
+        switch (d.key) {
+          case 'Stacked':
+            stacked.style('stack');
+            break;
+          case 'Stream':
+            stacked.style('stream');
+            break;
+          case 'Expanded':
+            stacked.style('expand');
+            break;
+        }
+
+        selection.transition().call(chart);
+      });
+
+      dispatch.on('tooltipShow', function(e) {
+        if (tooltips) showTooltip(e, that.parentNode);
+      });
+
+    });
+
+
+    //TODO: decide if this makes sense to add into all the models for ease of updating (updating without needing the selection)
+    chart.update = function() { selection.transition().call(chart) };
+    chart.container = this; // I need a reference to the container in order to have outside code check if the chart is visible or not
+
+    return chart;
+  }
+
+
+
+  //============================================================
+  // Event Handling/Dispatching (out of chart's scope)
+  //------------------------------------------------------------
+
+  stacked.dispatch.on('tooltipShow', function(e) {
+    //disable tooltips when value ~= 0
+    //// TODO: consider removing points from voronoi that have 0 value instead of this hack
+    if (!Math.round(stacked.y()(e.point) * 100)) {  // 100 will not be good for very small numbers... will have to think about making this valu dynamic, based on data range
+      setTimeout(function() { d3.selectAll('.point.hover').classed('hover', false) }, 0);
+      return false;
+    }
+
+    e.pos = [e.pos[0] + margin.left, e.pos[1] + margin.top],
+    dispatch.tooltipShow(e);
+  });
+
+  stacked.dispatch.on('tooltipHide', function(e) {
+    dispatch.tooltipHide(e);
+  });
+
+  dispatch.on('tooltipHide', function() {
+    if (tooltips) nv.tooltip.cleanup();
+  });
+
+
+
+  //============================================================
+  // Global getters and setters
+  //------------------------------------------------------------
+
+  chart.dispatch = dispatch;
+  chart.stacked = stacked;
+  chart.xAxis = xAxis;
+  chart.yAxis = yAxis;
+
+  d3.rebind(chart, stacked, 'x', 'y', 'size', 'xScale', 'yScale', 'xDomain', 'yDomain', 'sizeDomain', 'interactive', 'offset', 'order', 'style', 'clipEdge', 'forceX', 'forceY', 'forceSize');
+
+  chart.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return chart;
+  };
+
+  chart.width = function(_) {
+    if (!arguments.length) return getWidth;
+    width = _;
+    return chart;
+  };
+
+  chart.height = function(_) {
+    if (!arguments.length) return getHeight;
+    height = _;
+    return chart;
+  };
+
+  chart.color = function(_) {
+    if (!arguments.length) return color;
+    color = nv.utils.getColor(_);
+    legend.color(color);
+    return chart;
+  };
+
+  chart.showControls = function(_) {
+    if (!arguments.length) return showControls;
+    showControls = _;
+    return chart;
+  };
+
+  chart.showLegend = function(_) {
+    if (!arguments.length) return showLegend;
+    showLegend = _;
+    return chart;
+  };
+
+  chart.tooltips = function(_) {
+    if (!arguments.length) return tooltips;
+    tooltips = _;
+    return chart;
+  };
+
+  chart.tooltipContent = function(_) {
+    if (!arguments.length) return tooltip;
+    tooltip = _;
+    return chart;
+  };
+
+  chart.noData = function(_) {
+    if (!arguments.length) return noData;
+    noData = _;
+    return chart;
+  };
+
+  yAxis.setTickFormat = yAxis.tickFormat;
+  yAxis.tickFormat = function(_) {
+    if (!arguments.length) return yAxisTickFormat;
+    yAxisTickFormat = _;
+    return yAxis;
+  };
+
+  return chart;
+}
+})();
