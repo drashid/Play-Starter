@@ -7,6 +7,7 @@ define(['controller/controllers'], function(controllers){
         $scope.navTimersActive = current == '/timers' ? 'active' : '';
         $scope.navHealthActive = current == '/health' ? 'active' : '';
         $scope.navMetersActive = current == '/meters' ? 'active' : '';
+        $scope.navGaugesActive = current == '/gauges' ? 'active' : '';
       });     
     }
   ]);
