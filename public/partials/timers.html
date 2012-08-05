@@ -44,7 +44,7 @@
           </th>
         </thead>
         <tbody>
-            <tr ng-repeat="metric in metrics | filter:{'type': 'TIMER'} | filter:timerSearch | orderBy:sortField:sortOrder">
+            <tr ng-repeat="metric in metrics | filter:isTimer | filter:timerSearch | orderBy:sortField:sortOrder">
                 <td ng-class="showID()">{{metric.machine}}</td>
                 <td>{{metric.name}}</td>
                 <td>{{metric.mean | round:2}} <span class="metric-unit">({{metric.durationUnit | timeunit}})</span></td>

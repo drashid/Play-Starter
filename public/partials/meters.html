@@ -44,7 +44,7 @@
           </th>
         </thead>
         <tbody>
-            <tr ng-repeat="metric in metrics | filter:meterSearch | orderBy:sortField:sortOrder">
+            <tr ng-repeat="metric in metrics | filter:isMeter | filter:meterSearch | orderBy:sortField:sortOrder">
                 <td ng-class="showID()">{{metric.machine}}</td>
                 <td>{{metric.name}}</td>
                 <td>{{metric.count | round:2}}</td>

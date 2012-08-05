@@ -15,6 +15,7 @@ require(
     'libs/angular',
     'admin/HealthCtrl',
     'admin/TimerCtrl',
+    'admin/GaugeCtrl',
     'admin/MeterCtrl', 
     'admin/AdminCtrl',
     'controller/controllers' 
@@ -29,6 +30,7 @@ require(
         routes.
           when('/timers', { templateUrl: asset('partials/timers.html'), controller: 'TimerCtrl' }).
           when('/meters', { templateUrl: asset('partials/meters.html'), controller: 'MeterCtrl' }).
+          when('/gauges', { templateUrl: asset('partials/gauges.html'), controller: 'GaugeCtrl' }).
           otherwise({ redirectTo:'/health', templateUrl: asset('partials/health.html'), controller: 'HealthCtrl'});
       }])
       //basic filters

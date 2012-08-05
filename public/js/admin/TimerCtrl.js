@@ -33,24 +33,23 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
         return $scope.averageNodes ? $scope.averagedMetrics : $scope.fetchedMetrics;
       }
 
+      $scope.isTimer = function(item){
+        return _.has(item, 'type') && (item.type === 'TIMER');
+      };
+
       _formatDataForGraph = function(averagedMetrics){
         var min = [],
             avg = [],
             median = [],
             max = [];
 
-        _.chain(averagedMetrics)
-          .filter(function(item){
-            switch(item.type){
-              case 'TIMER': return true;
-              default: return false;
+          _.each(averagedMetrics, function(item, i){ 
+            if($scope.isTimer(item)){
+              min.push({ x: i, y: item.min, units: item.durationUnit, metricName: item.name });
+              median.push({ x: i, y: item.median, units: item.durationUnit, metricName: item.name });
+              avg.push({ x: i, y: item.mean, units: item.durationUnit, metricName: item.name });
+              max.push({ x: i, y: item.max, units: item.durationUnit, metricName: item.name });
             }
-          })
-          .each( function(item, i){ 
-            min.push({ x: i, y: item.min, units: item.durationUnit, metricName: item.name });
-            median.push({ x: i, y: item.median, units: item.durationUnit, metricName: item.name });
-            avg.push({ x: i, y: item.mean, units: item.durationUnit, metricName: item.name });
-            max.push({ x: i, y: item.max, units: item.durationUnit, metricName: item.name });
           });
 
         return [
