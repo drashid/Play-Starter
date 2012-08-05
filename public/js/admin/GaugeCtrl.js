@@ -9,7 +9,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
           $scope.fetchedMetrics = _.flatten(data);
           $scope.averagedMetrics = utils.averageMetrics($scope.fetchedMetrics)
 
-          $scope.metrics = _chooseMetrics();
+          // $scope.metrics = _chooseMetrics();
           _loadGraph();
         });
       };
@@ -42,36 +42,42 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
 
         _.each(averagedMetrics, function(item, i){ 
             if($scope.isGauge(item)){
-              count.push({ x: i, y: item.count, metricName: item.name });
+              count.push({ value: item.value, label: item.name });
             }
           });
 
         return [
-          { key: 'Count', values: count }
+          { key: 'Gauge', values: count }
         ];
       };
       
       _loadGraph = function(){ 
         nv.addGraph(function() {
-          var chart = nv.models.multiBarChart();
-          chart.showControls(false); //disable stacked
-          chart.showLegend(false);
-          chart.tooltipContent(function(key, x, y, e, graph){
-            return '<h3>' + e.point.metricName + '</h3>' + 
-                   '<p>' + y + '</p>';
-          });
+          var chart = nv.models.multiBarHorizontalChart()
+            .x(function(d){ return d.label; })
+            .y(function(d){ return d.value; })
+            .margin({top: 30, right: 20, bottom: 50, left: 175})
+            .showControls(false)
+            .showLegend(false)
+            .tooltips(false)
+            .showValues(true);
 
-          chart.xAxis
-            .axisLabel('Metrics')
-            .tickFormat(d3.format(',f'));
+          // chart.tooltipContent(function(key, x, y, e, graph){
+          //   return '<h3>' + x + '</h3>' + 
+          //          '<p>' + y + '</p>';
+          // });
+
+          // chart.xAxis
+          //   .axisLabel('Metrics')
+          //   .tickFormat(d3.format(',f'));
 
           chart.yAxis
-            .axisLabel('Count')
-            .tickFormat(d3.format(',d'));
+            .axisLabel('Value')
+            .tickFormat(d3.format(',.2f'));
 
           d3.select('#chart1 svg')
             .datum(_formatDataForGraph($scope.averagedMetrics))
-            .transition().duration(250).call(chart);
+            .transition().duration(500).call(chart);
 
           nv.utils.windowResize(chart.update);
 
@@ -80,16 +86,16 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
       };
 
       //trigger metric processing (average or not average) on toggle
-      $scope.$watch('averageNodes', function(value){
-        $scope.metrics = _chooseMetrics();
-      });
+      // $scope.$watch('averageNodes', function(value){
+      //   $scope.metrics = _chooseMetrics();
+      // });
 
       //INIT 
-      $scope.averageNodes = true;
+      // $scope.averageNodes = true;
       $scope.loadMetrics();
-      $scope.sortBy('count');
-      $scope.sortOrder = true;
-      _showSortArrow('count');
+      // $scope.sortBy('count');
+      // $scope.sortOrder = true;
+      // _showSortArrow('count');
     }
   ]);
 
