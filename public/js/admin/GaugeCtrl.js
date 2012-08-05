@@ -9,33 +9,13 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
           $scope.fetchedMetrics = _.flatten(data);
           $scope.averagedMetrics = utils.averageMetrics($scope.fetchedMetrics)
 
-          // $scope.metrics = _chooseMetrics();
           _loadGraph();
         });
       };
 
-      // $scope.sortBy = function(fieldName){
-      //   utils.sortBy($scope, fieldName, 'sortField', 'sortOrder');
-      //   _showSortArrow(fieldName);
-      // }
-
-      // $scope.showID = function(){
-      //   return $scope.averageNodes ? "hide-id" : "show-id";
-      // };
-
       $scope.isGauge = function(item){
         return _.has(item, 'type') && (item.type === 'GAUGE');
       };
-
-      // _showSortArrow = function(fieldName){
-      //   $scope.sortArrow = $scope.sortOrder ? "▼" : "▲";
-      //   $("th > span.sortArrow").css("visibility", "hidden");
-      //   $("th#" + fieldName + " > span.sortArrow").css("visibility", "visible");
-      // }
-
-      // _chooseMetrics = function(){
-      //   return $scope.averageNodes ? $scope.averagedMetrics : $scope.fetchedMetrics;
-      // }
 
       _formatDataForGraph = function(averagedMetrics){
         var count = [];
@@ -62,15 +42,6 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
             .tooltips(false)
             .showValues(true);
 
-          // chart.tooltipContent(function(key, x, y, e, graph){
-          //   return '<h3>' + x + '</h3>' + 
-          //          '<p>' + y + '</p>';
-          // });
-
-          // chart.xAxis
-          //   .axisLabel('Metrics')
-          //   .tickFormat(d3.format(',f'));
-
           chart.yAxis
             .axisLabel('Value')
             .tickFormat(d3.format(',.2f'));
@@ -85,17 +56,8 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
         });
       };
 
-      //trigger metric processing (average or not average) on toggle
-      // $scope.$watch('averageNodes', function(value){
-      //   $scope.metrics = _chooseMetrics();
-      // });
-
-      //INIT 
-      // $scope.averageNodes = true;
+      //INIT
       $scope.loadMetrics();
-      // $scope.sortBy('count');
-      // $scope.sortOrder = true;
-      // _showSortArrow('count');
     }
   ]);
 
