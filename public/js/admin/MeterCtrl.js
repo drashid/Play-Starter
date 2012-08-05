@@ -23,6 +23,10 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
         return $scope.averageNodes ? "hide-id" : "show-id";
       };
 
+      $scope.isMeter = function(item){
+        return _.has(item, 'type') && (item.type === 'TIMER' || item.type === 'METER');
+      };
+
       _showSortArrow = function(fieldName){
         $scope.sortArrow = $scope.sortOrder ? "▼" : "▲";
         $("th > span.sortArrow").css("visibility", "hidden");
@@ -37,7 +41,9 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
         var count = [];
 
         _.each(averagedMetrics, function(item, i){ 
-            count.push({ x: i, y: item.count, metricName: item.name });
+            if($scope.isMeter(item)){
+              count.push({ x: i, y: item.count, metricName: item.name });
+            }
           });
 
         return [

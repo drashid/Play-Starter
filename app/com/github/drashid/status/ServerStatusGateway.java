@@ -18,6 +18,7 @@ import redis.clients.jedis.Jedis;
 
 import com.github.drashid.service.impl.RedisService;
 import com.github.drashid.status.health.ServerHealth;
+import com.github.drashid.status.metric.GaugeInfo;
 import com.github.drashid.status.metric.MeterInfo;
 import com.github.drashid.status.metric.MetricData;
 import com.github.drashid.status.metric.TimerInfo;
@@ -94,7 +95,7 @@ public class ServerStatusGateway {
         }else if(entry.getValue() instanceof Meter) {
           metricInfos.add(new MeterInfo(MACHINE_CODE, metricName, (Meter)entry.getValue()));
         }else if(entry.getValue() instanceof Gauge) {
-          
+          metricInfos.add(new GaugeInfo(MACHINE_CODE, metricName, (Gauge<?>)entry.getValue()));
         }
       }
       Map<String, String> nodeTimerMap = Maps.newHashMap();
