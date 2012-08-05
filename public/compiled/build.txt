@@ -28,6 +28,7 @@ js/libs/d3.js
 js/libs/nv.d3.js
 js/admin/metric-utils.js
 js/admin/TimerCtrl.js
+js/admin/GaugeCtrl.js
 js/admin/MeterCtrl.js
 js/admin/AdminCtrl.js
 js/admin-main.js
