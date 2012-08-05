@@ -13,7 +13,7 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
         });
       };
 
-      $scope.isGauge = function(item){
+      _isGauge = function(item){
         return _.has(item, 'type') && (item.type === 'GAUGE');
       };
 
@@ -21,10 +21,10 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
         var count = [];
 
         _.each(averagedMetrics, function(item, i){ 
-            if($scope.isGauge(item)){
-              count.push({ value: item.value, label: item.name });
-            }
-          });
+          if(_isGauge(item)){
+            count.push({ value: item.value, label: item.name });
+          }
+        });
 
         return [
           { key: 'Gauge', values: count }
@@ -43,7 +43,6 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
             .showValues(true);
 
           chart.yAxis
-            .axisLabel('Value')
             .tickFormat(d3.format(',.2f'));
 
           d3.select('#chart1 svg')
