@@ -6,7 +6,7 @@ define(['controller/controllers', 'libs/jquery', 'libs/underscore',
 
       $scope.loadHealth = function(){
           $http.get('/api/admin/metrics/health').success(function(data){
-            $scope.health = _.sortBy(data, 'timestamp');
+            $scope.health = _.sortBy(data, 'timestamp').reverse();
           });
       };
 
