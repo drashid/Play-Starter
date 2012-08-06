@@ -1,12 +1,12 @@
-define(['controller/controllers', 'libs/jquery', 
-        'libs/bootstrap-tooltip', 'libs/bootstrap-popover'], function(controllers, $){
+define(['controller/controllers', 'libs/jquery', 'libs/underscore',
+        'libs/bootstrap-tooltip', 'libs/bootstrap-popover'], function(controllers, $, _){
   
   controllers.controller('HealthCtrl', ['$scope', '$http',
     function HealthCtrl($scope, $http) {
 
       $scope.loadHealth = function(){
           $http.get('/api/admin/metrics/health').success(function(data){
-            $scope.health = data;
+            $scope.health = _.sortBy(data, 'timestamp');
           });
       };
 
