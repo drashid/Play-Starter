@@ -20,10 +20,10 @@ js/admin-main.js
 js/libs/angular.js
 js/controller/controllers.js
 js/libs/jquery.js
+js/libs/underscore.js
 js/libs/bootstrap-tooltip.js
 js/libs/bootstrap-popover.js
 js/admin/HealthCtrl.js
-js/libs/underscore.js
 js/libs/d3.js
 js/libs/nv.d3.js
 js/admin/metric-utils.js
