@@ -6,6 +6,7 @@ var nv = {
 
 window.nv = nv;
 
+nv.epsZero = 0.0000001; //0 as a default is bad for log scale (= infinity), use epsilon zero instead
 nv.tooltip = {}; // For the tooltip system
 nv.utils = {}; // Utility subsystem
 nv.models = {}; //stores all the possible models/components
@@ -4287,7 +4288,7 @@ nv.models.multiBar = function() {
       id = Math.floor(Math.random() * 10000), //Create semi-unique ID in case user doesn't select one
       getX = function(d) { return d.x },
       getY = function(d) { return d.y },
-      forceY = [0], // 0 is forced by default.. this makes sense for the majority of bar graphs... user can always do chart.forceY([]) to remove
+      forceY = [nv.epsZero], // 0 is forced by default.. this makes sense for the majority of bar graphs... user can always do chart.forceY([]) to remove
       clipEdge = true,
       stacked = false,
       color = nv.utils.defaultColor(),
@@ -4399,7 +4400,7 @@ nv.models.multiBar = function() {
           //.style('fill-opacity', 1e-6)
         .selectAll('rect.nv-bar')
         .delay(function(d,i) { return i * delay/ data[0].values.length })
-          .attr('y', function(d) { return stacked ? y0(d.y0) : y0(0) })
+          .attr('y', function(d) { return stacked ? y0(d.y0) : y0(nv.epsZero) })
           .attr('height', 0)
           .remove();
       groups
@@ -4423,7 +4424,7 @@ nv.models.multiBar = function() {
           .attr('x', function(d,i,j) {
               return stacked ? 0 : (j * x.rangeBand() / data.length )
           })
-          .attr('y', function(d) { return y0(stacked ? d.y0 : 0) })
+          .attr('y', function(d) { return y0(stacked ? d.y0 : nv.epsZero) })
           .attr('height', 0)
           .attr('width', x.rangeBand() / (stacked ? 1 : data.length) );
       bars
@@ -4433,7 +4434,7 @@ nv.models.multiBar = function() {
               value: getY(d,i),
               point: d,
               series: data[d.series],
-              pos: [x(getX(d,i)) + (x.rangeBand() * (stacked ? data.length / 2 : d.series + .5) / data.length), y(getY(d,i) + (stacked ? d.y0 : 0))],  // TODO: Figure out why the value appears to be shifted
+              pos: [x(getX(d,i)) + (x.rangeBand() * (stacked ? data.length / 2 : d.series + .5) / data.length), y(getY(d,i) + (stacked ? d.y0 : nv.epsZero))],  // TODO: Figure out why the value appears to be shifted
               pointIndex: i,
               seriesIndex: d.series,
               e: d3.event
@@ -4455,7 +4456,7 @@ nv.models.multiBar = function() {
               value: getY(d,i),
               point: d,
               series: data[d.series],
-              pos: [x(getX(d,i)) + (x.rangeBand() * (stacked ? data.length / 2 : d.series + .5) / data.length), y(getY(d,i) + (stacked ? d.y0 : 0))],  // TODO: Figure out why the value appears to be shifted
+              pos: [x(getX(d,i)) + (x.rangeBand() * (stacked ? data.length / 2 : d.series + .5) / data.length), y(getY(d,i) + (stacked ? d.y0 : nv.epsZero))],  // TODO: Figure out why the value appears to be shifted
               pointIndex: i,
               seriesIndex: d.series,
               e: d3.event
@@ -4467,7 +4468,7 @@ nv.models.multiBar = function() {
               value: getY(d,i),
               point: d,
               series: data[d.series],
-              pos: [x(getX(d,i)) + (x.rangeBand() * (stacked ? data.length / 2 : d.series + .5) / data.length), y(getY(d,i) + (stacked ? d.y0 : 0))],  // TODO: Figure out why the value appears to be shifted
+              pos: [x(getX(d,i)) + (x.rangeBand() * (stacked ? data.length / 2 : d.series + .5) / data.length), y(getY(d,i) + (stacked ? d.y0 : nv.epsZero))],  // TODO: Figure out why the value appears to be shifted
               pointIndex: i,
               seriesIndex: d.series,
               e: d3.event
@@ -4504,11 +4505,11 @@ nv.models.multiBar = function() {
               d3.transition(d3.select(this))
                 .attr('y', function(d,i) {
                   return getY(d,i) < 0 ?
-                    y(0) :
+                    y(nv.epsZero) :
                     y(getY(d,i))
                 })
                 .attr('height', function(d,i) {
-                  return Math.abs(y(getY(d,i)) - y(0))
+                  return Math.abs(y(getY(d,i)) - y(nv.epsZero))
                 });
             })
 
@@ -4660,6 +4661,8 @@ nv.models.multiBarChart = function() {
       yAxis = nv.models.axis().orient('left'),
       legend = nv.models.legend().height(30),
       controls = nv.models.legend().height(30),
+      isLinear = true,
+      scales = nv.models.legend().height(30),
       dispatch = d3.dispatch('tooltipShow', 'tooltipHide');
 
   xAxis.tickFormat(function(d) { return d });
@@ -4719,7 +4722,7 @@ nv.models.multiBarChart = function() {
       gEnter.append('g').attr('class', 'nv-barsWrap');
       gEnter.append('g').attr('class', 'nv-legendWrap');
       gEnter.append('g').attr('class', 'nv-controlsWrap');
-
+      gEnter.append('g').attr('class', 'nv-scalesWrap');
 
 
       var g = wrap.select('g');
@@ -4759,15 +4762,26 @@ nv.models.multiBarChart = function() {
         ];
 
         controls.width(180).color(['#444', '#444', '#444']);
-        g.select('.nv-controlsWrap')
+        g.select('.nv-scalesWrap')
             .datum(controlsData)
             .attr('transform', 'translate(0,' + (-margin.top) +')')
             .call(controls);
       }
 
+      // Log/Linear switch
+      var scalesData = [
+        { key: 'Linear', disabled: !isLinear },
+        { key: 'Log', disabled: isLinear }
+      ]
+
+      scales.width(180).color(['#444', '#444', '#444']);
+        g.select('.nv-controlsWrap')
+            .datum(scalesData)
+            .attr('transform', 'translate(0,' + (-margin.top) +')')
+            .call(scales);
+      //END Log/Linear switch
 
       g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
 
       var barsWrap = g.select('.nv-barsWrap')
           .datum(data.filter(function(d) { return !d.disabled }))
@@ -4814,7 +4828,15 @@ nv.models.multiBarChart = function() {
       d3.transition(g.select('.nv-y.nv-axis'))
           .call(yAxis);
 
+      var yTicks = g.select('.nv-y.nv-axis > g').selectAll('g');
+      yTicks.selectAll('line, text')
+            .style('opacity', 1);
 
+      if(!isLinear){
+        yTicks.selectAll('text')
+            .style('opacity', 0);
+        yTicks.select('.nv-axislabel').style('opacity', 1);
+      }
 
       //============================================================
       // Event Handling/Dispatching (in chart's scope)
@@ -4851,6 +4873,29 @@ nv.models.multiBarChart = function() {
             break;
         }
 
+        selection.transition().call(chart);
+      });
+
+      scales.dispatch.on('legendClick', function(d,i) {
+        if(!d.disabled) return;
+        scalesData = scalesData.map(function(s) {
+          s.disabled = true;
+          return s;
+        });
+        d.disabled = false;
+
+        switch (d.key) {
+          case 'Log':
+            isLinear = false;
+            multibar.yScale(d3.scale.log());
+            break;
+          case 'Linear':
+            isLinear = true;
+            multibar.yScale(d3.scale.linear());
+            break;
+        }
+
+        // selection.transition().call(scales);
         selection.transition().call(chart);
       });
 
