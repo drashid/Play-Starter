@@ -4660,6 +4660,8 @@ nv.models.multiBarChart = function() {
       yAxis = nv.models.axis().orient('left'),
       legend = nv.models.legend().height(30),
       controls = nv.models.legend().height(30),
+      isLinear = true,
+      scales = nv.models.legend().height(30),
       dispatch = d3.dispatch('tooltipShow', 'tooltipHide');
 
   xAxis.tickFormat(function(d) { return d });
@@ -4719,7 +4721,7 @@ nv.models.multiBarChart = function() {
       gEnter.append('g').attr('class', 'nv-barsWrap');
       gEnter.append('g').attr('class', 'nv-legendWrap');
       gEnter.append('g').attr('class', 'nv-controlsWrap');
-
+      gEnter.append('g').attr('class', 'nv-scalesWrap');
 
 
       var g = wrap.select('g');
@@ -4759,15 +4761,26 @@ nv.models.multiBarChart = function() {
         ];
 
         controls.width(180).color(['#444', '#444', '#444']);
-        g.select('.nv-controlsWrap')
+        g.select('.nv-scalesWrap')
             .datum(controlsData)
             .attr('transform', 'translate(0,' + (-margin.top) +')')
             .call(controls);
       }
 
+      // Log/Linear switch
+      var scalesData = [
+        { key: 'Linear', disabled: !isLinear },
+        { key: 'Log', disabled: isLinear }
+      ]
+
+      scales.width(180).color(['#444', '#444', '#444']);
+        g.select('.nv-controlsWrap')
+            .datum(scalesData)
+            .attr('transform', 'translate(0,' + (-margin.top) +')')
+            .call(scales);
+      //END Log/Linear switch
 
       g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
 
       var barsWrap = g.select('.nv-barsWrap')
           .datum(data.filter(function(d) { return !d.disabled }))
@@ -4851,6 +4864,27 @@ nv.models.multiBarChart = function() {
             break;
         }
 
+        selection.transition().call(chart);
+      });
+
+      scales.dispatch.on('legendClick', function(d,i) {
+        if(!d.disabled) return;
+        scalesData = scalesData.map(function(s) {
+          s.disabled = true;
+          return s;
+        });
+        d.disabled = false;
+
+        switch (d.key) {
+          case 'Log':
+            isLinear = false;
+            break;
+          case 'Linear':
+            isLinear = true;
+            break;
+        }
+
+        // selection.transition().call(scales);
         selection.transition().call(chart);
       });
 
