@@ -34,7 +34,7 @@ public class RedisOptimisticLock implements DistributedLock {
   @Inject
   RedisOptimisticLock(@Assisted String key) {
     this.key = key;
-    this.value = LockUtils.genMachineMarkedUUID();
+    this.value = LockUtils.createMachineUUID();
   }
 
   @Override
