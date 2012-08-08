@@ -4878,9 +4878,11 @@ nv.models.multiBarChart = function() {
         switch (d.key) {
           case 'Log':
             isLinear = false;
+            multibar.yScale(d3.scale.log());
             break;
           case 'Linear':
             isLinear = true;
+            multibar.yScale(d3.scale.linear());
             break;
         }
 
