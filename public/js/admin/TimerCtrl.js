@@ -74,7 +74,6 @@ define(['controller/controllers', 'libs/underscore', 'libs/nv.d3', 'admin/metric
             .tickFormat(d3.format(',f'));
 
           chart.yAxis
-            // .scale(d3.scale.log()) Would be nice if this worked...
             .axisLabel('Time')
             .tickFormat(d3.format(',.1f'));
 

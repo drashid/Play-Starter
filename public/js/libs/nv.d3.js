@@ -4288,7 +4288,7 @@ nv.models.multiBar = function() {
       id = Math.floor(Math.random() * 10000), //Create semi-unique ID in case user doesn't select one
       getX = function(d) { return d.x },
       getY = function(d) { return d.y },
-      forceY = [], // 0 is forced by default.. this makes sense for the majority of bar graphs... user can always do chart.forceY([]) to remove
+      forceY = [nv.epsZero], // 0 is forced by default.. this makes sense for the majority of bar graphs... user can always do chart.forceY([]) to remove
       clipEdge = true,
       stacked = false,
       color = nv.utils.defaultColor(),
@@ -4828,7 +4828,15 @@ nv.models.multiBarChart = function() {
       d3.transition(g.select('.nv-y.nv-axis'))
           .call(yAxis);
 
+      var yTicks = g.select('.nv-y.nv-axis > g').selectAll('g');
+      yTicks.selectAll('line, text')
+            .style('opacity', 1);
 
+      if(!isLinear){
+        yTicks.selectAll('text')
+            .style('opacity', 0);
+        yTicks.select('.nv-axislabel').style('opacity', 1);
+      }
 
       //============================================================
       // Event Handling/Dispatching (in chart's scope)
