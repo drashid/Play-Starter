@@ -4708,7 +4708,12 @@ nv.models.multiBarChart = function() {
 
       //------------------------------------------------------------
 
-
+      var dataMinY = 9007199254740992; //javascript max value 
+      data.forEach(function(group) {
+        group.values.forEach(function(elem){
+          dataMinY = Math.min(elem.y, dataMinY);
+        });
+      });
 
       x = multibar.xScale();
       y = multibar.yScale();
@@ -4888,10 +4893,12 @@ nv.models.multiBarChart = function() {
           case 'Log':
             isLinear = false;
             multibar.yScale(d3.scale.log());
+            multibar.forceY([Math.max(nv.epsZero, dataMinY/2)]);
             break;
           case 'Linear':
             isLinear = true;
             multibar.yScale(d3.scale.linear());
+            multibar.forceY([0]);
             break;
         }
 
