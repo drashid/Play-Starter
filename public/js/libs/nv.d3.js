@@ -6,7 +6,7 @@ var nv = {
 
 window.nv = nv;
 
-nv.epsZero = 0.0000001; //0 as a default is bad for log scale (= infinity), use epsilon zero instead
+nv.epsZero = 0.01; //0 as a default is bad for log scale (= infinity), use epsilon zero instead
 nv.tooltip = {}; // For the tooltip system
 nv.utils = {}; // Utility subsystem
 nv.models = {}; //stores all the possible models/components
