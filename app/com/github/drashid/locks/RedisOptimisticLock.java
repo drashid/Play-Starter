@@ -1,9 +1,6 @@
 package com.github.drashid.locks;
 
-import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -13,12 +10,7 @@ import org.apache.commons.lang.Validate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
-import com.github.drashid.config.ConfigModule;
-import com.github.drashid.config.Environment;
-import com.github.drashid.service.ServiceModule;
 import com.github.drashid.service.impl.RedisService;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.google.inject.assistedinject.Assisted;
 
 public class RedisOptimisticLock implements DistributedLock {
@@ -84,51 +76,6 @@ public class RedisOptimisticLock implements DistributedLock {
     } finally {
       redis.returnConnection(conn);
     }
-  }
-
-  public static void main(String[] args) throws InterruptedException, FileNotFoundException {
-    Injector inject = Guice.createInjector(new LockModule(), new ServiceModule(), new ConfigModule(Environment.DEVELOPMENT, "conf/development.json"));
-
-    inject.getInstance(RedisService.class).start();
-    DistributedLockFactory lockFactory = inject.getInstance(DistributedLockFactory.class);
-    ExecutorService service = Executors.newFixedThreadPool(3);
-
-    Runnable one = buildRunnable(lockFactory);
-    Runnable two = buildRunnable(lockFactory);
-    Runnable three = buildRunnable(lockFactory);
-
-    service.submit(one);
-    service.submit(two);
-    service.submit(three);
-
-    service.awaitTermination(5, TimeUnit.SECONDS);
-    service.shutdownNow();
-  }
-
-  private static Runnable buildRunnable(final DistributedLockFactory lockFactory) {
-    return new Runnable() {
-
-      @Override
-      public void run() {
-        DistributedLock lock = lockFactory.createLock("TEST+LOCK!");
-        try {
-          String threadName = Thread.currentThread().getName();
-          System.out.println("In thread " + threadName);
-          boolean success = lock.tryLock(2, TimeUnit.SECONDS);
-          System.out.println(String.format("Thread: %s, success: %s", threadName, success));
-          try {
-            Thread.sleep(1000);
-          } catch (InterruptedException e) {
-          }
-          success = lock.tryLock(2, TimeUnit.SECONDS);
-          System.out.println(String.format("Thread: %s, success: %s", threadName, success));
-        } catch (Exception e) {
-          e.printStackTrace();
-        } finally {
-          lock.releaseLock();
-        }
-      }
-    };
   }
 
 }
