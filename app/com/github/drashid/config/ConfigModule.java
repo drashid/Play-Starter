@@ -1,6 +1,10 @@
 package com.github.drashid.config;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Set;
 
 import org.codehaus.jackson.JsonNode;
@@ -10,7 +14,7 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import play.Play;
+import play.Application;
 
 import com.github.drashid.utils.json.JsonUtils;
 import com.google.inject.AbstractModule;
@@ -21,24 +25,38 @@ public class ConfigModule extends AbstractModule {
 
   private static final String CONFIG_ROOT_PACKAGE = "com.github.drashid.config";
 
+  private final Environment env;
+  
+  private final InputStream configStream;
+  
+  public ConfigModule(Application app) {
+    this.env = Environment.valueOf(app);    
+    String configFile = getConfigFileForEnv(env, app);    
+    LOG.info("Loading configuration from {}", configFile);
+    this.configStream = app.resourceAsStream(configFile);
+  }
+  
+  public ConfigModule(Environment env, String configFile) throws FileNotFoundException {
+    this.env = env;
+    LOG.info("Loading configuration from {}", configFile);
+    this.configStream = new FileInputStream(new File(configFile));
+  }
+  
   @Override
   protected void configure() {
     //Bind environment
-    Environment env = Environment.valueOf(Play.application());
     bind(Environment.class).toInstance(env);
-    
-    String configFile = getConfigFile(env);
     
     //Bind config classes
     Reflections reflections = new Reflections(CONFIG_ROOT_PACKAGE);
     Set<Class<?>> clsz = reflections.getTypesAnnotatedWith(Config.class);
-    LOG.info("Loading configuration for classes {} from {}", clsz, configFile);
+    LOG.info("Loading configuration for classes {}", clsz);
 
     JsonNode json;
     try {
-      json = JsonUtils.toJson(Play.application().resourceAsStream(configFile));
+      json = JsonUtils.toJson(configStream);
     } catch (Exception e) {
-      LOG.error("Error loading configuration json file {}", configFile);
+      LOG.error("Error loading configuration json file {}", configStream);
       throw new InvalidConfigurationException("Error loading json config", e);
     }
 
@@ -53,8 +71,8 @@ public class ConfigModule extends AbstractModule {
     }
   }
 
-  private String getConfigFile(Environment env) {
-    return Play.application().configuration().getString("config." + env.name());
+  private String getConfigFileForEnv(Environment env, Application app) {
+    return app.configuration().getString("config." + env.name());
   }
 
   private <E> void bindConfig(Class<E> cls, JsonNode json) throws JsonParseException, JsonMappingException, IOException {

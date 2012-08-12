@@ -1,5 +1,7 @@
 package module;
 
+import play.Play;
+
 import com.github.drashid.config.ConfigModule;
 import com.github.drashid.locks.LockModule;
 import com.github.drashid.service.ServiceModule;
@@ -15,7 +17,7 @@ public class ApplicationModule extends AbstractModule {
     install(new InstrumentationModule());
     install(new ScheduledTaskModule());
     install(new ServiceModule());
-    install(new ConfigModule());
+    install(new ConfigModule(Play.application()));
     install(new AdminModule());
     install(new LockModule());
   }

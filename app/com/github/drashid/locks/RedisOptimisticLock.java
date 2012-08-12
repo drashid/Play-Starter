@@ -1,5 +1,6 @@
 package com.github.drashid.locks;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,10 +13,10 @@ import org.apache.commons.lang.Validate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
-import com.github.drashid.config.impl.RedisConfig;
+import com.github.drashid.config.ConfigModule;
+import com.github.drashid.config.Environment;
 import com.github.drashid.service.ServiceModule;
 import com.github.drashid.service.impl.RedisService;
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.Assisted;
@@ -85,17 +86,9 @@ public class RedisOptimisticLock implements DistributedLock {
     }
   }
 
-  public static void main(String[] args) throws InterruptedException {
-    Injector inject = Guice.createInjector(new LockModule(), new ServiceModule(), new AbstractModule() {
+  public static void main(String[] args) throws InterruptedException, FileNotFoundException {
+    Injector inject = Guice.createInjector(new LockModule(), new ServiceModule(), new ConfigModule(Environment.DEVELOPMENT, "conf/development.json"));
 
-      @Override
-      protected void configure() {
-        RedisConfig config = new RedisConfig();
-        config.setHost("localhost");
-        config.setPort(6379);
-        bind(RedisConfig.class).toInstance(config);
-      }
-    });
     inject.getInstance(RedisService.class).start();
     DistributedLockFactory lockFactory = inject.getInstance(DistributedLockFactory.class);
     ExecutorService service = Executors.newFixedThreadPool(3);
@@ -108,7 +101,7 @@ public class RedisOptimisticLock implements DistributedLock {
     service.submit(two);
     service.submit(three);
 
-    service.awaitTermination(10, TimeUnit.SECONDS);
+    service.awaitTermination(5, TimeUnit.SECONDS);
     service.shutdownNow();
   }
 
@@ -121,12 +114,13 @@ public class RedisOptimisticLock implements DistributedLock {
         try {
           String threadName = Thread.currentThread().getName();
           System.out.println("In thread " + threadName);
-          boolean success = lock.tryLock(60, TimeUnit.SECONDS);
+          boolean success = lock.tryLock(2, TimeUnit.SECONDS);
           System.out.println(String.format("Thread: %s, success: %s", threadName, success));
           try {
-            Thread.sleep(3000);
+            Thread.sleep(1000);
           } catch (InterruptedException e) {
           }
+          success = lock.tryLock(2, TimeUnit.SECONDS);
           System.out.println(String.format("Thread: %s, success: %s", threadName, success));
         } catch (Exception e) {
           e.printStackTrace();
