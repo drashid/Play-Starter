@@ -11,7 +11,7 @@ public class RedisConfig {
 
   private String password;
 
-  RedisConfig() {
+  public RedisConfig() {
   }
 
   public String getHost() {
