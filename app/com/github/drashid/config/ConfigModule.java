@@ -32,14 +32,16 @@ public class ConfigModule extends AbstractModule {
   public ConfigModule(Application app) {
     this.env = Environment.valueOf(app);    
     String configFile = getConfigFileForEnv(env, app);    
-    LOG.info("Loading configuration from {}", configFile);
     this.configStream = app.resourceAsStream(configFile);
+    
+    LOG.info("Loading configuration from {}", configFile);
   }
   
   public ConfigModule(Environment env, String configFile) throws FileNotFoundException {
     this.env = env;
-    LOG.info("Loading configuration from {}", configFile);
     this.configStream = new FileInputStream(new File(configFile));
+    
+    LOG.info("Loading configuration from {}", configFile);
   }
   
   @Override
